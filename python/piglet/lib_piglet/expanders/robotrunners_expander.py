@@ -93,9 +93,9 @@ class robotrunners_expander(base_expander):
         y = curr_state[1]
         direction = curr_state[2]
         if move == Move_Actions.ROTATE_CW:
-            direction = (direction + 1) % 4
+            direction = Directions((direction.value + 1) % 4)
         elif move == Move_Actions.ROTATE_CCW:
-            direction = (direction - 1) % 4
+            direction = Directions((direction.value - 1) % 4)
         elif move == Move_Actions.MOVE_FORWARD:
             if direction == Directions.NORTH:
                 y -= 1

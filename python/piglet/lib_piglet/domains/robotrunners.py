@@ -18,6 +18,12 @@ class Directions(IntEnum):
     EAST = 1
     SOUTH = 2
     WEST = 3
+    
+    def __str__(self):
+        return self.name
+    
+    def __repr__(self):
+        return self.name
 
 class robotrunners_action:
 
