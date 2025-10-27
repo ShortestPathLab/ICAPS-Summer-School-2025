@@ -8,8 +8,7 @@
 from lib_piglet.search.search_node import search_node
 from lib_piglet.expanders.base_expander import base_expander
 from lib_piglet.domains.robotrunners import  Move_Actions, robotrunners_action, Directions, robotrunners
-from lib_piglet.constraints.grid_constraints import grid_constraint_table, grid_reservation_table
-import copy
+from lib_piglet.constraints.grid_constraints import grid_constraint_table, robotrunners_reservation_table
 
 class robotrunners_expander(base_expander):
 
@@ -18,7 +17,7 @@ class robotrunners_expander(base_expander):
         self.domain_: robotrunners = map
         self.effects_: list = [self.domain_.height_*-1, self.domain_.height_, -1, 1]
         self.constraint_table_: grid_constraint_table   = constraint_table
-        self.reservation_table_: grid_reservation_table = None # reservation_table_ is not used on default, decide how to use it on your own.
+        self.reservation_table_ = robotrunners_reservation_table
 
         # memory for storing successor (state, action) pairs
         self.succ_: list = [] 
@@ -40,6 +39,12 @@ class robotrunners_expander(base_expander):
                     continue
                 if self.constraint_table_.get_constraint(current.state_,current.timestep_).e_[a.move_]:
                     continue
+            # check that an action is valid given reservation tables
+            # if self.reservation_table_ is not None:
+            #     if self.reservation_table_.is_reserved(self, loc, time, current_agent_id):
+            #         continue
+            #     if self.reservation_table_.is_edge_collision(self, loc, time, current_agent_id):
+            #         continue
             self.succ_.append((new_state, a))
         return self.succ_[:]
 
@@ -60,30 +65,34 @@ class robotrunners_expander(base_expander):
         if (self.domain_.get_tile(state) == False):
             return retval
 
-        if (self.direction == Directions.NORTH and self.domain_.get_tile((x,y-1))):
+        if (direction == Directions.NORTH and self.domain_.get_tile((x,y-1,t))):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1
-        elif (self.direction == Directions.EAST and self.domain_.get_tile((x+1,y))):
+        elif (direction == Directions.EAST and self.domain_.get_tile((x+1,y,t))):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1
-        elif (self.direction == Directions.SOUTH and self.domain_.get_tile((x,y+1))):
+        elif (direction == Directions.SOUTH and self.domain_.get_tile((x,y+1,t))):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1
-        elif (self.direction == Directions.WEST and self.domain_.get_tile((x-1,y))):
+        elif (direction == Directions.WEST and self.domain_.get_tile((x-1,y,t))):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1
 
-        if (self.direction == 1 and self.domain_.get_tile((x,y,t))):
+        if (self.domain_.get_tile((x,y,t))):
+            retval.append(robotrunners_action())
+            retval[-1].move_ = Move_Actions.ROTATE_CW
+            retval[-1].cost_ = 1
+            retval.append(robotrunners_action())
+            retval[-1].move_ = Move_Actions.ROTATE_CCW
+            retval[-1].cost_ = 1
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.WAIT
             retval[-1].cost_ = 1
-
-
-
+        
         return retval
 
     def __move(self, curr_state: tuple, move):
@@ -91,8 +100,21 @@ class robotrunners_expander(base_expander):
         y = curr_state[1]
         t = curr_state[2]
         direction = curr_state[3]
+        if move == Move_Actions.ROTATE_CW:
+            direction = (direction + 1) % 4
+        elif move == Move_Actions.ROTATE_CCW:
+            direction = (direction - 1) % 4
+        elif move == Move_Actions.MOVE_FORWARD:
+            if direction == Directions.NORTH:
+                y -= 1
+            elif direction == Directions.EAST:
+                x += 1
+            elif direction == Directions.SOUTH:
+                y += 1
+            elif direction == Directions.WEST:
+                x -= 1
         
-        return x, y, 
+        return x, y, t, direction
 
     def __str__(self):
         return str(self.domain_)
