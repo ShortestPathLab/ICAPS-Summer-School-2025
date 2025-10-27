@@ -8,16 +8,15 @@
 from lib_piglet.search.search_node import search_node
 from lib_piglet.expanders.base_expander import base_expander
 from lib_piglet.domains.robotrunners import  Move_Actions, robotrunners_action, Directions, robotrunners
-from lib_piglet.constraints.grid_constraints import grid_constraint_table, robotrunners_reservation_table
+from lib_piglet.constraints.grid_constraints import robotrunners_reservation_table
 
 class robotrunners_expander(base_expander):
 
 
-    def __init__(self, map : robotrunners, constraint_table: grid_constraint_table = None):
+    def __init__(self, map : robotrunners, reservation_table: robotrunners_reservation_table = None):
         self.domain_: robotrunners = map
         self.effects_: list = [self.domain_.height_*-1, self.domain_.height_, -1, 1]
-        self.constraint_table_: grid_constraint_table   = constraint_table
-        self.reservation_table_ = robotrunners_reservation_table
+        self.reservation_table_ = reservation_table
 
         # memory for storing successor (state, action) pairs
         self.succ_: list = [] 
@@ -34,17 +33,12 @@ class robotrunners_expander(base_expander):
             # The search will initialise the rest, assuming it decides 
             # to add the corresponding successor to OPEN
             new_state = self.__move(current.state_, a.move_)
-            if self.constraint_table_ is not None:
-                if self.constraint_table_.get_constraint(new_state,current.timestep_+1).v_:
-                    continue
-                if self.constraint_table_.get_constraint(current.state_,current.timestep_).e_[a.move_]:
-                    continue
             # check that an action is valid given reservation tables
-            # if self.reservation_table_ is not None:
-            #     if self.reservation_table_.is_reserved(self, loc, time, current_agent_id):
-            #         continue
-            #     if self.reservation_table_.is_edge_collision(self, loc, time, current_agent_id):
-            #         continue
+            if self.reservation_table_ is not None:
+                if self.reservation_table_.is_reserved(self, current.state):
+                    continue
+                if self.reservation_table_.is_edge_collision(self, current.state, new_state):
+                    continue
             self.succ_.append((new_state, a))
         return self.succ_[:]
 
