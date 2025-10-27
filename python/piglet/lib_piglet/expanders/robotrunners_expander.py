@@ -49,8 +49,7 @@ class robotrunners_expander(base_expander):
     def get_actions(self, state: tuple):
         x = state[0]
         y = state[1]
-        t = state[2]
-        direction = state[3]
+        direction = state[2]
         retval = []
 
         if (x < 0 or x >= int(self.domain_.height_) or y < 0 or y >= int(self.domain_.width_)):
@@ -59,24 +58,24 @@ class robotrunners_expander(base_expander):
         if (self.domain_.get_tile(state) == False):
             return retval
 
-        if (direction == Directions.NORTH and self.domain_.get_tile((x,y-1,t))):
+        if (direction == Directions.NORTH and self.domain_.get_tile((x,y-1))):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1
-        elif (direction == Directions.EAST and self.domain_.get_tile((x+1,y,t))):
+        elif (direction == Directions.EAST and self.domain_.get_tile((x+1,y))):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1
-        elif (direction == Directions.SOUTH and self.domain_.get_tile((x,y+1,t))):
+        elif (direction == Directions.SOUTH and self.domain_.get_tile((x,y+1))):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1
-        elif (direction == Directions.WEST and self.domain_.get_tile((x-1,y,t))):
+        elif (direction == Directions.WEST and self.domain_.get_tile((x-1,y))):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1
 
-        if (self.domain_.get_tile((x,y,t))):
+        if (self.domain_.get_tile((x,y))):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.ROTATE_CW
             retval[-1].cost_ = 1
@@ -92,8 +91,7 @@ class robotrunners_expander(base_expander):
     def __move(self, curr_state: tuple, move):
         x = curr_state[0]
         y = curr_state[1]
-        t = curr_state[2]
-        direction = curr_state[3]
+        direction = curr_state[2]
         if move == Move_Actions.ROTATE_CW:
             direction = (direction + 1) % 4
         elif move == Move_Actions.ROTATE_CCW:
@@ -108,7 +106,7 @@ class robotrunners_expander(base_expander):
             elif direction == Directions.WEST:
                 x -= 1
         
-        return x, y, t, direction
+        return x, y, direction
 
     def __str__(self):
         return str(self.domain_)
