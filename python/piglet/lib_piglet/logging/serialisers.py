@@ -99,7 +99,8 @@ class robotrunners_serialiser(domain_serialiser[robotrunners_state]):
                     "alpha": 1,
                     "x": "${{ $.x }}",
                     "y": "${{ $.y }}",
-                    "direction": "${{ $.direction}}"
+                    "direction": "${{ $.direction }}",
+                    "t": "${{ $.t }}"
                 }
             ]
         }
@@ -109,7 +110,7 @@ class robotrunners_serialiser(domain_serialiser[robotrunners_state]):
 
     def serialise(self, current: search_node[robotrunners_state]):
         [x, y, direction] = current.state_
-        return {"x": y, "y": x, "direction": int(direction)}
+        return {"x": y, "y": x, "direction": int(direction), "t": current.timestep_}
 
 
 class grid_serialiser(domain_serialiser[grid_state]):
