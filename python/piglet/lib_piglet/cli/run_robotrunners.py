@@ -4,6 +4,8 @@
 
 from lib_piglet.cli.cli_tool import task, args_interface, DOMAIN_TYPE
 from lib_piglet.domains import gridmap, robotrunners
+from lib_piglet.domains.robotrunners import Directions
+
 from lib_piglet.expanders import (
     grid_expander,
     robotrunners_expander,
@@ -39,15 +41,21 @@ def run_task(t: task, args: args_interface, logger: search_logger):
     # if search engine exist and domain file doesn't change, just update start and goal
     if search_engine is not None and domain.domain_file_ is not None and t.domain == domain.domain_file_:
         if t.domain_type == DOMAIN_TYPE.gridmap:
-            start = t.start_state
-            goal = t.goal_state
+            sx, sy = t.start_state
+            gx, gy = t.goal_state
+            start = (sx, sy, Directions.NORTH)
+            goal = (gx, gy, Directions.NORTH)
 
     # if no search engine or domain file change, reload domain.
     else:
         if t.domain_type == DOMAIN_TYPE.gridmap:
             domain = robotrunners.robotrunners(t.domain)
-            start = t.start_state
-            goal = t.goal_state
+            sx, sy = t.start_state
+            gx, gy = t.goal_state
+            start = (sx, sy, Directions.NORTH)
+            goal = (gx, gy, Directions.NORTH)
+            # start = t.start_state
+            # goal = t.goal_state
             expander = robotrunners_expander.robotrunners_expander(domain)
             heuristic = gridmap_h.piglet_heuristic
 

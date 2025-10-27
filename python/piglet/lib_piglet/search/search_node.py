@@ -56,10 +56,12 @@ class search_node(Generic[State]):
     def __eq__(self, other):
         if other == None:
             return False
-        return self.state_ == other.state_
+        return self.state_ == other.state_ and self.timestep_ == other.timestep_
 
     def __hash__(self):
-        return hash(self.state_)
+        x, y, direction = self.state_
+        combined_state = (x, y, direction, self.timestep_)
+        return hash(combined_state)
 
 
 # Compare two node by g value

@@ -2,6 +2,7 @@ from re import sub
 from typing import Generic, TypeVar
 from lib_piglet.domains.graph import vertex
 from lib_piglet.domains.gridmap import grid_state
+from lib_piglet.domains.robotrunners import robotrunners_state
 from lib_piglet.domains.n_puzzle import puzzle_state
 from lib_piglet.search.search_node import search_node
 
@@ -67,6 +68,48 @@ class n_puzzle_serialiser(domain_serialiser[puzzle_state]):
             "height": state.state_.width(),
             "board": chunk(state.state_.state_list_, state.state_.width()),
         }
+
+
+class robotrunners_serialiser(domain_serialiser[robotrunners_state]):
+    def views(self):
+        return {
+            "main": [
+                {
+                    "$if": "${{ $.type != 'stats' }}",
+                    "$": "rect",
+                    "width": 1,
+                    "height": 1,
+                    "fill": 
+                        sub("\s+", " ", """
+                        ${{
+                            ({
+                                destination: color.red, 
+                                source: color.green, 
+                                close: color.pink, 
+                                expand: color.deepPurple,
+                                generating: color.amber, 
+                                'generating-new': color.amber, 
+                                'generating-pruned': color.blueGrey, 
+                                'dominated-by': color.amber, 
+                                'relaxed-by': color.amber, 
+                                solution: color.blue
+                            })[$.type] ?? theme.accent
+                        }}
+                    """).strip(),
+                    "alpha": 1,
+                    "x": "${{ $.x }}",
+                    "y": "${{ $.y }}",
+                    "direction": "${{ $.direction}}"
+                }
+            ]
+        }
+
+    def pivot(self):
+        return {"x": "${{ $.x + 0.5 }}", "y": "${{ $.y + 0.5 }}", "scale": 1}
+
+    def serialise(self, current: search_node[robotrunners_state]):
+        [x, y, direction] = current.state_
+        return {"x": y, "y": x, "direction": direction}
 
 
 class grid_serialiser(domain_serialiser[grid_state]):
@@ -152,6 +195,7 @@ class graph_serialiser(domain_serialiser[vertex]):
 
 serialisers: dict = {
     "grid": grid_serialiser(),
+    "robotrunners": robotrunners_serialiser(),
     "n_puzzle": n_puzzle_serialiser(),
     "graph": graph_serialiser(),
 }
