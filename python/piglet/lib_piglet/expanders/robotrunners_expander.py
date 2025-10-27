@@ -55,7 +55,7 @@ class robotrunners_expander(base_expander):
         if (x < 0 or x >= int(self.domain_.height_) or y < 0 or y >= int(self.domain_.width_)):
             return retval
 
-        if (self.domain_.get_tile(state) == False):
+        if (self.domain_.get_tile((x,y)) == False):
             return retval
 
         if (direction == Directions.NORTH and self.domain_.get_tile((x,y-1))):
@@ -98,13 +98,13 @@ class robotrunners_expander(base_expander):
             direction = Directions((direction.value - 1) % 4)
         elif move == Move_Actions.MOVE_FORWARD:
             if direction == Directions.NORTH:
-                y -= 1
-            elif direction == Directions.EAST:
-                x += 1
-            elif direction == Directions.SOUTH:
-                y += 1
-            elif direction == Directions.WEST:
                 x -= 1
+            elif direction == Directions.EAST:
+                y += 1
+            elif direction == Directions.SOUTH:
+                x += 1
+            elif direction == Directions.WEST:
+                y -= 1
         
         return x, y, direction
 
