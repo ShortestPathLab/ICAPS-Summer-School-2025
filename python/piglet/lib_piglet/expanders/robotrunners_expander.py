@@ -8,7 +8,7 @@
 from lib_piglet.search.search_node import search_node
 from lib_piglet.expanders.base_expander import base_expander
 from lib_piglet.domains.robotrunners import  Move_Actions, robotrunners_action, Directions, robotrunners
-from lib_piglet.constraints.grid_constraints import robotrunners_reservation_table
+from lib_piglet.constraints.robotrunners_constraints import robotrunners_reservation_table
 
 class robotrunners_expander(base_expander):
 
