@@ -28,7 +28,7 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - name: Run Dockerfile generation script
-              run: bash CreateDockerfile.sh
+              run: bash CreateDockerfileForOPSS25.sh
             - name: Build image
               run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
               #
