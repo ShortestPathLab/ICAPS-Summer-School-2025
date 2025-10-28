@@ -2,7 +2,7 @@ import MAPF
 
 from typing import Dict, List, Tuple,Set
 from queue import PriorityQueue
-import numpy as np
+# import numpy as np
 import datetime
 
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
@@ -19,6 +19,7 @@ class pyMAPFPlanner:
             preprocess_time_limit (_type_): _description_
         """
         pass
+        print("pyMAPFPlanner initialized")
         return True
 
     def plan(self, time_limit):
@@ -39,6 +40,7 @@ class pyMAPFPlanner:
         """
 
         time_remaining = self.env.plan_start_time + datetime.timedelta(milliseconds=time_limit) - self.env.plan_current_time()
+        print(f"pyMAPFPlanner time remaining: {time_remaining.total_seconds()} seconds")
 
         # example of only using single-agent search
         return self.sample_priority_planner(int(time_remaining.total_seconds() * 1000))
@@ -62,7 +64,7 @@ class pyMAPFPlanner:
                 elif incr == -1 or incr == 3:
                     actions[i] = MAPF.Action.CCR
         actions = [int(a) for a in actions]
-        return np.array(actions, dtype=int)
+        return actions
 
     def single_agent_plan(self, start: int, start_direct: int, end: int):
         path = []

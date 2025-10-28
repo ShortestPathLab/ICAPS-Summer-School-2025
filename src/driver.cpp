@@ -35,11 +35,13 @@ void sigint_handler(int a)
 
 int main(int argc, char **argv)
 {
-#ifdef PYTHON
-#if PYTHON
-    pybind11::initialize_interpreter();
-#endif
-#endif
+// #ifdef PYTHON
+// #if PYTHON
+//     pybind11::initialize_interpreter();
+//     // pybind11::scoped_interpreter guard{};
+//     // pybind11::gil_scoped_release release;
+// #endif
+// #endif
     // Declare the supported options.
     po::options_description desc("Allowed options");
     desc.add_options()("help", "produce help message")
@@ -94,7 +96,16 @@ int main(int argc, char **argv)
 
 #ifdef PYTHON
 #if PYTHON
-        planner = new PyEntry();
+        // planner = new PyEntry();
+        pybind11::scoped_interpreter guard{};   // init Python
+
+        { // build any Python-backed objects while HOLDING the GIL
+            pybind11::gil_scoped_acquire acq;
+            // e.g. construct PyEntry(), which builds pyMAPFPlanner/pyTaskScheduler
+            planner = new PyEntry();              // or whatever path creates Python objects
+        } // GIL released here (acq dtor)
+
+        pybind11::gil_scoped_release rel;       // now main stays without the GIL
 #else
         planner = new Entry();
 #endif
