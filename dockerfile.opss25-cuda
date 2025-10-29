@@ -1,4 +1,4 @@
-FROM pytorch/pytorch:2.4.1-cuda11.8-cudnn9-devel as base
+FROM pytorch/pytorch:2.4.1-cuda11.8-cudnn9-devel AS base
 
 RUN pip install pybind11-global==2.10.1
 
