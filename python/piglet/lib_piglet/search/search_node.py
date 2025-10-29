@@ -29,6 +29,7 @@ class search_node(Generic[State]):
 
         self.h_: float = 0
         self.f_: float = 0
+        self.timestep_: int = 0
         self.closed_: bool = False
         self.priority_queue_handle_: object = None
         self.expanded: bool = False

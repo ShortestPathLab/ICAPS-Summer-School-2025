@@ -7,4 +7,5 @@ test.txt
 .DS_Store
 python/tmp
 **/__pycache__
+python/piglet/**.trace.yaml
 output.json
