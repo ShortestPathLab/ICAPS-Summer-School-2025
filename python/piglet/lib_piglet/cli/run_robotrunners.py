@@ -43,8 +43,8 @@ def run_task(t: task, args: args_interface, logger: search_logger):
         if t.domain_type == DOMAIN_TYPE.gridmap:
             sx, sy = t.start_state
             gx, gy = t.goal_state
-            start = (sx, sy, Directions.NORTH)
-            goal = (gx, gy, Directions.NORTH)
+            start = (sx, sy, Directions.NORTH, 0)
+            goal = (gx, gy, Directions.NONE, -1)
 
     # if no search engine or domain file change, reload domain.
     else:
@@ -52,10 +52,8 @@ def run_task(t: task, args: args_interface, logger: search_logger):
             domain = robotrunners.robotrunners(t.domain)
             sx, sy = t.start_state
             gx, gy = t.goal_state
-            start = (sx, sy, Directions.NORTH)
-            goal = (gx, gy, Directions.NORTH)
-            # start = t.start_state
-            # goal = t.goal_state
+            start = (sx, sy, Directions.NORTH, 0)
+            goal = (gx, gy, Directions.NONE, -1)
             expander = robotrunners_expander.robotrunners_expander(domain)
             heuristic = gridmap_h.piglet_heuristic
 

@@ -35,9 +35,9 @@ class robotrunners_expander(base_expander):
             new_state = self.__move(current.state_, a.move_)
             # check that an action is valid given reservation tables
             if self.reservation_table_ is not None:
-                if self.reservation_table_.is_reserved(current.state_, current.timestep_+1):
+                if self.reservation_table_.is_reserved(current.state_):
                     continue
-                if self.reservation_table_.is_edge_collision(current.state_, new_state, current.timestep_+1):
+                if self.reservation_table_.is_edge_collision(current.state_, new_state):
                     continue
             self.succ_.append((new_state, a))
         return self.succ_[:]
@@ -47,9 +47,7 @@ class robotrunners_expander(base_expander):
     # @param loc A (x,y) coordinate tuple
     # @return a list of gridaction object.
     def get_actions(self, state: tuple):
-        x = state[0]
-        y = state[1]
-        direction = state[2]
+        x, y, direction, t = state
         retval = []
 
         if (x < 0 or x >= int(self.domain_.height_) or y < 0 or y >= int(self.domain_.width_)):
@@ -89,9 +87,7 @@ class robotrunners_expander(base_expander):
         return retval
 
     def __move(self, curr_state: tuple, move):
-        x = curr_state[0]
-        y = curr_state[1]
-        direction = curr_state[2]
+        x, y, direction, t = curr_state
         if move == Move_Actions.ROTATE_CW:
             direction = Directions((direction.value + 1) % 4)
         elif move == Move_Actions.ROTATE_CCW:
@@ -106,7 +102,7 @@ class robotrunners_expander(base_expander):
             elif direction == Directions.WEST:
                 y -= 1
         
-        return x, y, direction
+        return x, y, direction, t+1
 
     def __str__(self):
         return str(self.domain_)

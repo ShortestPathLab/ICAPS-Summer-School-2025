@@ -18,6 +18,7 @@ class Directions(IntEnum):
     EAST = 1
     SOUTH = 2
     WEST = 3
+    NONE = 4
     
     def __str__(self):
         return self.name
@@ -56,9 +57,12 @@ class robotrunners(base_domain[robotrunners_state]):
         self.map_size_: int = int(0)
         self.domain_file_: str = filename
         self.load(filename)
+        self.use_time: bool = False
 
     def is_goal(self, current_state, goal_state):
-        return current_state == goal_state
+        x, y, direction, t = current_state
+        gx, gy, g_direction, gt = goal_state
+        return (x, y) == (gx, gy)
 
     # Load map in the map instance
     # @param filename The path to map file.
