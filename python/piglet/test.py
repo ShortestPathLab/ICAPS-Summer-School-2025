@@ -34,7 +34,7 @@ open_list = bin_heap(sn.compare_node_f)
 engine = graph_search.graph_search
 search_engine = engine(open_list, expander, heuristic_function=heuristic_function)
 # solution = search_engine.get_path((1,2,Directions.NORTH,0),(2,1,Directions.NONE,-1))
-solution = search_engine.get_path((1,10,Directions.NORTH,0),(0,15,Directions.NONE,-1))
+solution = search_engine.get_path((11,8,Directions.EAST,0),(10,9,Directions.NONE,-1))
 
 
 # print solution

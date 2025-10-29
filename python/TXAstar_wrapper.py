@@ -13,6 +13,7 @@ import lib_piglet.search.search_node as sn
 from lib_piglet.utils.data_structure import bin_heap
 from lib_piglet.domains.robotrunners import Directions
 from lib_piglet.constraints.robotrunners_constraints import robotrunners_reservation_table
+import lib_piglet.solution.solution as s
 
 
 class PigletSpaceTimeWrapper:
@@ -51,27 +52,31 @@ class PigletSpaceTimeWrapper:
             raise ValueError("Invalid MovingAI map header: missing width/height")
 
         # Build Piglet environment
+        self.default_res_table = robotrunners_reservation_table(self.cols, self.rows)
         self._dm = robotrunners.robotrunners(map_file)
         self._heuristic = gridmap_h.piglet_heuristic
-        self._engine_ctor = graph_search.graph_search
-        self.default_res_table = robotrunners_reservation_table(self.cols, self.rows)
+        self._engine = graph_search.graph_search
         self._expander = robotrunners_expander(self._dm, self.default_res_table)
+        self.open_list = bin_heap(sn.compare_node_f)
+        self.search_engine = self._engine(self.open_list, self._expander, heuristic_function=self._heuristic)
 
     # ---------------------------------------------------------------------- #
     # Search path (forward, MAPFPlanner format)
     # ---------------------------------------------------------------------- #
-    def search_path(self, start_loc: int, start_dir: int, goal_loc: int) -> List[Tuple[int, int]]:
+    def search_path(self, start_loc: int, start_dir: int, start_time, goal_loc: int) -> List[Tuple[int, int]]:
         print(f"Searching path from loc {start_loc} dir {start_dir} to goal loc {goal_loc}")
         sr, sc = self._loc_to_rc(start_loc)
         er, ec = self._loc_to_rc(goal_loc)
         sdir = self._dir_to_piglet(start_dir)
-        start_state = (sr, sc, sdir)
-        goal_state = (er, ec, Directions.EAST) # set to east for now ;
-
-        raw_path = self._search_once(start_state, goal_state)
+        start_state = (sr, sc, sdir, start_time)
+        goal_state = (er, ec, Directions.NONE,-1) # set to east for now ;
+        print(f"Converted to Piglet states: start {start_state}, goal {goal_state}")
+        raw_path = self._search_once((11,8,Directions.EAST,0),(10,9,Directions.NONE,-1))
+        print (raw_path)
         if not raw_path:
             return []
 
+        # print( "Raw path: ohhhhhhh path!!!!!!!!!!!!")
         # Accept either tuples or objects with .state
         converted: List[Tuple[int, int]] = []
         for st in raw_path:
@@ -83,13 +88,13 @@ class PigletSpaceTimeWrapper:
         # Omit the start state so path[0] is the next step (turn or move)
         if converted and converted[0] == (start_loc, start_dir):
             converted = converted[1:]
-
+        
         return converted
 
     
 
     # -------- Reserve path forward (start → goal) --------
-    def reserve_forward(
+    def reserve_path(
         self,
         mapf_path: List[Tuple[int, int]],
         start_loc: int,
@@ -127,7 +132,7 @@ class PigletSpaceTimeWrapper:
             res_table.add_vertex((curr_x, curr_y, t), agent_id)
 
     # ---- Remove (unreserve) the same forward path reservations ----
-    def remove_forward(
+    def remove_path(
         self,
         mapf_path: List[Tuple[int, int]],
         start_loc: int,
@@ -167,16 +172,13 @@ class PigletSpaceTimeWrapper:
         res_table.del_vertex((x0, y0, start_time), agent_id)
 
     
-    # ---------------------------------------------------------------------- #
-    # Internal helpers
-    # ---------------------------------------------------------------------- #
+    def solution_to_state_list(self, solution):
+        return [node.state_ for node in solution.paths_]
+
     def _search_once(self, start_state, goal_state):
-        open_list = bin_heap(sn.compare_node_f)
-        engine = self._engine_ctor(open_list, self._expander, heuristic_function=self._heuristic)
-        try:
-            return engine.get_path(start_state, goal_state).to_state_list()
-        except Exception:
-            return None
+        self.search_engine.open_list_.clear()
+        solution = self.search_engine.get_path(start_state, goal_state)
+        return self.solution_to_state_list(solution)
 
     def _loc_to_rc(self, loc: int) -> Tuple[int, int]:
         return loc // self.cols, loc % self.cols
@@ -209,6 +211,15 @@ class PigletSpaceTimeWrapper:
 
 if __name__ == "__main__":
     # Simple test
-    wrapper = PigletSpaceTimeWrapper("example_problems/random.domain/maps/random-32-32-20.map")
-    path = wrapper.search_path(42, 0, 15)  # from loc 0 facing N to loc 255
+    wrapper = PigletSpaceTimeWrapper("../example_problems/random.domain/maps/random-32-32-20.map")
+    # Searching path from loc 360 dir 0 to goal loc 329
+
+    # path = wrapper.get_path((11,8,Directions.NORTH,0),(10,9,Directions.NONE,-1))
+    path = wrapper.search_path(360, 0, 0, 329)  # from loc 0 facing N to loc 255
+    # path = wrapper.get_path((11, 8, Directions.EAST, 0),(10, 9, Directions.NONE, -1))
     print("Path:", path)
+
+    # In utils.py
+
+    # lorr_map_to_piglet_map
+
