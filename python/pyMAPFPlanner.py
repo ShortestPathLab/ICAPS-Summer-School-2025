@@ -4,6 +4,8 @@ from typing import Dict, List, Tuple,Set
 from queue import PriorityQueue
 import numpy as np
 import datetime
+import sys, os
+from TXAstar_wrapper import PigletSpaceTimeWrapper
 
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
 
@@ -11,6 +13,8 @@ class pyMAPFPlanner:
     def __init__(self, env=None) -> None:
         if env is not None:
             self.env = env
+        map_file = "example_problems/random.domain/maps/random-32-32-20.map"
+        self.piglet = PigletSpaceTimeWrapper(map_file)
 
     def initialize(self, preprocess_time_limit: int):
         """_summary_
@@ -191,46 +195,81 @@ class pyMAPFPlanner:
                             neighbor_direction, next_node[2])]=curr
         return path
 
-    def sample_priority_planner(self,time_limit:int):
-        actions = [MAPF.Action.W] * len(self.env.curr_states)
-        reservation = set()  # loc1, loc2, t
+    # def sample_priority_planner(self,time_limit:int):
+    #     actions = [MAPF.Action.W] * len(self.env.curr_states)
+    #     reservation = set()  # loc1, loc2, t
 
-        for i in range(self.env.num_of_agents):
-            path = []
-            if not self.env.goal_locations[i]:
-                path.append((self.env.curr_states[i].location, self.env.curr_states[i].orientation))
-                reservation.add((self.env.curr_states[i].location, -1, 1))
+    #     for i in range(self.env.num_of_agents):
+    #         path = []
+    #         if not self.env.goal_locations[i]:
+    #             path.append((self.env.curr_states[i].location, self.env.curr_states[i].orientation))
+    #             reservation.add((self.env.curr_states[i].location, -1, 1))
 
-        for i in range(self.env.num_of_agents):
-            path = []
-            if self.env.goal_locations[i]:
-                path = self.space_time_plan(
-                    self.env.curr_states[i].location,
-                    self.env.curr_states[i].orientation,
-                    self.env.goal_locations[i][0][0],
-                    reservation
-                )
+    #     for i in range(self.env.num_of_agents):
+    #         path = []
+    #         if self.env.goal_locations[i]:
+    #             path = self.space_time_plan(
+    #                 self.env.curr_states[i].location,
+    #                 self.env.curr_states[i].orientation,
+    #                 self.env.goal_locations[i][0][0],
+    #                 reservation
+    #             )
             
+    #         if path:
+    #             if path[0][0] != self.env.curr_states[i].location:
+    #                 actions[i] = MAPF.Action.FW
+    #             elif path[0][1] != self.env.curr_states[i].orientation:
+    #                 incr = path[0][1] - self.env.curr_states[i].orientation
+    #                 if incr == 1 or incr == -3:
+    #                     actions[i] = MAPF.Action.CR
+    #                 elif incr == -1 or incr == 3:
+    #                     actions[i] = MAPF.Action.CCR
+
+    #             last_loc = -1
+    #             t = 1
+    #             for p in path:
+    #                 reservation.add((p[0], -1, t))
+    #                 if last_loc != -1:
+    #                     reservation.add((last_loc, p[0], t))
+    #                 last_loc = p[0]
+    #                 t += 1
+
+    #     return actions
+    
+
+    def sample_priority_planner(self, time_limit: int):
+        print("inside the planner")
+        actions = [MAPF.Action.W] * len(self.env.curr_states)
+
+        for i in range(self.env.num_of_agents):
+            if not self.env.goal_locations[i]:
+                continue
+
+            start = self.env.curr_states[i].location
+            start_dir = self.env.curr_states[i].orientation
+            goal = self.env.goal_locations[i][0][0]
+
+            path = self.piglet.search_path(start, start_dir, goal)
+            # print(path)
+            # print(type(path))
             if path:
-                if path[0][0] != self.env.curr_states[i].location:
+                print("hahdfhsdhfadshfdsahfd")
+                next_loc, next_dir = path[0]
+                cur_loc = start
+                cur_dir = start_dir
+                print (f"Agent {i}: from loc {cur_loc} dir {cur_dir} to next loc {next_loc} dir {next_dir}")
+                if next_loc != cur_loc:
                     actions[i] = MAPF.Action.FW
-                elif path[0][1] != self.env.curr_states[i].orientation:
-                    incr = path[0][1] - self.env.curr_states[i].orientation
-                    if incr == 1 or incr == -3:
+                elif next_dir != cur_dir:
+                    incr = (next_dir - cur_dir) % 4
+                    if incr == 1:
                         actions[i] = MAPF.Action.CR
-                    elif incr == -1 or incr == 3:
+                    elif incr == 3:
                         actions[i] = MAPF.Action.CCR
 
-                last_loc = -1
-                t = 1
-                for p in path:
-                    reservation.add((p[0], -1, t))
-                    if last_loc != -1:
-                        reservation.add((last_loc, p[0], t))
-                    last_loc = p[0]
-                    t += 1
+                self.piglet.reserve_forward(path, start, i, start_time=0)
 
-        return actions
+        return np.array([int(a) for a in actions], dtype=int)
 
 
 

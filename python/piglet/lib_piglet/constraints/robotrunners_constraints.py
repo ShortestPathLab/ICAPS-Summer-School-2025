@@ -10,6 +10,7 @@ class robotrunners_reservation_table:
     def __init__(self,width, height):
         self.width_ = width
         self.height_ = height
+        self.table_ = [[None for _ in range(self.height_)] for _ in range(self.width_)]
         self.vertextable_ = [[None] * int(self.width_) for x in range(int(self.height_))]
         self.edgetable_ = {}
 
