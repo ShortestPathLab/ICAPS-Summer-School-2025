@@ -498,5 +498,4 @@ class pyMAPFPlanner:
 
 if __name__ == "__main__":
     test_planner = pyMAPFPlanner()
-    test_planner.get_TXAstar_path(11,Directions.EAST,10)
-    # test_planner.initialize(100)
+    test_planner.initialize(100)
