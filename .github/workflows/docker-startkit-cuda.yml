@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Build and deploy Docker Start Kit image
+name: Build and deploy Docker Start Kit CUDA-enabled image
 
 on:
   # Runs on pushes targeting the default branch
@@ -15,7 +15,7 @@ permissions:
   packages: write
   id-token: write
 env:
-  IMAGE_NAME: opss25-startkit
+  IMAGE_NAME: opss25-startkit-cuda
 #
 jobs:
   # This pushes the image to GitHub Packages.
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build image
-        run: docker build . --file dockerfile.opss25 --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+        run: docker build . --file dockerfile.opss25-cuda --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
         #
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

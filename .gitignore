@@ -8,3 +8,4 @@ test.txt
 python/tmp
 **/__pycache__
 output.json
+/.cache
