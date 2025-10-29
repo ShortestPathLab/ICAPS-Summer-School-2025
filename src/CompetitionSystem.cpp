@@ -187,6 +187,12 @@ void BaseSystem::simulate(int simulation_time)
 
         // update tasks
         task_manager.update_tasks(curr_states, proposed_schedule, simulator.get_curr_timestep());
+
+        if (num_of_agents == 1 && task_manager.all_tasks_finished)
+        {
+            logger->log_info("all tasks finished", simulator.get_curr_timestep());
+            break;
+        }
     }
 }
 

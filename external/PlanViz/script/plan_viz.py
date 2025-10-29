@@ -1519,24 +1519,46 @@ class PlanViz2024:
 
 
     def move_to_conflict(self, event):
+        # if self.is_run.get() is True:
+        #     return
+
+        # _sid_ = event.widget.curselection()  # get all selected indices
+        # if len(_sid_) < 1:
+        #     return
+        # _sid_ = _sid_[0]
+        # conf = self.shown_conflicts[self.conflict_listbox.get(_sid_)]
+        # if len(conf[0]) == 5:
+        #     task_id, agent1, agent2, tstep_std, description = conf[0]
+        # if len(conf[0]) == 4:
+        #     agent1, agent2, tstep_std, description = conf[0]    
+        # if agent1 != -1 and agent1 < self.pcf.team_size:
+        #     self.change_ag_color(agent1, AGENT_COLORS["collide"])
+        # if agent2 != -1 and agent2 < self.pcf.team_size:
+        #     self.change_ag_color(agent2, AGENT_COLORS["collide"])
+        # self.shown_conflicts[self.conflict_listbox.get(_sid_)][1] = True
+        # self.new_time.set(int(tstep_std)-1)
+        # self.update_curtime()
         if self.is_run.get() is True:
             return
 
-        _sid_ = event.widget.curselection()  # get all selected indices
-        if len(_sid_) < 1:
-            return
-        _sid_ = _sid_[0]
+        _sid_ = event.widget.curselection()[0]  # get all selected indices
         conf = self.shown_conflicts[self.conflict_listbox.get(_sid_)]
-        if len(conf[0]) == 5:
-            task_id, agent1, agent2, tstep_std, description = conf[0]
-        if len(conf[0]) == 4:
-            agent1, agent2, tstep_std, description = conf[0]    
-        if agent1 != -1 and agent1 < self.pcf.team_size:
-            self.change_ag_color(agent1, AGENT_COLORS["collide"])
-        if agent2 != -1 and agent2 < self.pcf.team_size:
-            self.change_ag_color(agent2, AGENT_COLORS["collide"])
+        if conf[0][0] != -1 and conf[0][0] < self.pcf.team_size:
+            self.change_ag_color(conf[0][0], AGENT_COLORS["collide"])
+        if conf[0][1] != -1 and conf[0][1] < self.pcf.team_size:
+            self.change_ag_color(conf[0][1], AGENT_COLORS["collide"])
         self.shown_conflicts[self.conflict_listbox.get(_sid_)][1] = True
-        self.new_time.set(int(tstep_std)-1)
+        self.new_time.set(int(conf[0][2])-1)
+        self.update_curtime()
+
+        for (_, _agent_) in self.pcf.agents.items():
+            _agent_.path = _agent_.plan_path
+        self.move_agents_per_timestep()
+        time.sleep(1.5)
+
+        for (_, _agent_) in self.pcf.agents.items():
+            _agent_.path = _agent_.exec_path
+        self.new_time.set(int(conf[0][2])-1)
         self.update_curtime()
 
 

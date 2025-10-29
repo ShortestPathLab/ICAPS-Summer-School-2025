@@ -22,7 +22,7 @@ from lib_piglet.cli.cli_tool import (
 )
 from lib_piglet.cli.run_robotrunners import run_multi_tasks, run_task
 from lib_piglet.logging.search_logger import search_logger
-from lib_piglet.utils.identifier import get_random_id
+from lib_piglet.utils.identifier import get_random_id, get_time_id
 from lib_piglet.output.outputs import outputs
 from lib_piglet.output.base_output import base_output
 
@@ -80,7 +80,7 @@ def main():
             task = parse_problem(content, domain_type)
 
             with get_logger(
-                args.log, f"{'-'.join([args.framework, args.strategy])}-{get_random_id()}.trace.yaml",
+                args.log, f"{'-'.join([args.framework, args.strategy])}-{ran}-{get_time_id()}.trace.yaml",
             ) as logger:
                 if args.multi_agent:
                     multi_tasks.append(task)
