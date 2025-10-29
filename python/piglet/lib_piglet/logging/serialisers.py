@@ -96,7 +96,7 @@ class robotrunners_serialiser(domain_serialiser[robotrunners_state]):
                             })[$.type] ?? theme.accent
                         }}
                     """).strip(),
-                    "alpha": 1,
+                    "alpha": "${{ ($.expanded || $.type == 'generating' || $.type == 'generating-new') ? 0.2 : 1 }}",
                     "x": "${{ $.x }}",
                     "y": "${{ $.y }}",
                     "direction": "${{ $.direction }}",
