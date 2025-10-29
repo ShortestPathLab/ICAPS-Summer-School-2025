@@ -35,9 +35,9 @@ class robotrunners_expander(base_expander):
             new_state = self.__move(current.state_, a.move_)
             # check that an action is valid given reservation tables
             if self.reservation_table_ is not None:
-                if self.reservation_table_.is_reserved( current.state_):
+                if self.reservation_table_.is_reserved(current.state_, current.timestep_+1):
                     continue
-                if self.reservation_table_.is_edge_collision(current.state_, new_state):
+                if self.reservation_table_.is_edge_collision(current.state_, new_state, current.timestep_+1):
                     continue
             self.succ_.append((new_state, a))
         return self.succ_[:]
