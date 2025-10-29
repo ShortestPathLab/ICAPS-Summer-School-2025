@@ -20,7 +20,7 @@ FROM base
 
 COPY --from=builder /MAPF/codes/build /MAPF/codes/build
 
-RUN python3 -m pip install numpy
+RUN python3 -m pip install numpy pyyaml
 
 WORKDIR /MAPF/codes/
 
