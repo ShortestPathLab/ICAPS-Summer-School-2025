@@ -149,6 +149,10 @@ list<int> TaskManager::check_finished_tasks(vector<State>& states, int timestep)
             events.push_back(make_tuple(timestep,k,task->task_id,task->idx_next_loc));
         }
     }
+    if (num_of_task_finish == tasks.size())
+    {
+        all_tasks_finished = true;
+    }
     return finished_tasks_this_timestep;
 }
 

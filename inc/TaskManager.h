@@ -36,6 +36,8 @@ public:
 
     int get_number_errors() const {return schedule_errors.size();}
 
+    bool all_tasks_finished = false;
+
 
 
     TaskManager(std::vector<list<int>>& tasks, int num_of_agents):
