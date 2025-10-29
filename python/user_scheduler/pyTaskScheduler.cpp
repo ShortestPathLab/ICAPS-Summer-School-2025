@@ -37,7 +37,7 @@ pyTaskScheduler::pyTaskScheduler(SharedEnvironment* env): TaskScheduler(env)
 
 void pyTaskScheduler::initialize(int preprocess_time_limit)
 {
-    pybind11::gil_scoped_release release;
+    // pybind11::gil_scoped_release release;
     pybind11::gil_scoped_acquire acquire;
     std::cout<<"pyTaskScheduler begin to initialize"<<std::endl;
     py_scheduler.attr("initialize")(preprocess_time_limit);
@@ -47,7 +47,7 @@ void pyTaskScheduler::initialize(int preprocess_time_limit)
 
 void pyTaskScheduler::plan(int time_limit, std::vector<int> & proposed_schedule)
 {
-    pybind11::gil_scoped_release release;
+    // pybind11::gil_scoped_release release;
     pybind11::gil_scoped_acquire acquire;
     // std::cout<<"calling python scheduler"<<std::endl;
 
