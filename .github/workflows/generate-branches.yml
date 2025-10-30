@@ -34,35 +34,35 @@ jobs:
                     local max=$1
                     echo "Removing regions with A > $max"
                     for f in $(find . -type f -name "*.py"); do
-                    awk -v max="$max" '
-                        BEGIN { skip=0; indent="" }
-                        # Match start of ANSWER region (allow leading spaces)
-                        /^ *# *region +ANSWER +A[0-9]+:/ {
-                        match($0, /^([[:space:]]*)/, m)
-                        indent = m[1]  # capture indentation
-                        match($0, /A([0-9]+)/, m)
-                        if (m[1] > max) {
-                            skip = 1
-                            print indent "pass"    # insert placeholder
-                            next                    # skip printing region line
-                        }
-                        }
+                        awk -v max="$max" '
+                            BEGIN { skip=0; indent="" }
+                            # Match start of ANSWER region (allow leading spaces)
+                            /^ *# *region +ANSWER +A[0-9]+:/ {
+                            match($0, /^( *)/, m)
+                            indent = m[1]  # capture indentation
+                            match($0, /A([0-9]+)/, m)
+                            if (m[1] > max) {
+                                skip = 1
+                                print indent "pass"    # insert placeholder
+                                next                    # skip printing region line
+                            }
+                            }
 
-                        # Match end of region
-                        /^ *# *endregion/ {
-                        if (skip) { skip = 0; next }  # skip the end line entirely
-                        }
+                            # Match end of region
+                            /^ *# *endregion/ {
+                            if (skip) { skip = 0; next }  # skip the end line entirely
+                            }
 
-                        # Print everything else if not skipping
-                        skip == 0 { print }
-                    ' "$f" > "$f.tmp"
+                            # Print everything else if not skipping
+                            skip == 0 { print }
+                        ' "$f" > "$f.tmp"
 
-                    if [ -s "$f.tmp" ]; then
-                        mv "$f.tmp" "$f"
-                    else
-                        echo "⚠️  Skipping $f (produced empty output)"
-                        rm "$f.tmp"
-                    fi
+                        if [ -s "$f.tmp" ]; then
+                            mv "$f.tmp" "$f"
+                        else
+                            echo "⚠️  Skipping $f (produced empty output)"
+                            rm "$f.tmp"
+                        fi
                     done
                   }
 
