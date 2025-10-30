@@ -2,22 +2,20 @@ import datetime
 import random
 from typing import Dict, List, Optional, Tuple, Union
 
-# This import will be available when running within the start-kit environment
+# League of Robot Runners imports
 import MAPF
 
-import opss25
+# OPSS25 imports
+import opss25.a1.ex3_create_search
 
+# Piglet imports
 from piglet.lib_piglet.constraints.robotrunners_constraints import (
     robotrunners_reservation_table,
 )
 from piglet.lib_piglet.domains.gridmap import gridmap
 from piglet.lib_piglet.domains.robotrunners import Directions, robotrunners
-
-# Piglet imports
 from piglet.lib_piglet.expanders import (
     base_expander,
-    grid_expander,
-    robotrunners_expander,
 )
 from piglet.lib_piglet.heuristics import gridmap_h
 from piglet.lib_piglet.search import (
@@ -162,6 +160,7 @@ class pyMAPFPlanner:
             self._domain = robotrunners(
                 "example_problems/random.domain/maps/random-32-32-20.map"
             )
+            # Haven't done this part yet
             self._expander = robotrunners_expander.robotrunners_expander(
                 self._domain, self._default_res_table
             )

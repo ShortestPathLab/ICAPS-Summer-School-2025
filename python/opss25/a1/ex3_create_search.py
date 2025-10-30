@@ -15,8 +15,8 @@ from piglet.lib_piglet.domains.gridmap import gridmap
 from piglet.lib_piglet.search.graph_search import graph_search
 from piglet.lib_piglet.utils.data_structure import bin_heap
 from piglet.lib_piglet.search.search_node import search_node
-from ex1_robotrunners_expander import robotrunners_expander
-from ex2_robotrunners_heuristic import straight_heuristic
+from .ex1_robotrunners_expander import robotrunners_expander
+from .ex2_robotrunners_heuristic import straight_heuristic
 
 
 def create_search(domain: gridmap):
