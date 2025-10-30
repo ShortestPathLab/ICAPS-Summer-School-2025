@@ -125,9 +125,9 @@ class robotrunners_expander(base_expander):
             actions.append(robotrunners_action())
             actions[-1].move_ = Move_Actions.ROTATE_CCW
             actions[-1].cost_ = 1
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.WAIT
-            actions[-1].cost_ = 1
+            # actions.append(robotrunners_action())
+            # actions[-1].move_ = Move_Actions.WAIT
+            # actions[-1].cost_ = 1
 
         # endregion
 
