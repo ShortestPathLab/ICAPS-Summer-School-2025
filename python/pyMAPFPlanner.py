@@ -5,11 +5,13 @@ from typing import Dict, List, Optional, Tuple, Union
 # This import will be available when running within the start-kit environment
 import MAPF
 
+import opss25
+
 from piglet.lib_piglet.constraints.robotrunners_constraints import (
     robotrunners_reservation_table,
 )
-from piglet.lib_piglet.domains import gridmap, robotrunners
-from piglet.lib_piglet.domains.robotrunners import Directions
+from piglet.lib_piglet.domains.gridmap import gridmap
+from piglet.lib_piglet.domains.robotrunners import Directions, robotrunners
 
 # Piglet imports
 from piglet.lib_piglet.expanders import (
@@ -40,7 +42,7 @@ class pyMAPFPlanner:
 
     def __init__(self, env=None) -> None:
         if env is not None:
-            self.env = env
+            self.env: MAPF.SharedEnvironment = env
 
     def initialize(self, preprocess_time_limit: int):
         """_summary_
@@ -116,7 +118,7 @@ class pyMAPFPlanner:
 
         return self.execute_action_from_path_pool()
 
-    def get_Astar_path(self, start: int, start_direct: int, goal: int):
+    def get_astar_path(self, start: int, start_direct: int, goal: int):
         """Get path from Piglet Astar planner
 
         Args:
@@ -127,16 +129,13 @@ class pyMAPFPlanner:
             path (List[Tuple[int,int]]): list of (location, direction) tuples
         """
         if self._search_engine is None:
-            # Initialize Piglet Astar planner
-            self._domain = gridmap.gridmap(
-                "example_problems/random.domain/maps/random-32-32-20.map"
-            )
-            self._expander = grid_expander.grid_expander(self._domain)
-            self._heuristic = gridmap_h.piglet_heuristic
-            open_list = bin_heap(search_node.compare_node_f)
-            engine = graph_search.graph_search
-            self._search_engine = engine(
-                open_list, self._expander, heuristic_function=self._heuristic
+            # Create the gridmap
+            self._domain = gridmap.from_list(self.env.cols, self.env.rows, self.env.map)
+
+            # ℹ️ INFO
+            # Look, your search engine is called here!
+            self._search_engine = opss25.a1.ex3_create_search.create_search(
+                self._domain
             )
 
         self._search_engine.open_list_.clear()
@@ -145,7 +144,7 @@ class pyMAPFPlanner:
             self._to_piglet_state(goal),
         )
 
-    def get_TXAstar_path(
+    def get_txastar_path(
         self, start: int, start_direct: int, start_time: int, goal: int
     ):
         """Get path from Piglet TXAstar planner
@@ -160,7 +159,7 @@ class pyMAPFPlanner:
         if self._search_engine is None:
             # Initialize Piglet TXAstar planner
             # print(self.env.map)
-            self._domain = robotrunners.robotrunners(
+            self._domain = robotrunners(
                 "example_problems/random.domain/maps/random-32-32-20.map"
             )
             self._expander = robotrunners_expander.robotrunners_expander(
@@ -212,7 +211,7 @@ class pyMAPFPlanner:
                     [current_piglet_state, next_piglet_state], agent_id=i, start_time=0
                 )
             else:
-                piglet_path = self.get_TXAstar_path(
+                piglet_path = self.get_txastar_path(
                     self.env.curr_states[i].location,
                     self.env.curr_states[i].orientation,
                     start_time,

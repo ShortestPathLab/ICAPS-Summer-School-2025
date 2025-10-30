@@ -37,7 +37,11 @@ class grid_joint_state:
             a = other.agent_locations_
             b = self.agent_locations_
 
-        if not self.is_goal_ and not other.is_goal_ and len(self.agent_locations_) != len(self.agent_locations_):
+        if (
+            not self.is_goal_
+            and not other.is_goal_
+            and len(self.agent_locations_) != len(self.agent_locations_)
+        ):
             return False
 
         for key, item in a.items():
@@ -64,8 +68,13 @@ class grid_joint_state:
 grid_state = tuple
 
 
-
 class gridmap(base_domain[grid_state]):
+
+    @staticmethod
+    def from_list(width: int, height: int, map: list[int]):
+        m = gridmap(width, height, map)
+        m.map_ = [([map[x * width + y] for y in range(width)]) for x in range(height)]
+
     def get_name(self):
         return "grid"
 
@@ -75,7 +84,8 @@ class gridmap(base_domain[grid_state]):
         self.width_: int = int(0)
         self.map_size_: int = int(0)
         self.domain_file_: str = filename
-        self.load(filename)
+        if filename is not None:
+            self.load(filename)
 
     def is_goal(self, current_state, goal_state):
         return current_state == goal_state
@@ -154,6 +164,7 @@ class gridmap(base_domain[grid_state]):
 
     def __str__(self):
         return self.domain_file_
+
 
 class gridmap_joint(gridmap):
     start_: grid_joint_state

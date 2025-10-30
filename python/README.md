@@ -13,3 +13,5 @@ You'll find in this repository exercises for you to complete, divided in to bran
 You don't have to finish the exercises in order to move on to the next question.
 
 You'll find the code you need to modify in the `opss25` directory. And, look out for the 🏷️ EXERCISE label. The code sections marked with this label are where you need to implement your solution.
+
+Look out for the ℹ️ INFO label. The code sections marked with this label are where you can find useful information about the code.
