@@ -69,12 +69,13 @@ jobs:
 
                   # Generate branches a1-a4
                   for i in 0 1 2 3; do
+                      j=$((i + 1))
                       git checkout main -f
-                      branch="a${i}"
+                      branch="a${j}"
                       echo "Creating branch $branch..."
                       remove_answers "$i"
                       git checkout -B "$branch"
                       git add -A
-                      git commit -m "Generated $branch with answers up to A${i}" || echo "No changes to commit"
+                      git commit -m "Generated $branch with answers up to A${j}" || echo "No changes to commit"
                       git push origin "$branch" --force
                   done
