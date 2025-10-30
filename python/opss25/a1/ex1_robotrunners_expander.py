@@ -115,19 +115,6 @@ class robotrunners_expander(base_expander):
             actions[-1].cost_ = 1
         # endregion
 
-        # 🏷️ A2 EXERCISE: IMPLEMENT THE WAIT ACTION
-        #
-        # Now we're dealing with the time dimension, robots can now wait.
-        # Here, we need to determine if the robot can wait on a tile.
-        # If so, we need to add a wait action to the list.
-        #
-        # region ANSWER A2:
-        if self.domain_.get_tile((x, y)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.WAIT
-            actions[-1].cost_ = 1
-        # endregion
-
         return actions
 
     def __move(self, curr_state: tuple, move):
