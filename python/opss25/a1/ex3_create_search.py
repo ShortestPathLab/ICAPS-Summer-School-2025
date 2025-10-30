@@ -25,14 +25,14 @@ def create_search(domain: gridmap):
     # 🏷️ EXERCISE: DEFINE THE EXPANDER
     # Import and initialize the expander
     expander = None
-    # region ANSWER:
+    # region ANSWER A1:
     expander = robotrunners_expander(domain)
     # endregion
 
     # 🏷️ EXERCISE: DEFINE THE HEURISTIC
     # Import a heuristic funtion
     heuristic = None
-    # region ANSWER:
+    # region ANSWER A1:
     heuristic = straight_heuristic
     # endregion
 

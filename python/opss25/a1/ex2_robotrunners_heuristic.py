@@ -24,7 +24,7 @@ def manhattan_heuristic(current_state, goal_state):
     #
     # Write and return an expression that computes the manhattan distance.
 
-    # region ANSWER:
+    # region ANSWER A1:
 
     return abs(current_state[0] - goal_state[0]) + abs(current_state[1] - goal_state[1])
 
@@ -40,7 +40,7 @@ def straight_heuristic(current_state, goal_state):
     #
     # Write and return an expression that computes the straight distance.
 
-    # region ANSWER:
+    # region ANSWER A1:
 
     return round(
         (
