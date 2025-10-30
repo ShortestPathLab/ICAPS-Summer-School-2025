@@ -34,6 +34,7 @@ jobs:
                     local max=$1
                     echo "Removing regions with A > $max"
                     for f in $(find . -type f -name "*.py"); do
+                        echo "Processing $f..."
                         awk -v max="$max" '
                             BEGIN { skip=0; indent="" }
                             # Match start of ANSWER region (allow leading spaces)
