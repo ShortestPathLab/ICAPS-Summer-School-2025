@@ -77,6 +77,46 @@ class pyMAPFPlanner:
         """
 
         time_remaining = self.env.plan_start_time + datetime.timedelta(milliseconds=time_limit) - self.env.plan_current_time()
+
+        # ---------------------------------------------------------------------
+        # PATH PLANNING EXERCISE
+        # ---------------------------------------------------------------------
+        # Each agent will plan its path using three approaches:
+        #   1. Standard A* search
+        #   2. Time-extended A* search (TX-A*)
+        #   3. Prioritized Planning (PP Planner)
+        # ---------------------------------------------------------------------
+
+        # # --- Plan with normal A* -------------------------------------------------
+        # for agent_id in range(self.env.num_of_agents):
+        #     start_loc = self.env.curr_states[agent_id].location
+        #     start_dir = self.env.curr_states[agent_id].orientation
+        #     goal = self.env.goal_locations[agent_id][0][0]
+
+        #     self._path_pool[agent_id] = self.get_Astar_path(
+        #         start_loc,
+        #         start_dir,
+        #         goal
+        #     )
+
+        # # --- Plan with time-extended A* (TX-A*) ----------------------------------
+        for agent_id in range(self.env.num_of_agents):
+            start_loc = self.env.curr_states[agent_id].location
+            start_dir = self.env.curr_states[agent_id].orientation
+            goal = self.env.goal_locations[agent_id][0][0]
+            print("Start loc:", start_loc, "Start dir:", start_dir, "Goal:", goal)
+            self._path_pool[agent_id] = self.get_TXAstar_path(
+                start_loc,
+                start_dir,
+                start_time=0,
+                goal=goal
+            )
+
+        # ---  Plan with Prioritized Planning (PP) ---------------------------------
+        # Here we allow 10 seconds (10,000 ms) of planning time for all agents.
+        # self.run_PP_planner(time_limit_ms=10000)
+
+        
         return self.execute_action_from_path_pool()
     
 
@@ -138,19 +178,27 @@ class pyMAPFPlanner:
         """ 
         self._default_res_table.clear()
         for i in range(self.env.num_of_agents):
-            piglet_path = self.get_TXAstar_path(
-                self.env.curr_states[i].location,
-                self.env.curr_states[i].orientation,
-                0,
-                self.env.goal_locations[i][0][0],
-            )
+            if not self.env.goal_locations[i]:
+                current_piglet_state = self._to_piglet_state(self.env.curr_states[i].location, direction=self.env.curr_states[i].orientation, time=0)
+                next_piglet_state = self._to_piglet_state(self.env.curr_states[i].location, direction=self.env.curr_states[i].orientation, time=1)
+                piglet_path = [current_piglet_state, next_piglet_state]
+            else:
+                piglet_path = self.get_TXAstar_path(
+                    self.env.curr_states[i].location,
+                    self.env.curr_states[i].orientation,
+                    0,
+                    self.env.goal_locations[i][0][0],
+                )
             self._path_pool[i] = self.solution_to_mapf_state_list(piglet_path)
             #TODO: Bugs here: need to be fixed.
             # self.reserve_path(self.solution_to_piglet_state_list(piglet_path), agent_id = i, start_time=0)
     
     
+
+
+
+
     def execute_action_from_path_pool(self):
-        self.run_PP_planner(10000)
         actions = [MAPF.Action.W] * len(self.env.curr_states)
         for i in range(len(self.env.curr_states)):
             current_path = self._path_pool[i]
@@ -171,13 +219,6 @@ class pyMAPFPlanner:
     def solution_to_piglet_state_list(self, solution):
         return [node.state_ for node in solution.paths_]
     
-    def test_TXAstar(self,time_limit:int):
-        actions = [MAPF.Action.W] * len(self.env.curr_states)
-        run_PP_planner = self.run_PP_planner(time_limit)
-
-        return actions
-    
-
         # -------- Reserve path forward (start → goal) --------
     def reserve_path(
         self,
@@ -270,263 +311,6 @@ class pyMAPFPlanner:
 
 
     
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    def naive_a_star(self,time_limit):
-        actions = [MAPF.Action.W for i in range(len(self.env.curr_states))]
-        for i in range(0, self.env.num_of_agents):
-            path = []
-            if len(self.env.goal_locations[i]) == 0:
-                path.append((self.env.curr_states[i].location, self.env.curr_states[i].orientation))
-            else:
-                path = self.single_agent_plan(
-                    self.env.curr_states[i].location, self.env.curr_states[i].orientation, self.env.goal_locations[i][0][0])
-
-            if path[0][0] != self.env.curr_states[i].location:
-                actions[i] = MAPF.Action.FW
-            elif path[0][1] != self.env.curr_states[i].orientation:
-                incr = path[0][1]-self.env.curr_states[i].orientation
-                if incr == 1 or incr == -3:
-                    actions[i] = MAPF.Action.CR
-                elif incr == -1 or incr == 3:
-                    actions[i] = MAPF.Action.CCR
-        actions = [int(a) for a in actions]
-        return np.array(actions, dtype=int)
-
-    def single_agent_plan(self, start: int, start_direct: int, end: int):
-        path = []
-        open_list = PriorityQueue()
-        s = (start, start_direct, 0, self.getManhattanDistance(start, end))
-        open_list.put([0, s])
-        all_nodes = dict()
-        close_list = set()
-        parent = {(start, start_direct): None}
-        all_nodes[start*4+start_direct] = s
-        while not open_list.empty():
-            curr = (open_list.get())[1]
-            close_list.add(curr[0]*4+curr[1])
-            if curr[0] == end:
-                curr = (curr[0], curr[1])
-                while curr != None:
-                    path.append(curr)
-                    curr = parent[curr]
-                path.pop()
-                path.reverse()
-
-                break
-            neighbors = self.getNeighbors(curr[0], curr[1])
-            for neighbor in neighbors:
-                if (neighbor[0]*4+neighbor[1]) in close_list:
-                    continue
-                next_node = (neighbor[0], neighbor[1], curr[2]+1,
-                             self.getManhattanDistance(neighbor[0], end))
-                parent[(next_node[0], next_node[1])] = (curr[0], curr[1])
-                open_list.put([next_node[3]+next_node[2], next_node])
-        return path
-
-    def getManhattanDistance(self, loc1: int, loc2: int) -> int:
-        loc1_x = loc1//self.env.cols
-        loc1_y = loc1 % self.env.cols
-        loc2_x = loc2//self.env.cols
-        loc2_y = loc2 % self.env.cols
-        return abs(loc1_x-loc2_x)+abs(loc1_y-loc2_y)
-
-    def validateMove(self, loc: int, loc2: int) -> bool:
-        loc_x = loc//self.env.cols
-        loc_y = loc % self.env.cols
-        if(loc_x >= self.env.rows or loc_y >= self.env.cols or self.env.map[loc] == 1):
-            return False
-        loc2_x = loc2//self.env.cols
-        loc2_y = loc2 % self.env.cols
-        if(abs(loc_x-loc2_x)+abs(loc_y-loc2_y) > 1):
-            return False
-        return True
-
-    def getNeighbors(self, location: int, direction: int):
-        neighbors = []
-        # forward
-        candidates = [location+1, location+self.env.cols,
-                      location-1, location-self.env.cols]
-        forward = candidates[direction]
-        new_direction = direction
-        if (forward >= 0 and forward < len(self.env.map) and self.validateMove(forward, location)):
-            neighbors.append((forward, new_direction))
-        # turn left
-        new_direction = direction-1
-        if (new_direction == -1):
-            new_direction = 3
-        neighbors.append((location, new_direction))
-        # turn right
-        new_direction = direction+1
-        if (new_direction == 4):
-            new_direction = 0
-        neighbors.append((location, new_direction))
-        return neighbors
-
-    def space_time_plan(self,start: int, start_direct: int, end: int, reservation: Set[Tuple[int, int, int]]) -> List[Tuple[int, int]]:
-        path = []
-        open_list = PriorityQueue()
-        all_nodes = {}  # loc+dict, t
-        parent={}
-        s = (start, start_direct, 0, self.getManhattanDistance(start, end))
-        open_list.put((s[3], id(s), s))
-        parent[(start * 4 + start_direct, 0)]=None
-
-        while not open_list.empty():
-            n=open_list.get()
-            _, _, curr = n
-        
-            curr_location, curr_direction, curr_g, _ = curr
-
-            if (curr_location*4+curr_direction,curr_g) in all_nodes:
-                continue
-            all_nodes[(curr_location*4+curr_direction,curr_g)]=curr
-            if curr_location == end:
-                while True:
-                    path.append((curr[0], curr[1]))
-                    curr=parent[(curr[0]*4+curr[1],curr[2])]
-                    if curr is None:
-                        break
-                path.pop()
-                path.reverse()
-                break
-            
-            neighbors = self.getNeighbors(curr_location, curr_direction)
-
-            for neighbor in neighbors:
-                neighbor_location, neighbor_direction = neighbor
-
-                if (neighbor_location, -1, curr[2] + 1) in reservation:
-                    continue
-
-                if (neighbor_location, curr_location, curr[2] + 1) in reservation:
-                    continue
-
-                neighbor_key = (neighbor_location * 4 +
-                                neighbor_direction, curr[2] + 1)
-
-                if neighbor_key in all_nodes:
-                    old = all_nodes[neighbor_key]
-                    if curr_g + 1 < old[2]:
-                        old = (old[0], old[1], curr_g + 1, old[3], old[4])
-                else:
-                    next_node = (neighbor_location, neighbor_direction, curr_g + 1,
-                                self.getManhattanDistance(neighbor_location, end))
-        
-                    open_list.put(
-                        (next_node[3] + next_node[2], id(next_node), next_node))
-                
-                    parent[(neighbor_location * 4 +
-                            neighbor_direction, next_node[2])]=curr
-        return path
-
-    def sample_priority_planner(self,time_limit:int):
-        actions = [MAPF.Action.W] * len(self.env.curr_states)
-        reservation = set()  # loc1, loc2, t
-
-        for i in range(self.env.num_of_agents):
-            path = []
-            if not self.env.goal_locations[i]:
-                path.append((self.env.curr_states[i].location, self.env.curr_states[i].orientation))
-                reservation.add((self.env.curr_states[i].location, -1, 1))
-
-        for i in range(self.env.num_of_agents):
-            path = []
-            if self.env.goal_locations[i]:
-                path = self.space_time_plan(
-                    self.env.curr_states[i].location,
-                    self.env.curr_states[i].orientation,
-                    self.env.goal_locations[i][0][0],
-                    reservation
-                )
-            
-            if path:
-                if path[0][0] != self.env.curr_states[i].location:
-                    actions[i] = MAPF.Action.FW
-                elif path[0][1] != self.env.curr_states[i].orientation:
-                    incr = path[0][1] - self.env.curr_states[i].orientation
-                    if incr == 1 or incr == -3:
-                        actions[i] = MAPF.Action.CR
-                    elif incr == -1 or incr == 3:
-                        actions[i] = MAPF.Action.CCR
-
-                last_loc = -1
-                t = 1
-                for p in path:
-                    reservation.add((p[0], -1, t))
-                    if last_loc != -1:
-                        reservation.add((last_loc, p[0], t))
-                    last_loc = p[0]
-                    t += 1
-
-        return actions
-    
-
-    # def sample_priority_planner(self, time_limit: int):
-    #     print("inside the planner")
-    #     actions = [MAPF.Action.W] * len(self.env.curr_states)
-
-    #     for i in range(self.env.num_of_agents):
-    #         if not self.env.goal_locations[i]:e
-    #             continue
-
-    #         start = self.env.curr_states[i].location
-    #         start_dir = self.env.curr_states[i].orientation
-    #         goal = self.env.goal_locations[i][0][0]
-
-    #         path = self.piglet.search_path(start, start_dir, goal)
-    #         # print(path)
-    #         # print(type(path))
-    #         if path:
-    #             print("hahdfhsdhfadshfdsahfd")
-    #             next_loc, next_dir = path[0]
-    #             cur_loc = start
-    #             cur_dir = start_dir
-    #             print (f"Agent {i}: from loc {cur_loc} dir {cur_dir} to next loc {next_loc} dir {next_dir}")
-    #             if next_loc != cur_loc:
-    #                 actions[i] = MAPF.Action.FW
-    #             elif next_dir != cur_dir:
-    #                 incr = (next_dir - cur_dir) % 4
-    #                 if incr == 1:
-    #                     actions[i] = MAPF.Action.CR
-    #                 elif incr == 3:
-    #                     actions[i] = MAPF.Action.CCR
-
-    #             self.piglet.reserve_forward(path, start, i, start_time=0)
-
-    #     return np.array([int(a) for a in actions], dtype=int)
-
-
 
 if __name__ == "__main__":
     test_planner = pyMAPFPlanner()
