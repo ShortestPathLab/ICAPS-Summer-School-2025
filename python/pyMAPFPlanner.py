@@ -1,39 +1,32 @@
+import datetime
+import random
+from typing import Dict, List, Optional, Tuple, Union
+
+# This import will be available when running within the start-kit environment
 import MAPF
 
-from typing import Dict, List, Tuple, Set, Optional, Union
-from queue import PriorityQueue
-import numpy as np
-import datetime
-import sys, os
-import os
-import sys
-import random
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "piglet")))
-from lib_piglet.logging import search_logger
-from lib_piglet.output.trace_output import trace_output
+from piglet.lib_piglet.constraints.robotrunners_constraints import (
+    robotrunners_reservation_table,
+)
+from piglet.lib_piglet.domains import gridmap, robotrunners
+from piglet.lib_piglet.domains.robotrunners import Directions
+
 # Piglet imports
-from lib_piglet.expanders import (
+from piglet.lib_piglet.expanders import (
+    base_expander,
     grid_expander,
     robotrunners_expander,
-    base_expander,
 )
-from lib_piglet.search import (
-    tree_search,
-    graph_search,
+from piglet.lib_piglet.heuristics import gridmap_h
+from piglet.lib_piglet.search import (
     base_search,
+    graph_search,
     search_node,
 )
-from lib_piglet.domains import (
-    robotrunners,
-    gridmap
-)
-from lib_piglet.utils.data_structure import bin_heap
-from lib_piglet.heuristics import gridmap_h
-from lib_piglet.domains.robotrunners import Directions
-from lib_piglet.constraints.robotrunners_constraints import robotrunners_reservation_table
-
+from piglet.lib_piglet.utils.data_structure import bin_heap
 
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
+
 
 class pyMAPFPlanner:
 
@@ -49,9 +42,8 @@ class pyMAPFPlanner:
         if env is not None:
             self.env = env
         # self._default_res_table = robotrunners_reservation_table(self.env.rows, self.env.cols)
-        #TODO: NEED to wrapper this to proper name.
+        # TODO: NEED to wrapper this to proper name.
         map_file = "example_problems/random.domain/maps/random-32-32-20.map"
-
 
     def initialize(self, preprocess_time_limit: int):
         """_summary_
@@ -59,7 +51,9 @@ class pyMAPFPlanner:
         Args:
             preprocess_time_limit (_type_): _description_
         """
-        self._default_res_table = robotrunners_reservation_table(self.env.rows, self.env.cols)
+        self._default_res_table = robotrunners_reservation_table(
+            self.env.rows, self.env.cols
+        )
         return True
 
     def plan(self, time_limit):
@@ -70,16 +64,20 @@ class pyMAPFPlanner:
 
         Args:
             time_limit (int): time limit in milliseconds
-        
-        The time limit (ms) starts from the time when the Entr::compute() was called. 
-        You could read start time from self.env.plan_start_time, 
+
+        The time limit (ms) starts from the time when the Entr::compute() was called.
+        You could read start time from self.env.plan_start_time,
         which is a datetime.timedelta measures the time from the start-kit clocks epoch to start time.
-        This means that the function should return the planned actions before 
+        This means that the function should return the planned actions before
         self.env.plan_start_time + datetime.timedelta(milliseconds=time_limit) - self.env.plan_current_time()
         The start-kit uses its own c++ clock (not system clock or wall clock), the function self.env.plan_current_time() returns the C++ clock now time.
         """
 
-        time_remaining = self.env.plan_start_time + datetime.timedelta(milliseconds=time_limit) - self.env.plan_current_time()
+        time_remaining = (
+            self.env.plan_start_time
+            + datetime.timedelta(milliseconds=time_limit)
+            - self.env.plan_current_time()
+        )
 
         # ---------------------------------------------------------------------
         # PATH PLANNING EXERCISE
@@ -119,14 +117,10 @@ class pyMAPFPlanner:
         # Here we allow 10 seconds (10,000 ms) of planning time for all agents.
         self.run_PP_planner(10000)
 
-        
         return self.execute_action_from_path_pool()
-    
-
-    
 
     def get_Astar_path(self, start: int, start_direct: int, goal: int):
-        """ Get path from Piglet Astar planner
+        """Get path from Piglet Astar planner
 
         Args:
             start (int): start location
@@ -134,22 +128,30 @@ class pyMAPFPlanner:
             goal (int): goal location
         Returns:
             path (List[Tuple[int,int]]): list of (location, direction) tuples
-        """ 
+        """
         if self._search_engine is None:
             # Initialize Piglet Astar planner
-            self._domain = gridmap.gridmap("example_problems/random.domain/maps/random-32-32-20.map")
+            self._domain = gridmap.gridmap(
+                "example_problems/random.domain/maps/random-32-32-20.map"
+            )
             self._expander = grid_expander.grid_expander(self._domain)
             self._heuristic = gridmap_h.piglet_heuristic
             open_list = bin_heap(search_node.compare_node_f)
             engine = graph_search.graph_search
-            self._search_engine = engine(open_list, self._expander, heuristic_function=self._heuristic)
+            self._search_engine = engine(
+                open_list, self._expander, heuristic_function=self._heuristic
+            )
 
         self._search_engine.open_list_.clear()
-        return self._search_engine.get_path(self._to_piglet_state(start,direction=start_direct),
-                                           self._to_piglet_state(goal))
+        return self._search_engine.get_path(
+            self._to_piglet_state(start, direction=start_direct),
+            self._to_piglet_state(goal),
+        )
 
-    def get_TXAstar_path(self, start: int, start_direct: int, start_time: int, goal: int):
-        """ Get path from Piglet TXAstar planner
+    def get_TXAstar_path(
+        self, start: int, start_direct: int, start_time: int, goal: int
+    ):
+        """Get path from Piglet TXAstar planner
 
         Args:
             start (int): start location
@@ -157,21 +159,28 @@ class pyMAPFPlanner:
             goal (int): goal location
         Returns:
             path (List[Tuple[int,int]]): list of (location, direction) tuples
-        """ 
+        """
         if self._search_engine is None:
             # Initialize Piglet TXAstar planner
             # print(self.env.map)
-            self._domain = robotrunners.robotrunners("example_problems/random.domain/maps/random-32-32-20.map")
-            self._expander = robotrunners_expander.robotrunners_expander(self._domain, self._default_res_table)
+            self._domain = robotrunners.robotrunners(
+                "example_problems/random.domain/maps/random-32-32-20.map"
+            )
+            self._expander = robotrunners_expander.robotrunners_expander(
+                self._domain, self._default_res_table
+            )
             self._heuristic = gridmap_h.piglet_heuristic
             open_list = bin_heap(search_node.compare_node_f)
             engine = graph_search.graph_search
-            self._search_engine = engine(open_list, self._expander, heuristic_function=self._heuristic)
+            self._search_engine = engine(
+                open_list, self._expander, heuristic_function=self._heuristic
+            )
 
         self._search_engine.open_list_.clear()
-        return self._search_engine.get_path(self._to_piglet_state(start,direction=start_direct,time=start_time),
-                                           self._to_piglet_state(goal,time=-1))
-
+        return self._search_engine.get_path(
+            self._to_piglet_state(start, direction=start_direct, time=start_time),
+            self._to_piglet_state(goal, time=-1),
+        )
 
     def _plan_in_sequence(self, agent_ids: List[int], start_time: int = 0):
         """
@@ -189,15 +198,22 @@ class pyMAPFPlanner:
                 current_piglet_state = self._to_piglet_state(
                     self.env.curr_states[i].location,
                     direction=self.env.curr_states[i].orientation,
-                    time=start_time 
+                    time=start_time,
                 )
                 next_piglet_state = self._to_piglet_state(
                     self.env.curr_states[i].location,
                     direction=self.env.curr_states[i].orientation,
-                    time=start_time + 1
+                    time=start_time + 1,
                 )
-                self._path_pool[i] =  [(self.env.curr_states[i].location, self.env.curr_states[i].orientation)]
-                self.reserve_path([current_piglet_state, next_piglet_state], agent_id = i, start_time=0)
+                self._path_pool[i] = [
+                    (
+                        self.env.curr_states[i].location,
+                        self.env.curr_states[i].orientation,
+                    )
+                ]
+                self.reserve_path(
+                    [current_piglet_state, next_piglet_state], agent_id=i, start_time=0
+                )
             else:
                 piglet_path = self.get_TXAstar_path(
                     self.env.curr_states[i].location,
@@ -207,13 +223,17 @@ class pyMAPFPlanner:
                 )
 
                 if piglet_path is None:
-                    # pp could have not path for this agent set to wait in this case   
+                    # pp could have not path for this agent set to wait in this case
                     return False
                 else:
-                    self._path_pool[i] = self.solution_to_mapf_state_list(piglet_path)[1:]
-                    self.reserve_path(self.solution_to_piglet_state_list(piglet_path), agent_id = i, start_time=0)
-
-
+                    self._path_pool[i] = self.solution_to_mapf_state_list(piglet_path)[
+                        1:
+                    ]
+                    self.reserve_path(
+                        self.solution_to_piglet_state_list(piglet_path),
+                        agent_id=i,
+                        start_time=0,
+                    )
 
             # self._path_pool[i] = self.solution_to_mapf_state_list(piglet_path)[1:]
             # self.reserve_path(self.solution_to_piglet_state_list(piglet_path), agent_id = i, start_time=0)
@@ -221,30 +241,20 @@ class pyMAPFPlanner:
         return True
 
     def run_PP_planner(self, time_limit: int):
-        """ Run Piglet planner within time limit
+        """Run Piglet planner within time limit
 
         Args:
             time_limit (int): time limit in milliseconds
         Returns:
             path (List[Tuple[int,int]]): list of (location, direction) tuples for all agents
-        """ 
+        """
 
         # print(self.env.num_of_agents)
         agent_ids = list(range(self.env.num_of_agents))
         random.shuffle(agent_ids)  # rando
         success = False
-        while not success: 
+        while not success:
             success = self._plan_in_sequence(agent_ids, start_time=0)
-        
-
-
-        
-
-    
-    
-
-
-
 
     def execute_action_from_path_pool(self):
         actions = [MAPF.Action.W] * len(self.env.curr_states)
@@ -258,38 +268,41 @@ class pyMAPFPlanner:
                 if incr == 1 or incr == -3:
                     actions[i] = MAPF.Action.CR
                 elif incr == -1 or incr == 3:
-                    actions[i] = MAPF.Action.CCR    
+                    actions[i] = MAPF.Action.CCR
         # print("Actions from path pool:", actions)
         return actions
-
 
     def solution_to_mapf_state_list(self, solution):
         return [self._to_mapf_state(node.state_) for node in solution.paths_]
 
     def solution_to_piglet_state_list(self, solution):
         return [node.state_ for node in solution.paths_]
-    
+
     # -------- Reserve path forward (start → goal) --------
     def reserve_path(
         self,
         piglet_path: List[Tuple[int, int, Directions, int]],
         agent_id: int,
-        start_time: int
+        start_time: int,
     ):
         """
         Reserve the path forward (start→goal), ignoring collisions.
         tuple of (x,y,d,t)
         """
-        
+
         self._default_res_table.add_vertex(piglet_path[0], agent_id)
         for i in range(1, len(piglet_path)):
-            if piglet_path[i - 1][0] == piglet_path[i][0] and piglet_path[i - 1][1] == piglet_path[i][1]:
-                #same vertex
+            if (
+                piglet_path[i - 1][0] == piglet_path[i][0]
+                and piglet_path[i - 1][1] == piglet_path[i][1]
+            ):
+                # same vertex
                 self._default_res_table.add_vertex(piglet_path[i], agent_id)
             else:
-                self._default_res_table.add_edge(piglet_path[i - 1], piglet_path[i], agent_id)
+                self._default_res_table.add_edge(
+                    piglet_path[i - 1], piglet_path[i], agent_id
+                )
                 self._default_res_table.add_vertex(piglet_path[i], agent_id)
-            
 
     # --- helpers --------------------------------------------------------
     def _loc_to_rc(self, loc: int) -> Tuple[int, int]:
@@ -321,19 +334,16 @@ class pyMAPFPlanner:
             Directions.SOUTH: 1,
             Directions.WEST: 2,
             Directions.NORTH: 3,
-            Directions.NONE: -1
+            Directions.NONE: -1,
         }
         return reverse_map.get(direction, -1)
 
     # --- piglet ---------------------------------------------------------
     def _to_piglet_state(
-        self,
-        loc: int,
-        direction: Optional[int] = None,
-        time: Optional[int] = None
+        self, loc: int, direction: Optional[int] = None, time: Optional[int] = None
     ) -> Union[Tuple[int, int, Directions], Tuple[int, int, Directions, int]]:
         # convert flat index -> (row, col)
-        r , c = self._loc_to_rc(loc)    
+        r, c = self._loc_to_rc(loc)
 
         # map direction int -> Directions enum
         if direction is None:
@@ -347,20 +357,19 @@ class pyMAPFPlanner:
     # --- mapf -----------------------------------------------------------
     def _to_mapf_state(
         self,
-        piglet_state: Union[Tuple[int, int, Directions], Tuple[int, int, Directions, int]]
+        piglet_state: Union[
+            Tuple[int, int, Directions], Tuple[int, int, Directions, int]
+        ],
     ) -> Tuple[int, int]:
         """
         Convert Piglet-style (r, c, d, [time]) → MAPF-style (loc, direction_index).
         Ignores the last element if present (e.g., time).
         """
         r, c, d = piglet_state[:3]
-        loc = self._rc_to_loc(r, c)   
+        loc = self._rc_to_loc(r, c)
         d_idx = self._dir_to_mapf(d)
         return (loc, d_idx)
 
-
-
-    
 
 if __name__ == "__main__":
     test_planner = pyMAPFPlanner()
