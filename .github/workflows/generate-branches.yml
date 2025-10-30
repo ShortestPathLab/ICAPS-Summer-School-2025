@@ -1,0 +1,53 @@
+name: Generate Assignment Branches
+
+on:
+    workflow_dispatch:
+    push:
+        branches:
+            - main
+
+jobs:
+    generate:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # So we can push branches
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.x"
+
+            - name: Generate branches for each assignment
+              run: |
+                  # Helper: Remove answer regions above a certain assignment number
+                  remove_answers() {
+                    local max=$1
+                    for f in $(find . -type f -name "*.py"); do
+                      cp "$f" "$f.tmp"
+                      awk -v max="$max" '
+                        /# region ANSWER A[0-9]+:/ {
+                          match($0, /A([0-9]+)/, m)
+                          if (m[1] > max) skip=1
+                        }
+                        skip==0 { print }
+                        /# endregion/ { skip=0 }
+                      ' "$f.tmp" > "$f"
+                      rm "$f.tmp"
+                    done
+                  }
+
+                  # Generate branches a1-a4
+                  for i in 1 2 3 4; do
+                    git checkout main -f
+                    branch="a${i}"
+                    echo "Creating branch $branch..."
+                    remove_answers "$i"
+                    git checkout -B "$branch"
+                    git add -A
+                    git commit -m "Generated $branch with answers up to A${i}" || echo "No changes to commit"
+                    git push origin "$branch" --force
+                  done
