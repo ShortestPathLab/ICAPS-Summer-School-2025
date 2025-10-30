@@ -32,9 +32,6 @@ from piglet.lib_piglet.domains.robotrunners import (
     Directions,
     robotrunners,
 )
-from piglet.lib_piglet.constraints.robotrunners_constraints import (
-    robotrunners_reservation_table,
-)
 
 
 class robotrunners_expander(base_expander):
@@ -60,12 +57,6 @@ class robotrunners_expander(base_expander):
             # The search will initialise the rest, assuming it decides
             # to add the corresponding successor to OPEN
             new_state = self.__move(current.state_, a.move_)
-            # check that an action is valid given reservation tables
-            if self.reservation_table_ is not None:
-                if self.reservation_table_.is_reserved(new_state):
-                    continue
-                if self.reservation_table_.is_edge_collision(current.state_, new_state):
-                    continue
             self.succ_.append((new_state, a))
         return self.succ_[:]
 

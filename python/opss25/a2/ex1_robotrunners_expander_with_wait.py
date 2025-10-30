@@ -13,25 +13,39 @@ class robotrunners_expander_with_wait(robotrunners_expander):
     def __init__(
         self,
         map: robotrunners,
-        reservation_table: robotrunners_reservation_table = None,
+        reservation_table: robotrunners_reservation_table,
     ):
         super().__init__(map)
         self.reservation_table_ = reservation_table
 
+    def expand(self, current):
+        self.succ_.clear()
+        for a in self.get_actions(current.state_):
+            # NB: we only initialise the state and action attributes.
+            # The search will initialise the rest, assuming it decides
+            # to add the corresponding successor to OPEN
+            new_state = self.__move(current.state_, a.move_)
+
+            # 🏷️ A2 EXERCISE: CHECK THE RESERVATION TABLE
+            #
+            # Now that we have a reservation table, we need to check that
+            # we're not bumping into other agents by checking the reservation table.
+            #
+            # We must check for both edge and vertex collisions.
+            #
+            # region ANSWER A2:
+            if self.reservation_table_.is_reserved(new_state):
+                continue
+            if self.reservation_table_.is_edge_collision(current.state_, new_state):
+                continue
+            # endregion
+
+            self.succ_.append((new_state, a))
+        return self.succ_[:]
+
     def get_actions(self, state: tuple):
         x, y, direction, t = state
-        actions = []
-
-        # 🏷️ A2 EXERCISE: USE THE RESERVATION TABLE
-        #
-        # We're going to redo the `get_actions`` logic.
-        # Now that we have a reservation table, we need to check that
-        # we're not colliding into other agents in the reservation table.
-        #
-        # Populate the 'actions' list with valid robotrunners_action objects.
-        # region ANSWER A2:
-        # TODO
-        # endregion
+        actions = super().get_actions(state)
 
         # 🏷️ A2 EXERCISE: IMPLEMENT THE WAIT ACTION
         #
