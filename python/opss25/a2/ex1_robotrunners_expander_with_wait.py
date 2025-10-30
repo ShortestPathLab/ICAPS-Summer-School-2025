@@ -20,7 +20,18 @@ class robotrunners_expander_with_wait(robotrunners_expander):
 
     def get_actions(self, state: tuple):
         x, y, direction, t = state
-        actions = super().get_actions(state)
+        actions = []
+
+        # 🏷️ A2 EXERCISE: USE THE RESERVATION TABLE
+        #
+        # We're going to redo the `get_actions`` logic.
+        # Now that we have a reservation table, we need to check that
+        # we're not colliding into other agents in the reservation table.
+        #
+        # Populate the 'actions' list with valid robotrunners_action objects.
+        # region ANSWER A2:
+        # TODO
+        # endregion
 
         # 🏷️ A2 EXERCISE: IMPLEMENT THE WAIT ACTION
         #
