@@ -41,9 +41,6 @@ class pyMAPFPlanner:
     def __init__(self, env=None) -> None:
         if env is not None:
             self.env = env
-        # self._default_res_table = robotrunners_reservation_table(self.env.rows, self.env.cols)
-        # TODO: NEED to wrapper this to proper name.
-        map_file = "example_problems/random.domain/maps/random-32-32-20.map"
 
     def initialize(self, preprocess_time_limit: int):
         """_summary_

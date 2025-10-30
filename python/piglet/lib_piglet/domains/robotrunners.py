@@ -2,10 +2,10 @@
 #
 # describes a valid action in a robot runners domain and specifies its cost
 
-import sys
 from enum import IntEnum
 
 from lib_piglet.domains.base_domain import base_domain
+
 
 class Move_Actions(IntEnum):
     MOVE_FORWARD = 0
@@ -13,18 +13,20 @@ class Move_Actions(IntEnum):
     ROTATE_CCW = 2
     WAIT = 3
 
+
 class Directions(IntEnum):
     NORTH = 0
     EAST = 1
     SOUTH = 2
     WEST = 3
     NONE = 4
-    
+
     def __str__(self):
         return self.name
-    
+
     def __repr__(self):
         return self.name
+
 
 class robotrunners_action:
 
@@ -101,7 +103,7 @@ class robotrunners(base_domain[robotrunners_state]):
 
         for x in range(0, int(self.height_)):
             for y in range(0, int(self.width_)):
-                if self.map_[x][y] == True:
+                if self.map_[x][y]:
                     print(".", end="")
                 else:
                     print("@", end="")
