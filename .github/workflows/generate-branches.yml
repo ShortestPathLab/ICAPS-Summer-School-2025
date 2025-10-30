@@ -31,24 +31,39 @@ jobs:
               run: |
                   # Helper: Remove answer regions above a certain assignment number
                   remove_answers() {
-                      local max=$1
-                      echo "Removing regions with A > $max"
-                      for f in $(find . -type f -name "*.py"); do
-                      awk -v max="$max" '
-                          BEGIN { skip=0 }
-                          # Match start of a numbered ANSWER region (allow leading spaces)
-                          /^[[:space:]]*#[:space:]*region[:space:]+ANSWER[:space:]+A[0-9]+:/ {
-                          match($0, /A([0-9]+)/, m)
-                          if (m[1] > max) skip=1
-                          if (skip) next
-                          }
-                          # Match end of any region (allow leading spaces)
-                          /^[[:space:]]*#[:space:]*endregion/ {
-                          if (skip) { skip=0; next }
-                          }
-                          skip == 0 { print }
-                      ' "$f" > "$f.tmp" && mv "$f.tmp" "$f"
-                      done
+                    local max=$1
+                    echo "Removing regions with A > $max"
+                    for f in $(find . -type f -name "*.py"); do
+                    awk -v max="$max" '
+                        BEGIN { skip=0; indent="" }
+                        # Match start of ANSWER region (allow leading spaces)
+                        /^ *# *region +ANSWER +A[0-9]+:/ {
+                        match($0, /^([[:space:]]*)/, m)
+                        indent = m[1]  # capture indentation
+                        match($0, /A([0-9]+)/, m)
+                        if (m[1] > max) {
+                            skip = 1
+                            print indent "pass"    # insert placeholder
+                            next                    # skip printing region line
+                        }
+                        }
+
+                        # Match end of region
+                        /^ *# *endregion/ {
+                        if (skip) { skip = 0; next }  # skip the end line entirely
+                        }
+
+                        # Print everything else if not skipping
+                        skip == 0 { print }
+                    ' "$f" > "$f.tmp"
+
+                    if [ -s "$f.tmp" ]; then
+                        mv "$f.tmp" "$f"
+                    else
+                        echo "⚠️  Skipping $f (produced empty output)"
+                        rm "$f.tmp"
+                    fi
+                    done
                   }
 
                   # Generate branches a1-a4
