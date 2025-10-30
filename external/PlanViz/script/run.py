@@ -9,14 +9,20 @@ import json
 from plan_config import PlanConfig2023, PlanConfig2024
 from plan_viz import PlanViz2023, PlanViz2024
 import math
+import sys
+
+class HelpOnErrorParser(argparse.ArgumentParser):
+    def error(self, message):
+        self.print_help()
+        self.exit(2, f"\nError: {message}\n")
 
 def main() -> None:
     """The main function of the visualizer.
     """
-    parser = argparse.ArgumentParser(description="Plan visualizer for a MAPF instance")
-    parser.add_argument("--map", type=str, help="Path to the map file")
+    parser = HelpOnErrorParser(description="Plan visualizer for a MAPF instance")
+    parser.add_argument("--map", required=True, type=str, help="Path to the map file")
     parser.add_argument("--version", type=str, default=None, help="Plan file version, '2024 LoRR' or '2023 LoRR'")
-    parser.add_argument("--plan", type=str, help="Path to the planned path file")
+    parser.add_argument("--plan", required=True, type=str, help="Path to the planned path file")
     parser.add_argument("--n", dest="team_size", type=int, default=np.inf,
                         help="Number of agents")
     parser.add_argument("--start", type=int, default=0, help="Starting timestep")
