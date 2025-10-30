@@ -45,7 +45,7 @@ class robotrunners_expander(base_expander):
             new_state = self.__move(current.state_, a.move_)
             # check that an action is valid given reservation tables
             if self.reservation_table_ is not None:
-                if self.reservation_table_.is_reserved(current.state_):
+                if self.reservation_table_.is_reserved(new_state):
                     continue
                 if self.reservation_table_.is_edge_collision(current.state_, new_state):
                     continue
@@ -79,7 +79,7 @@ class robotrunners_expander(base_expander):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1
-        elif direction == Directions.SOUTH and self.domain_.get_tile((x - 1, y)):
+        elif direction == Directions.SOUTH and self.domain_.get_tile((x + 1, y)):
             retval.append(robotrunners_action())
             retval[-1].move_ = Move_Actions.MOVE_FORWARD
             retval[-1].cost_ = 1

@@ -215,6 +215,11 @@ if __name__ == "__main__":
     # Searching path from loc 360 dir 0 to goal loc 329
 
     # path = wrapper.get_path((11,8,Directions.NORTH,0),(10,9,Directions.NONE,-1))
+
+    # (20, 31, EAST, 0)
+    # (14, 24, NONE, -1)
+
+
     path = wrapper.search_path(360, 0, 0, 329)  # from loc 0 facing N to loc 255
     # path = wrapper.get_path((11, 8, Directions.EAST, 0),(10, 9, Directions.NONE, -1))
     print("Path:", path)
