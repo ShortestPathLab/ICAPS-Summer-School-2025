@@ -42,11 +42,9 @@ class robotrunners_expander(base_expander):
     def __init__(
         self,
         map: robotrunners,
-        reservation_table: robotrunners_reservation_table = None,
     ):
         self.domain_: robotrunners = map
         self.effects_: list = [self.domain_.height_ * -1, self.domain_.height_, -1, 1]
-        self.reservation_table_ = reservation_table
 
         # memory for storing successor (state, action) pairs
         self.succ_: list = []
@@ -79,7 +77,7 @@ class robotrunners_expander(base_expander):
         x, y, direction, t = state
         actions = []
 
-        # 🏷️ EXERCISE: IMPLEMENT THE LOGIC TO DETERMINE VALID ACTIONS
+        # 🏷️ A1 EXERCISE: IMPLEMENT THE LOGIC TO DETERMINE VALID ACTIONS
         #
         # Here, we need to determine which actions are valid based on the robot's
         # current position and direction. The robot can only move forward if the tile
@@ -89,7 +87,6 @@ class robotrunners_expander(base_expander):
         # Populate the 'actions' list with valid robotrunners_action objects.
         #
         # region ANSWER A1:
-
         if (
             x < 0
             or x >= int(self.domain_.height_)
@@ -125,10 +122,19 @@ class robotrunners_expander(base_expander):
             actions.append(robotrunners_action())
             actions[-1].move_ = Move_Actions.ROTATE_CCW
             actions[-1].cost_ = 1
-            # actions.append(robotrunners_action())
-            # actions[-1].move_ = Move_Actions.WAIT
-            # actions[-1].cost_ = 1
+        # endregion
 
+        # 🏷️ A2 EXERCISE: IMPLEMENT THE WAIT ACTION
+        #
+        # Now we're dealing with the time dimension, robots can now wait.
+        # Here, we need to determine if the robot can wait on a tile.
+        # If so, we need to add a wait action to the list.
+        #
+        # region ANSWER A2:
+        if self.domain_.get_tile((x, y)):
+            actions.append(robotrunners_action())
+            actions[-1].move_ = Move_Actions.WAIT
+            actions[-1].cost_ = 1
         # endregion
 
         return actions
@@ -136,14 +142,14 @@ class robotrunners_expander(base_expander):
     def __move(self, curr_state: tuple, move):
         x, y, direction, t = curr_state
 
-        # 🏷️ EXERCISE: IMPLEMENT THE LOGIC TO UPDATE THE STATE GIVEN THE ACTION
+        # 🏷️ A1 EXERCISE: IMPLEMENT THE LOGIC TO UPDATE THE STATE GIVEN THE ACTION
         #
         # Here, we need to update the robot's current position and direction
         # based on the action it is taking.
         #
         # Mutate the values of x, y, direction and t according to the action.
         #
-        # region ANSWER:
+        # region ANSWER A1:
 
         if move == Move_Actions.ROTATE_CW:
             direction = Directions((direction.value + 1) % 4)

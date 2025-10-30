@@ -17,7 +17,7 @@
 
 def manhattan_heuristic(current_state, goal_state):
 
-    # 🏷️ EXERCISE: DEFINE THE MANHATTAN HEURISTIC
+    # 🏷️ A1 EXERCISE: DEFINE THE MANHATTAN HEURISTIC
     #
     # This is the distance between two points on a grid, measured by the number of
     # blocks that separate them.
@@ -33,7 +33,7 @@ def manhattan_heuristic(current_state, goal_state):
 
 def straight_heuristic(current_state, goal_state):
 
-    # 🏷️ EXERCISE: DEFINE THE STRAIGHT HEURISTIC
+    # 🏷️ A1 EXERCISE: DEFINE THE STRAIGHT HEURISTIC
     #
     # This is the distance between two points on a grid, measured using the
     # Pythagorean theorem.
@@ -41,7 +41,6 @@ def straight_heuristic(current_state, goal_state):
     # Write and return an expression that computes the straight distance.
 
     # region ANSWER A1:
-
     return round(
         (
             (current_state[0] - goal_state[0]) ** 2
@@ -50,5 +49,4 @@ def straight_heuristic(current_state, goal_state):
         ** 0.5,
         5,
     )
-
     # endregion

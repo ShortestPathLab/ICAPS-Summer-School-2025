@@ -22,15 +22,15 @@ from ex2_robotrunners_heuristic import straight_heuristic
 def create_search(domain: gridmap):
     open_list = bin_heap(search_node.compare_node_f)
 
-    # 🏷️ EXERCISE: DEFINE THE EXPANDER
+    # 🏷️ A1 EXERCISE: DEFINE THE EXPANDER
     # Import and initialize the expander
     expander = None
     # region ANSWER A1:
     expander = robotrunners_expander(domain)
     # endregion
 
-    # 🏷️ EXERCISE: DEFINE THE HEURISTIC
-    # Import a heuristic funtion
+    # 🏷️ A1 EXERCISE: DEFINE THE HEURISTIC
+    # Import a heuristic function
     heuristic = None
     # region ANSWER A1:
     heuristic = straight_heuristic
