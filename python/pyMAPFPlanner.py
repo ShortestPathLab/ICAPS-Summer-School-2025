@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple, Union
 # League of Robot Runners imports
 import MAPF
 
-# OPSS25 imports
+# # OPSS25 imports
 import opss25.a1.ex3_create_search
 
 # Piglet imports
@@ -161,7 +161,7 @@ class pyMAPFPlanner:
                 "example_problems/random.domain/maps/random-32-32-20.map"
             )
             # Haven't done this part yet
-            self._expander = robotrunners_expander.robotrunners_expander(
+            self._expander = robotrunners_expander.robotrunners_expander_with_wait(
                 self._domain, self._default_res_table
             )
             self._heuristic = gridmap_h.piglet_heuristic
@@ -185,11 +185,15 @@ class pyMAPFPlanner:
         NOTE: This function does NOT commit reservations; caller commits on success.
         """
         self._default_res_table.clear()
+        has_collisions = False
         for i in agent_ids:
-
+            check_path = self._path_pool[i]
+            if self.env.curr_states[i].location != check_path[0][0] or self.env.curr_states[i].orientation != check_path[0][1]:
+                has_collisions = True #replan all if we have mismatches between lcurrent state and path pool
+                break
+        for i in agent_ids:
             # Build a piglet path for agent i
-            if not self.env.goal_locations[i]:
-                # No goal: keep position/orientation, advance time by 1 (WAIT-like)
+            if not self.env.goal_locations[i]: # No goal: keep position/orientation, advance time by 1 (WAIT-like)
                 current_piglet_state = self._to_piglet_state(
                     self.env.curr_states[i].location,
                     direction=self.env.curr_states[i].orientation,
@@ -209,7 +213,16 @@ class pyMAPFPlanner:
                 self.reserve_path(
                     [current_piglet_state, next_piglet_state], agent_id=i, start_time=0
                 )
-            else:
+            elif not has_collisions and len(self._path_pool[i]) > 0: # Use existing path in path pool if we have paths and no collisions detected
+                piglet_path = self.solution_to_piglet_state_list(
+                    self._path_pool[i]
+                )
+                self.reserve_path(
+                    piglet_path,
+                    agent_id=i,
+                    start_time=0,
+                )
+            else: #replan single agent when necessary
                 piglet_path = self.get_txastar_path(
                     self.env.curr_states[i].location,
                     self.env.curr_states[i].orientation,
@@ -229,10 +242,6 @@ class pyMAPFPlanner:
                         agent_id=i,
                         start_time=0,
                     )
-
-            # self._path_pool[i] = self.solution_to_mapf_state_list(piglet_path)[1:]
-            # self.reserve_path(self.solution_to_piglet_state_list(piglet_path), agent_id = i, start_time=0)
-
         return True
 
     def run_PP_planner(self, time_limit: int):
@@ -264,6 +273,7 @@ class pyMAPFPlanner:
                     actions[i] = MAPF.Action.CR
                 elif incr == -1 or incr == 3:
                     actions[i] = MAPF.Action.CCR
+            self._path_pool[i].pop(0) # remove the executed action
         # print("Actions from path pool:", actions)
         return actions
 
