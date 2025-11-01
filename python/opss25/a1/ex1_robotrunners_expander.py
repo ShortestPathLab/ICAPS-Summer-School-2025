@@ -77,43 +77,7 @@ class robotrunners_expander(base_expander):
         #
         # Populate the 'actions' list with valid robotrunners_action objects.
         #
-        # region ANSWER A1:
-        if (
-            x < 0
-            or x >= int(self.domain_.height_)
-            or y < 0
-            or y >= int(self.domain_.width_)
-        ):
-            return actions
-
-        if not self.domain_.get_tile((x, y)):
-            return actions
-
-        if direction == Directions.NORTH and self.domain_.get_tile((x - 1, y)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.MOVE_FORWARD
-            actions[-1].cost_ = 1
-        elif direction == Directions.EAST and self.domain_.get_tile((x, y + 1)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.MOVE_FORWARD
-            actions[-1].cost_ = 1
-        elif direction == Directions.SOUTH and self.domain_.get_tile((x + 1, y)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.MOVE_FORWARD
-            actions[-1].cost_ = 1
-        elif direction == Directions.WEST and self.domain_.get_tile((x, y - 1)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.MOVE_FORWARD
-            actions[-1].cost_ = 1
-
-        if self.domain_.get_tile((x, y)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.ROTATE_CW
-            actions[-1].cost_ = 1
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.ROTATE_CCW
-            actions[-1].cost_ = 1
-        # endregion
+        pass
 
         return actions
 
@@ -127,23 +91,7 @@ class robotrunners_expander(base_expander):
         #
         # Mutate the values of x, y, direction and t according to the action.
         #
-        # region ANSWER A1:
-
-        if move == Move_Actions.ROTATE_CW:
-            direction = Directions((direction.value + 1) % 4)
-        elif move == Move_Actions.ROTATE_CCW:
-            direction = Directions((direction.value - 1) % 4)
-        elif move == Move_Actions.MOVE_FORWARD:
-            if direction == Directions.NORTH:
-                x -= 1
-            elif direction == Directions.EAST:
-                y += 1
-            elif direction == Directions.SOUTH:
-                x += 1
-            elif direction == Directions.WEST:
-                y -= 1
-
-        # endregion
+        pass
 
         return x, y, direction, t + 1
 
