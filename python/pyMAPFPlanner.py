@@ -32,7 +32,7 @@ import opss25.a2.ex1_robotrunners_expander_with_wait
 
 class pyMAPFPlanner:
 
-    _search_engine: base_search = None
+    _search_engine: base_search.base_search = None
     _expander: base_expander = None
     _domain = None
     _heuristic = None
@@ -176,6 +176,7 @@ class pyMAPFPlanner:
             )
 
         self._search_engine.open_list_.clear()
+
         return self._search_engine.get_path(
             self._to_piglet_state(start, direction=start_direct, time=start_time),
             self._to_piglet_state(goal, time=-1),
