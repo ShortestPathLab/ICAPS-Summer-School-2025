@@ -70,16 +70,6 @@ grid_state = tuple
 
 class gridmap(base_domain[grid_state]):
 
-    @staticmethod
-    def from_list(width: int, height: int, map: list[int], name: str | None = None):
-        # TODO Check if this is right
-        m = gridmap()
-        m.width_ = width
-        m.height_ = height
-        m.domain_file_ = name
-        m.map_ = [([map[x * width + y] for y in range(width)]) for x in range(height)]
-        return m
-
     def get_name(self):
         return "grid"
 

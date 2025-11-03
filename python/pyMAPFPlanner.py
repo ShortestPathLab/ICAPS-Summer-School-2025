@@ -130,7 +130,7 @@ class pyMAPFPlanner:
         """
         if self._search_engine is None:
             # Create the gridmap
-            self._domain = gridmap.from_list(
+            self._domain = robotrunners.from_list(
                 self.env.cols, self.env.rows, self.env.map, self.env.map_name
             )
 
@@ -161,10 +161,8 @@ class pyMAPFPlanner:
         if self._search_engine is None:
             # Initialize Piglet TXAstar planner
             # print(self.env.map)
-            self._domain = robotrunners(
-                gridmap.from_list(
-                    self.env.cols, self.env.rows, self.env.map, self.env.map_name
-                )
+            self._domain = robotrunners.from_list(
+                self.env.cols, self.env.rows, self.env.map, self.env.map_name
             )
             # Haven't done this part yet
             self._expander = opss25.a2.ex1_robotrunners_expander_with_wait.robotrunners_expander_with_wait(
