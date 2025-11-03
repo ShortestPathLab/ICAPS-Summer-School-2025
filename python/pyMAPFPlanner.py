@@ -180,6 +180,27 @@ class pyMAPFPlanner:
             self._to_piglet_state(start, direction=start_direct, time=start_time),
             self._to_piglet_state(goal, time=-1),
         )
+    
+    def put_agents_wait_in_place(self, agent_i: int, start_time: int):
+        current_piglet_state = self._to_piglet_state(
+                    self.env.curr_states[agent_i].location,
+                    direction=self.env.curr_states[agent_i].orientation,
+                    time=start_time,
+                )
+        next_piglet_state = self._to_piglet_state(
+            self.env.curr_states[agent_i].location,
+            direction=self.env.curr_states[agent_i].orientation,
+            time=start_time + 1,
+        )
+        self._path_pool[agent_i] = [
+            (
+                self.env.curr_states[agent_i].location,
+                self.env.curr_states[agent_i].orientation,
+            )
+        ]
+        self.reserve_path(
+            [current_piglet_state, next_piglet_state], agent_id=agent_i, start_time=0
+        )
 
     def _plan_in_sequence(self, agent_ids: List[int], start_time: int = 0):
         """
@@ -198,7 +219,9 @@ class pyMAPFPlanner:
 
             if piglet_path is None:
                 # pp could have not path for this agent set to wait in this case
-                return False
+                #return False
+                self.put_agents_wait_in_place(i, start_time)
+                continue
             else:
                 self._path_pool[i] = self.solution_to_mapf_state_list(piglet_path)[
                     1:
@@ -266,8 +289,8 @@ class pyMAPFPlanner:
         replan_agents = self.find_replan_agents(agent_ids)
         random.shuffle(replan_agents)  # rando
         success = False
-        while not success:
-            success = self._plan_in_sequence(agent_ids, start_time=0)
+        # while not success:
+        success = self._plan_in_sequence(agent_ids, start_time=0)
 
     def execute_action_from_path_pool(self):
         actions = [MAPF.Action.W] * len(self.env.curr_states)
