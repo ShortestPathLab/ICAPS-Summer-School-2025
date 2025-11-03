@@ -15,7 +15,14 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 
-def manhattan_heuristic(current_state, goal_state):
+from piglet.lib_piglet.domains.robotrunners import robotrunners, robotrunners_state
+
+
+def manhattan_heuristic(
+    domain: robotrunners,
+    current_state: robotrunners_state,
+    goal_state: robotrunners_state,
+):
 
     # 🏷️ A1 EXERCISE: DEFINE THE MANHATTAN HEURISTIC
     #
@@ -31,7 +38,11 @@ def manhattan_heuristic(current_state, goal_state):
     # endregion
 
 
-def straight_heuristic(current_state, goal_state):
+def straight_heuristic(
+    domain: robotrunners,
+    current_state: robotrunners_state,
+    goal_state: robotrunners_state,
+):
 
     # 🏷️ A1 EXERCISE: DEFINE THE STRAIGHT HEURISTIC
     #
