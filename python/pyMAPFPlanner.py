@@ -25,6 +25,8 @@ from piglet.lib_piglet.search import (
 )
 from piglet.lib_piglet.utils.data_structure import bin_heap
 
+import opss25.a2.ex1_robotrunners_expander_with_wait
+
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
 
 
@@ -161,7 +163,7 @@ class pyMAPFPlanner:
                 "example_problems/random.domain/maps/random-32-32-20.map"
             )
             # Haven't done this part yet
-            self._expander = robotrunners_expander.robotrunners_expander_with_wait(
+            self._expander = opss25.a2.ex1_robotrunners_expander_with_wait.robotrunners_expander_with_wait(
                 self._domain, self._default_res_table
             )
             self._heuristic = gridmap_h.piglet_heuristic

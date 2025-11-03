@@ -1,4 +1,4 @@
-from a1.ex1_robotrunners_expander import robotrunners_expander
+from ..a1.ex1_robotrunners_expander import robotrunners_expander
 from piglet.lib_piglet.domains.robotrunners import (
     Move_Actions,
     robotrunners,
