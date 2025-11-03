@@ -66,6 +66,6 @@ class robotrunners(gridmap):
         m.height_ = height
         m.domain_file_ = name
         m.map_ = [
-            ([bool(map[x * width + y]) for y in range(width)]) for x in range(height)
+            ([not (map[x * width + y]) for y in range(width)]) for x in range(height)
         ]
         return m

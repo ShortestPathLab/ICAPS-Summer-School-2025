@@ -31,7 +31,7 @@ from piglet.lib_piglet.output.trace_output import trace_output
 
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
 
-LOG_ENABLED = False
+LOG_ENABLED = True
 
 
 class pyMAPFPlanner:
