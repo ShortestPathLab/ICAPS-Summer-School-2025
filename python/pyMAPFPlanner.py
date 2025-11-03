@@ -25,7 +25,7 @@ from piglet.lib_piglet.search import (
 )
 from piglet.lib_piglet.utils.data_structure import bin_heap
 
-import opss25.a2.ex1_robotrunners_expander_with_wait
+import opss25.a2.ex3_create_search
 
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
 
@@ -137,7 +137,7 @@ class pyMAPFPlanner:
             # ℹ️ INFO
             # Look, your search engine is called here!
             self._search_engine = opss25.a1.ex3_create_search.create_search(
-                self._domain
+                self._domain,
             )
 
         self._search_engine.open_list_.clear()
@@ -159,35 +159,29 @@ class pyMAPFPlanner:
             path (List[Tuple[int,int]]): list of (location, direction) tuples
         """
         if self._search_engine is None:
-            # Initialize Piglet TXAstar planner
-            # print(self.env.map)
+            # Create the gridmap
             self._domain = robotrunners.from_list(
                 self.env.cols, self.env.rows, self.env.map, self.env.map_name
             )
-            # Haven't done this part yet
-            self._expander = opss25.a2.ex1_robotrunners_expander_with_wait.robotrunners_expander_with_wait(
+
+            # ℹ️ INFO
+            # Look, your search engine is called here!
+            self._search_engine = opss25.a2.ex3_create_search.create_search(
                 self._domain, self._default_res_table
-            )
-            self._heuristic = gridmap_h.piglet_heuristic
-            open_list = bin_heap(search_node.compare_node_f)
-            engine = graph_search.graph_search
-            self._search_engine = engine(
-                open_list, self._expander, heuristic_function=self._heuristic
             )
 
         self._search_engine.open_list_.clear()
-
         return self._search_engine.get_path(
             self._to_piglet_state(start, direction=start_direct, time=start_time),
             self._to_piglet_state(goal, time=-1),
         )
-    
+
     def put_agents_wait_in_place(self, agent_i: int, start_time: int):
         current_piglet_state = self._to_piglet_state(
-                    self.env.curr_states[agent_i].location,
-                    direction=self.env.curr_states[agent_i].orientation,
-                    time=start_time,
-                )
+            self.env.curr_states[agent_i].location,
+            direction=self.env.curr_states[agent_i].orientation,
+            time=start_time,
+        )
         next_piglet_state = self._to_piglet_state(
             self.env.curr_states[agent_i].location,
             direction=self.env.curr_states[agent_i].orientation,
@@ -217,23 +211,20 @@ class pyMAPFPlanner:
                 start_time,
                 self.env.goal_locations[i][0][0],
             )
-
             if piglet_path is None:
                 # pp could have not path for this agent set to wait in this case
-                #return False
+                # return False
                 self.put_agents_wait_in_place(i, start_time)
                 continue
             else:
-                self._path_pool[i] = self.solution_to_mapf_state_list(piglet_path)[
-                    1:
-                ]
+                self._path_pool[i] = self.solution_to_mapf_state_list(piglet_path)[1:]
                 self.reserve_path(
                     self.solution_to_piglet_state_list(piglet_path),
                     agent_id=i,
                     start_time=0,
                 )
         return True
-    
+
     def find_replan_agents(self, agent_ids: List[int]):
         """
         Find agents that need replanning due to mismatches between current state and path pool.
@@ -256,8 +247,8 @@ class pyMAPFPlanner:
                 break
         if has_collisions:
             return agent_ids  # replan all agents if any mismatch detected
-        
-        #when no collisions, only replan agents with missing or empty paths
+
+        # when no collisions, only replan agents with missing or empty paths
         replan_agents = []
         for i in agent_ids:
             if i not in self._path_pool.keys():
@@ -269,11 +260,11 @@ class pyMAPFPlanner:
             # Reserve existing paths for agents not needing replanning
             piglet_path = self.solution_to_piglet_state_list(self._path_pool[i])
             self.reserve_path(
-                    piglet_path,
-                    agent_id=i,
-                    start_time=0,
-                )
-            
+                piglet_path,
+                agent_id=i,
+                start_time=0,
+            )
+
         return replan_agents
 
     def run_PP_planner(self, time_limit: int):
