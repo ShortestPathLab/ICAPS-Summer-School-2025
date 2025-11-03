@@ -10,7 +10,8 @@ namespace DefaultPlanner{
 
 void schedule_initialize(int preprocess_time_limit, SharedEnvironment* env);
 
-void schedule_plan(int time_limit, std::vector<int> & proposed_schedule,  SharedEnvironment* env);
+void schedule_plan_nant(int time_limit, std::vector<int> & proposed_schedule,  SharedEnvironment* env);
+void schedule_plan_greedy(int time_limit, std::vector<int> & proposed_schedule,  SharedEnvironment* env);
 
 }
 
