@@ -53,6 +53,11 @@ class robotrunners(gridmap):
     def get_name(self):
         return "robotrunners"
 
+    def is_goal(self, current_state, goal_state):
+        x1, y1 = current_state[:2]
+        x2, y2 = goal_state[:2]
+        return x1 == x2 and y1 == y2
+
     @staticmethod
     def from_list(width: int, height: int, map: list[int], name: str | None = None):
         # TODO Check if this is right
