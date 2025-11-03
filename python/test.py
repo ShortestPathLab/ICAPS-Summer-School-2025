@@ -22,17 +22,26 @@ from piglet.lib_piglet.logging.search_logger import search_logger, bind
 from piglet.lib_piglet.output.trace_output import trace_output
 
 from piglet.lib_piglet.utils.data_structure import bin_heap
+from piglet.lib_piglet.cli.cli_tool import parse_problem
 
 MAP_PATH_ABSOLUTE = "/home/spaaaacccee/projects/opss25-startkit/example_problems/random/maps/random-32-32-20.map"
+SCEN_PATH_ABSOLUTE = "/home/spaaaacccee/projects/opss25-startkit/example_problems/random/random-32-32-10.scen"
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 print("Looking for:", MAP_PATH_ABSOLUTE)
 map_fo = open(MAP_PATH_ABSOLUTE, "r")
 
+print("Looking for:", SCEN_PATH_ABSOLUTE)
+scen_fo = open(SCEN_PATH_ABSOLUTE, "r")
+
+scens = [line.split() for line in scen_fo.readlines()[1:]]  # Remove first line
+
 print(map_fo.readlines())
 
 logger = search_logger(logger=trace_output(file="test.trace.yaml"))
+
+task = parse_problem(scens[0], 0)  # 0 for gridmap
 
 # int orientation;  // 0:east, 1:south, 2:west, 3:north
 default_res_table = robotrunners_reservation_table(32, 32)
@@ -53,7 +62,7 @@ bind(search_engine, logger).head()
 
 # solution = search_engine.get_path((1,2,Directions.NORTH,0),(2,1,Directions.NONE,-1))
 solution = search_engine.get_path(
-    (0, 2, Directions.EAST, 0), (10, 7, Directions.NONE, -1)
+    (*task.start_state, Directions.EAST, 0), (*task.goal_state, Directions.NONE, -1)
 )
 
 # (20, 31, EAST, 0)
