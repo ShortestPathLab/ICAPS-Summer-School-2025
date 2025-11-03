@@ -17,9 +17,9 @@ from lib_piglet.search.base_search import search_node
 
 
 class graph_search(base_search):
-    
-    name = 'graph'
-    
+
+    name = "graph"
+
     # Search the path between two state
     # @param start_state The start of the path
     # @param goal_state Then goal of the path
@@ -58,7 +58,7 @@ class graph_search(base_search):
 
             self.log("expand", current)
             current.close()
-            
+
             # expand the current node
             for state, action in self.expander_.expand(current):
                 # each successor is a (state, action) tuple which
@@ -73,16 +73,16 @@ class graph_search(base_search):
                     succ_node.priority_queue_handle_ = self.open_list_.push(succ_node)
                     self.all_nodes_list_[succ_node] = succ_node
                     self.nodes_generated_ += 1
-                else:      
+                else:
                     # succ_node only have the same hash and state comparing with the on in the all nodes list
                     # It's not the one in the all nodes list,  we need the real node in the all nodes list.
                     exist = self.all_nodes_list_[succ_node]
                     if not exist.is_closed():
                         self.relax(exist, succ_node)
-                    
+
             # Optionally log close event
             # self.log("close", current)
-        
+
         # OPEN list is exhausted and we did not find the goal
         # return failure instead of a solution
         self.runtime_ = time.process_time() - self.start_time
@@ -106,5 +106,5 @@ class graph_search(base_search):
             self.log("relaxed-by", exist)
         else:
             new.id = exist.id
-            self.log('generating', new) 
-            self.log('dominated-by', exist) 
+            self.log("generating", new)
+            self.log("dominated-by", exist)
