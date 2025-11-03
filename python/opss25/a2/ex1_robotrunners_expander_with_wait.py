@@ -24,7 +24,7 @@ class robotrunners_expander_with_wait(robotrunners_expander):
             # NB: we only initialise the state and action attributes.
             # The search will initialise the rest, assuming it decides
             # to add the corresponding successor to OPEN
-            new_state = self.__move(current.state_, a.move_)
+            new_state = self.move(current.state_, a.move_)
 
             # 🏷️ A2 EXERCISE: CHECK THE RESERVATION TABLE
             #

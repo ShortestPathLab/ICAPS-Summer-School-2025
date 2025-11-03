@@ -56,7 +56,7 @@ class robotrunners_expander(base_expander):
             # NB: we only initialise the state and action attributes.
             # The search will initialise the rest, assuming it decides
             # to add the corresponding successor to OPEN
-            new_state = self.__move(current.state_, a.move_)
+            new_state = self.move(current.state_, a.move_)
             self.succ_.append((new_state, a))
         return self.succ_[:]
 
