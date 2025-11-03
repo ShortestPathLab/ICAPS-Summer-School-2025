@@ -115,7 +115,6 @@ class robotrunners_expander(base_expander):
             actions[-1].move_ = Move_Actions.ROTATE_CCW
             actions[-1].cost_ = 1
         # endregion
-
         return actions
 
     def move(self, curr_state: tuple, move):

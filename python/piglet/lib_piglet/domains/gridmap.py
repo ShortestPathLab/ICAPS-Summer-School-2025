@@ -122,7 +122,7 @@ class gridmap(base_domain[grid_state]):
 
         for x in range(0, int(self.height_)):
             for y in range(0, int(self.width_)):
-                if self.map_[x][y] == True:
+                if self.map_[x][y]:
                     print(".", end="")
                 else:
                     print("@", end="")

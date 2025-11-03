@@ -59,5 +59,4 @@ class robotrunners_expander_with_wait(robotrunners_expander):
             actions[-1].move_ = Move_Actions.WAIT
             actions[-1].cost_ = 1
         # endregion
-
         return actions
