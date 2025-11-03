@@ -187,6 +187,8 @@ class pyMAPFPlanner:
         self._default_res_table.clear()
         has_collisions = False
         for i in agent_ids:
+            if i not in self._path_pool.keys():
+                continue
             check_path = self._path_pool[i]
             if self.env.curr_states[i].location != check_path[0][0] or self.env.curr_states[i].orientation != check_path[0][1]:
                 has_collisions = True #replan all if we have mismatches between lcurrent state and path pool
