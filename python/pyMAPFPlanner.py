@@ -160,7 +160,7 @@ class pyMAPFPlanner:
             # Initialize Piglet TXAstar planner
             # print(self.env.map)
             self._domain = robotrunners(
-                "example_problems/random.domain/maps/random-32-32-20.map"
+                gridmap.from_list(self.env.cols, self.env.rows, self.env.map)
             )
             # Haven't done this part yet
             self._expander = opss25.a2.ex1_robotrunners_expander_with_wait.robotrunners_expander_with_wait(
