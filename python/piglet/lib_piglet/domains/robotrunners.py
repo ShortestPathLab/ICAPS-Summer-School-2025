@@ -52,13 +52,14 @@ class robotrunners(base_domain[robotrunners_state]):
     def get_name(self):
         return "robotrunners"
 
-    def __init__(self, filename: str):
+    def __init__(self, filename: str | None):
         self.map_: list = []
         self.height_: int = int(0)
         self.width_: int = int(0)
         self.map_size_: int = int(0)
         self.domain_file_: str = filename
-        self.load(filename)
+        if filename is not None:
+            self.load(filename)
         self.use_time: bool = False
 
     def is_goal(self, current_state, goal_state):
