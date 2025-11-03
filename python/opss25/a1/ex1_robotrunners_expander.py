@@ -40,6 +40,7 @@ class robotrunners_expander(base_expander):
         self,
         map: robotrunners,
     ):
+        base_expander.__init__(self, map)
         self.domain_: robotrunners = map
         self.effects_: list = [self.domain_.height_ * -1, self.domain_.height_, -1, 1]
 
@@ -117,7 +118,7 @@ class robotrunners_expander(base_expander):
 
         return actions
 
-    def __move(self, curr_state: tuple, move):
+    def move(self, curr_state: tuple, move):
         x, y, direction, t = curr_state
 
         # 🏷️ A1 EXERCISE: IMPLEMENT THE LOGIC TO UPDATE THE STATE GIVEN THE ACTION

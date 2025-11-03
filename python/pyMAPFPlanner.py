@@ -194,12 +194,17 @@ class pyMAPFPlanner:
             if len(self._path_pool[i]) == 0:
                 continue
             check_path = self._path_pool[i]
-            if self.env.curr_states[i].location != check_path[0][0] or self.env.curr_states[i].orientation != check_path[0][1]:
-                has_collisions = True #replan all if we have mismatches between lcurrent state and path pool
+            if (
+                self.env.curr_states[i].location != check_path[0][0]
+                or self.env.curr_states[i].orientation != check_path[0][1]
+            ):
+                has_collisions = True  # replan all if we have mismatches between lcurrent state and path pool
                 break
         for i in agent_ids:
             # Build a piglet path for agent i
-            if not self.env.goal_locations[i]: # No goal: keep position/orientation, advance time by 1 (WAIT-like)
+            if not self.env.goal_locations[
+                i
+            ]:  # No goal: keep position/orientation, advance time by 1 (WAIT-like)
                 current_piglet_state = self._to_piglet_state(
                     self.env.curr_states[i].location,
                     direction=self.env.curr_states[i].orientation,
@@ -219,16 +224,18 @@ class pyMAPFPlanner:
                 self.reserve_path(
                     [current_piglet_state, next_piglet_state], agent_id=i, start_time=0
                 )
-            elif not has_collisions and i in self._path_pool.keys() and len(self._path_pool[i]) > 0: # Use existing path in path pool if we have paths and no collisions detected
-                piglet_path = self.solution_to_piglet_state_list(
-                    self._path_pool[i]
-                )
+            elif (
+                not has_collisions
+                and i in self._path_pool.keys()
+                and len(self._path_pool[i]) > 0
+            ):  # Use existing path in path pool if we have paths and no collisions detected
+                piglet_path = self.solution_to_piglet_state_list(self._path_pool[i])
                 self.reserve_path(
                     piglet_path,
                     agent_id=i,
                     start_time=0,
                 )
-            else: #replan single agent when necessary
+            else:  # replan single agent when necessary
                 piglet_path = self.get_txastar_path(
                     self.env.curr_states[i].location,
                     self.env.curr_states[i].orientation,
@@ -279,7 +286,7 @@ class pyMAPFPlanner:
                     actions[i] = MAPF.Action.CR
                 elif incr == -1 or incr == 3:
                     actions[i] = MAPF.Action.CCR
-            self._path_pool[i].pop(0) # remove the executed action
+            self._path_pool[i].pop(0)  # remove the executed action
         # print("Actions from path pool:", actions)
         return actions
 
