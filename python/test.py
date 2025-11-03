@@ -24,7 +24,7 @@ from piglet.lib_piglet.output.trace_output import trace_output
 from piglet.lib_piglet.utils.data_structure import bin_heap
 from piglet.lib_piglet.cli.cli_tool import parse_problem
 
-MAP_PATH_ABSOLUTE = "/home/spaaaacccee/projects/opss25-startkit/example_problems/random/maps/random-32-32-20.map"
+MAP_PATH_ABSOLUTE = "/home/spaaaacccee/projects/opss25-startkit/example_problems/random/random-32-32-10.map"
 SCEN_PATH_ABSOLUTE = "/home/spaaaacccee/projects/opss25-startkit/example_problems/random/random-32-32-10.scen"
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -65,13 +65,4 @@ solution = search_engine.get_path(
     (*task.start_state, Directions.EAST, 0), (*task.goal_state, Directions.NONE, -1)
 )
 
-# (20, 31, EAST, 0)
-# (14, 24, NONE, -1)
-# piglet_path = self.get_TXAstar_path(
-#             671,
-#             0,
-#             0,
-#             472
-#         )
-# print solution
 print(solution)
