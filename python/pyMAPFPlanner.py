@@ -26,8 +26,12 @@ from piglet.lib_piglet.search import (
 from piglet.lib_piglet.utils.data_structure import bin_heap
 
 import opss25.a2.ex3_create_search
+from piglet.lib_piglet.logging.search_logger import bind, search_logger
+from piglet.lib_piglet.output.trace_output import trace_output
 
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
+
+LOG_ENABLED = False
 
 
 class pyMAPFPlanner:
@@ -169,6 +173,10 @@ class pyMAPFPlanner:
             self._search_engine = opss25.a2.ex3_create_search.create_search(
                 self._domain, self._default_res_table
             )
+
+            if LOG_ENABLED:
+                logger = search_logger(logger=trace_output(file="test.trace.yaml"))
+                bind(self._search_engine, logger).head()
 
         self._search_engine.open_list_.clear()
         return self._search_engine.get_path(

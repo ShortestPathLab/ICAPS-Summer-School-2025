@@ -37,7 +37,7 @@ class graph_search(base_search):
         self.open_list_.push(start_node)
         self.all_nodes_list_[start_node] = start_node
 
-        # continue while there are still nods on OPEN
+        # continue while there are still nodes on OPEN
         while len(self.open_list_) > 0:
             current = self.open_list_.pop()
             self.nodes_expanded_ += 1
