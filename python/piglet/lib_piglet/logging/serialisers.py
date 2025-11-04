@@ -79,8 +79,10 @@ class robotrunners_serialiser(domain_serialiser[robotrunners_state]):
                     "$": "rect",
                     "width": 1,
                     "height": 1,
-                    "fill": 
-                        sub("\s+", " ", """
+                    "fill": sub(
+                        "\s+",
+                        " ",
+                        """
                         ${{
                             ({
                                 destination: color.red, 
@@ -95,12 +97,13 @@ class robotrunners_serialiser(domain_serialiser[robotrunners_state]):
                                 solution: color.blue
                             })[$.type] ?? theme.accent
                         }}
-                    """).strip(),
+                    """,
+                    ).strip(),
                     "alpha": "${{ ($.expanded || $.type == 'generating' || $.type == 'generating-new') ? 0.2 : 1 }}",
                     "x": "${{ $.x }}",
                     "y": "${{ $.y }}",
                     "direction": "${{ $.direction }}",
-                    "t": "${{ $.t }}"
+                    "t": "${{ $.t }}",
                 }
             ]
         }
@@ -109,7 +112,7 @@ class robotrunners_serialiser(domain_serialiser[robotrunners_state]):
         return {"x": "${{ $.x + 0.5 }}", "y": "${{ $.y + 0.5 }}", "scale": 1}
 
     def serialise(self, current: search_node[robotrunners_state]):
-        [x, y, direction, t] = current.state_
+        x, y, direction, t, *_ = current.state_ + (None, None)
         return {"x": y, "y": x, "direction": int(direction), "t": t}
 
 
@@ -122,8 +125,10 @@ class grid_serialiser(domain_serialiser[grid_state]):
                     "$": "rect",
                     "width": 1,
                     "height": 1,
-                    "fill": 
-                        sub("\s+", " ", """
+                    "fill": sub(
+                        "\s+",
+                        " ",
+                        """
                         ${{
                             ({
                                 destination: color.red, 
@@ -138,7 +143,8 @@ class grid_serialiser(domain_serialiser[grid_state]):
                                 solution: color.blue
                             })[$.type] ?? theme.accent
                         }}
-                    """).strip(),
+                    """,
+                    ).strip(),
                     "alpha": 1,
                     "x": "${{ $.x }}",
                     "y": "${{ $.y }}",

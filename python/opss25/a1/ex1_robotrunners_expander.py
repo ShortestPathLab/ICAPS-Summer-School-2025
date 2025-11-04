@@ -66,7 +66,7 @@ class robotrunners_expander(base_expander):
     # @param loc A (x,y) coordinate tuple
     # @return a list of gridaction object.
     def get_actions(self, state: tuple):
-        x, y, direction, t = state
+        x, y, direction, *_ = state
         actions = []
 
         # 🏷️ A1 EXERCISE: IMPLEMENT THE LOGIC TO DETERMINE VALID ACTIONS
@@ -118,7 +118,7 @@ class robotrunners_expander(base_expander):
         return actions
 
     def move(self, curr_state: tuple, move):
-        x, y, direction, t = curr_state
+        x, y, direction, *_ = curr_state
 
         # 🏷️ A1 EXERCISE: IMPLEMENT THE LOGIC TO UPDATE THE STATE GIVEN THE ACTION
         #
@@ -145,7 +145,7 @@ class robotrunners_expander(base_expander):
 
         # endregion
 
-        return x, y, direction, t + 1
+        return x, y, direction
 
     def __str__(self):
         return str(self.domain_)

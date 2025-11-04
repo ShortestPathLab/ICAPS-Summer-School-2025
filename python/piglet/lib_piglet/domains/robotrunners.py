@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-from lib_piglet.domains.base_domain import base_domain
 from lib_piglet.domains.gridmap import gridmap
 
 
