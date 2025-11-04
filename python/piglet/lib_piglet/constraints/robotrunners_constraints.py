@@ -1,13 +1,20 @@
 # constraints/robotrunners_constraints.py
 # This module defines constraints, constraints table and reservation table for grid map.
 
+from typing import TypeAlias
+
+
+EdgetableKey: TypeAlias = tuple[int, int, int, int]
+Timestep: TypeAlias = int
+AgentId: TypeAlias = int
+
 
 class robotrunners_reservation_table:
 
     width_: int
     height_: int
     vertextable_: list
-    edgetable_: list
+    edgetable_: dict[EdgetableKey, dict[Timestep, AgentId]]
 
     def __init__(self, width, height):
         self.width_ = width
@@ -17,7 +24,7 @@ class robotrunners_reservation_table:
         ]
         self.edgetable_ = {}
 
-    # Check if a temporal reservation exists at a given vertex 
+    # Check if a temporal reservation exists at a given vertex
     # @param state A tuple of (x,y,t) coordinates.
     # @param agent_id An int of agent_id.
     # @return bool True if reserved.
@@ -52,15 +59,7 @@ class robotrunners_reservation_table:
             self.vertextable_[x][y][t] = agent_id
             return True
 
-<<<<<<< HEAD
         return False
-=======
-        if self.vertextable_[x][y][t] != agent_id and self.vertextable_[x][y][t] != -1:
-            return False
-        else:
-            self.vertextable_[x][y][t] = agent_id
-            return True
->>>>>>> f1622f89a00c0fddd27bd31e15ce7022fe46d966
 
     # Delete a vertex reservation from reservation table
     # @param state A tuple of (x,y,t) coordinates.
@@ -78,13 +77,8 @@ class robotrunners_reservation_table:
         # delete temporal reservation (x, y, t) but only
         # if it belongs to agent @agent_id
         if t in self.vertextable_[x][y]:
-<<<<<<< HEAD
-            if self.vertextable_[x][y][t]== agent_id:
-                del self.vertextable_[x][y][t]
-=======
             if self.vertextable_[x][y][t] == agent_id:
-                self.vertextable_[x][y][t] = -1
->>>>>>> f1622f89a00c0fddd27bd31e15ce7022fe46d966
+                del self.vertextable_[x][y][t]
                 return True
 
         # reservation doesn't exist or belongs to another
@@ -96,28 +90,9 @@ class robotrunners_reservation_table:
     # @param new_state The second vertex (nx, ny, t)
     # @param agent_id An int of agent_id.
     # @return bool True if reserved.
-<<<<<<< HEAD
-    def is_edge_collision(self, state: tuple, new_state: tuple, current_agent_id: int = -1):
-=======
-    # def is_edge_collision(self, state: tuple, new_state: tuple, current_agent_id: int = -1):
-    #     x, y, direction, t = state
-    #     nx, ny, n_direction, arrival_t = new_state
-    #     if not (x,y,nx,ny) in self.edgetable_:
-    #         return False
-    #     if arrival_t not in self.edgetable_[(x,y,nx,ny)]:
-    #         return False
-
-    #     if self.edgetable_[(x,y,nx,ny)][arrival_t]==-1:
-    #         return False
-
-    #     if self.edgetable_[(x,y,nx,ny)][arrival_t] == current_agent_id and current_agent_id != -1:
-    #         return False
-
-    #     return True
     def is_edge_collision(
-        self, state: tuple, new_state: tuple, current_agent_id: int = -1
+        self, state: tuple, new_state: tuple, current_agent_id: int | None = None
     ):
->>>>>>> f1622f89a00c0fddd27bd31e15ce7022fe46d966
         x, y, direction, t = state
         nx, ny, n_direction, arrival_t = new_state
         for key in ((x, y, nx, ny), (nx, ny, x, y)):
@@ -125,15 +100,15 @@ class robotrunners_reservation_table:
             if not bucket:
                 continue
             val = bucket.get(arrival_t)
-            if val in (None, -1):
+            if val in (None, current_agent_id):
                 continue
-            if current_agent_id != -1 and val == current_agent_id:
+            if current_agent_id is None:
                 continue
             return True
 
         return False
 
-    # Reserve a temporal edge 
+    # Reserve a temporal edge
     # @param state: the source state (x, y, t)
     # @param new_state: the destination state (nx, ny, t+1)
     # @return True if reservation succeeds, else False
@@ -141,9 +116,9 @@ class robotrunners_reservation_table:
         x, y, direction, t = state
         nx, ny, n_direction, arrival_t = new_state
         key = (x, y, nx, ny)
-        
+
         # <-- no KeyError
-        bucket = self.edgetable_.setdefault(key, {})  
+        bucket = self.edgetable_.setdefault(key, {})
 
         # conflict; someone else already reserved the edge
         if arrival_t in bucket and bucket[arrival_t] != agent_id:
@@ -153,13 +128,9 @@ class robotrunners_reservation_table:
         bucket[arrival_t] = agent_id
         return True
 
-<<<<<<< HEAD
-
     # Remove a temporal edge reservation
     # @param state: the source state (x, y, y)
     # @param new_state: the destination state (nx, ny, t+1)
-=======
->>>>>>> f1622f89a00c0fddd27bd31e15ce7022fe46d966
     def del_edge(self, state: tuple, new_state: tuple, agent_id: int):
         x, y, direction, t = state
         nx, ny, n_direction, arrival_t = new_state
@@ -171,56 +142,14 @@ class robotrunners_reservation_table:
         if not bucket:
             return False
 
-        # delete reservation if it exists and 
+        # delete reservation if it exists and
         # it is held by agent @param agent_id
         if arrival_t in bucket and bucket[arrival_t] == agent_id:
-            del bucket[arrival_t] 
+            del bucket[arrival_t]
             return True
 
         # delete failed (reservation held by another agent)
         return False
-<<<<<<< HEAD
-=======
-
-    # # Add an single reservation to reservation table
-    # # @param state A tuple of (x,y,t) coordinates.
-    # # @param agent_id An int of agent_id.
-    # # @return success True if add successful, false if the location reserved by other agent.
-    # def add_edge(self, state: tuple, new_state: tuple, agent_id: int):
-    #     x, y, direction, t = state
-    #     nx, ny, n_direction, arrival_t = new_state
-    #     if self.edgetable_[(x,y,nx,ny)] is None:
-    #         self.edgetable_[(x,y,nx,ny)] = {}
-
-    #     if arrival_t not in self.edgetable_[(x,y,nx,ny)]:
-    #         self.edgetable_[(x,y,nx,ny)][arrival_t] = agent_id
-    #         return True
-
-    #     if self.edgetable_[(x,y,nx,ny)][arrival_t] != agent_id and self.edgetable_[(x,y,nx,ny)][arrival_t]!=-1:
-    #         return False
-    #     else:
-    #         self.edgetable_[(x,y,nx,ny)][arrival_t] = agent_id
-    #         return True
-
-    # # Delete a reserve from reservation table
-    # # @param state A tuple of (x,y,t) coordinates.
-    # # @param agent_id An int of agent_id.
-    # # @return success True if delete successful, False if reserve doesn't exist
-    # def del_edge(self, state: tuple, new_state: tuple, agent_id: int):
-    #     x, y, direction, t = state
-    #     nx, ny, n_direction, arrival_t = new_state
-    #     if self.edgetable_[(x,y,nx,ny)] is None:
-    #         return False
-
-    #     if arrival_t in self.edgetable_[(x,y,nx,ny)]:
-    #         if self.edgetable_[(x,y,nx,ny)][arrival_t]== agent_id:
-    #             self.edgetable_[(x,y,nx,ny)][arrival_t] = -1
-    #             return True
-    #         else:
-    #             return False
-    #     else:
-    #         return False
->>>>>>> f1622f89a00c0fddd27bd31e15ce7022fe46d966
 
     # clear the reservation table
     def clear(self):
