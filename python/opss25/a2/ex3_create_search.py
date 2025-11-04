@@ -19,7 +19,7 @@ from piglet.lib_piglet.constraints.robotrunners_constraints import (
     robotrunners_reservation_table,
 )
 from .ex1_robotrunners_expander_with_wait import robotrunners_expander_with_wait
-from ..a1.ex2_robotrunners_heuristic import straight_heuristic
+from ..a1.ex2_robotrunners_heuristic import manhattan_heuristic
 
 
 def create_search(
@@ -38,7 +38,7 @@ def create_search(
     # Import a heuristic function
     heuristic = None
     # region ANSWER A1:
-    heuristic = straight_heuristic
+    heuristic = manhattan_heuristic
     # endregion
 
     return graph_search(open_list, expander, heuristic_function=heuristic)
