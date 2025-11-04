@@ -75,21 +75,13 @@ class pyMAPFPlanner:
         self.front_buffer = [[] for _ in range(self.env.num_of_agents)]
 
     def did_error(self):
-        did_error = self.back_buffer and not all(
+        return self.back_buffer and not all(
             robotrunners_state_is_equal(a, b)
             for a, b in zip_longest(
                 self.back_buffer,
                 interop.to_piglet_state_list(self.env),
             )
         )
-        if did_error:
-            print(
-                "ERROR",
-                self.back_buffer,
-                interop.to_piglet_state_list(self.env),
-                flush=True,
-            )
-        return did_error
 
     def get_upcoming_actions(self, pop: bool = False):
         state_pairs = zip_longest(
