@@ -45,7 +45,7 @@ class pyMAPFPlanner:
     _map_file = None
     front_buffer: list[list[robotrunners_state]] = []
     # Back buffer only stores 1 past timestep's snapshot
-    back_buffer: list[robotrunners_state] = None
+    back_buffer: list[robotrunners_state] = []
 
     def __init__(self, env: MAPF.SharedEnvironment = None) -> None:
         if env is not None:
@@ -75,13 +75,21 @@ class pyMAPFPlanner:
         self.front_buffer = [[] for _ in range(self.env.num_of_agents)]
 
     def did_error(self):
-        return self.back_buffer and not all(
+        did_error = self.back_buffer and not all(
             robotrunners_state_is_equal(a, b)
             for a, b in zip_longest(
                 self.back_buffer,
                 interop.to_piglet_state_list(self.env),
             )
         )
+        if did_error:
+            print(
+                "ERROR",
+                self.back_buffer,
+                interop.to_piglet_state_list(self.env),
+                flush=True,
+            )
+        return did_error
 
     def get_upcoming_actions(self, pop: bool = False):
         state_pairs = zip_longest(
@@ -110,8 +118,8 @@ class pyMAPFPlanner:
             # Pop current action
             self.back_buffer = [
                 # Mutates the front buffer!
-                agent.pop(0) if len(agent) else None
-                for agent in self.front_buffer
+                next.pop(0) if len(next) else prev
+                for prev, next in zip_longest(self.back_buffer, self.front_buffer)
             ]
 
         return actions
