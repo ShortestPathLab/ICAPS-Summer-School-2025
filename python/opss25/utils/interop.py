@@ -1,14 +1,31 @@
 # --- piglet ---------------------------------------------------------
 from typing import Optional, Tuple, Union
 
+import MAPF
 from piglet.lib_piglet.domains.robotrunners import Directions
 
 
+def to_piglet_state_list(
+    env: MAPF.SharedEnvironment,
+):
+    return [
+        to_piglet_state(
+            env,
+            a.location,
+            a.orientation,
+        )
+        for a in env.curr_states
+    ]
+
+
 def to_piglet_state(
-    cols: int, loc: int, direction: Optional[int] = None, time: Optional[int] = None
+    env: MAPF.SharedEnvironment,
+    loc: int,
+    direction: Optional[int] = None,
+    time: Optional[int] = None,
 ) -> Union[Tuple[int, int, Directions], Tuple[int, int, Directions, int]]:
     # convert flat index -> (row, col)
-    r, c = loc_to_rc(cols, loc)
+    r, c = loc_to_rc(env.cols, loc)
 
     # map direction int -> Directions enum
     if direction is None:

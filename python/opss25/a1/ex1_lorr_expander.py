@@ -34,7 +34,7 @@ from piglet.lib_piglet.domains.robotrunners import (
 )
 
 
-class robotrunners_expander(base_expander):
+class lorr_expander(base_expander):
 
     def __init__(
         self,

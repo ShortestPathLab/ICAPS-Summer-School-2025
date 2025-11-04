@@ -1,8 +1,8 @@
 import os
 import sys
 
-import opss25.a1.ex2_robotrunners_heuristic
-import opss25.a2.ex1_robotrunners_expander_with_wait
+import python.opss25.a1.ex2_lorr_heuristics
+import python.opss25.a2.ex1_lorr_expander_w_reservations
 import piglet.lib_piglet.search.search_node as sn
 from piglet.lib_piglet.cli.cli_tool import parse_problem
 from piglet.lib_piglet.constraints.robotrunners_constraints import (
@@ -48,11 +48,11 @@ default_res_table = robotrunners_reservation_table(32, 32)
 dm = robotrunners.robotrunners(MAP_PATH_ABSOLUTE)
 
 expander = (
-    opss25.a2.ex1_robotrunners_expander_with_wait.robotrunners_expander_with_wait(
+    python.opss25.a2.ex1_lorr_expander_w_reservations.lorr_expander_w_reservations(
         dm, reservation_table=default_res_table
     )
 )
-heuristic_function = opss25.a1.ex2_robotrunners_heuristic.straight_heuristic
+heuristic_function = opss25.a1.ex2_heuristic.straight_heuristic
 open_list = bin_heap(sn.compare_node_f)
 engine = graph_search.graph_search
 search_engine = engine(open_list, expander, heuristic_function=heuristic_function)
