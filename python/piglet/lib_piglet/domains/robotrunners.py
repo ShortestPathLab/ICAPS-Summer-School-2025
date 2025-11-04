@@ -4,7 +4,6 @@
 
 from enum import IntEnum
 
-from lib_piglet.domains.base_domain import base_domain
 from lib_piglet.domains.gridmap import gridmap
 
 
@@ -46,7 +45,19 @@ class robotrunners_action:
             print("WAIT " + str(self.cost_))
 
 
-robotrunners_state = tuple
+robotrunners_state = tuple[int, int, Directions, int]
+
+
+def robotrunners_state_is_equal(
+    a: robotrunners_state | None, b: robotrunners_state | None
+):
+    if a is None and b is None:
+        return True
+    elif a is None or b is None:
+        return False
+    x1, y1, r1, *_ = a
+    x2, y2, r2, *_ = b
+    return (x1, y1, r1) == (x2, y2, r2)
 
 
 class robotrunners(gridmap):

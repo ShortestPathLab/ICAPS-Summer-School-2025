@@ -18,26 +18,23 @@ from piglet.lib_piglet.domains.robotrunners import robotrunners
 from piglet.lib_piglet.constraints.robotrunners_constraints import (
     robotrunners_reservation_table,
 )
-from .ex1_robotrunners_expander_with_wait import robotrunners_expander_with_wait
-from ..a1.ex2_robotrunners_heuristic import manhattan_heuristic
+from .ex1_lorr_expander_w_reservations import lorr_expander_w_reservations
+from ..a1.ex2_lorr_heuristics import manhattan_heuristic
 
 
-def create_search(
+def create_search_w_reservations(
     domain: robotrunners, reservation_table: robotrunners_reservation_table
 ):
     open_list = bin_heap(search_node.compare_node_f)
 
-    # 🏷️ A1 EXERCISE: DEFINE THE EXPANDER
-    # Import and initialize the expander
-    expander = None
-    # region ANSWER A1:
-    expander = robotrunners_expander_with_wait(domain, reservation_table)
-    # endregion
+    # ℹ️ INFO We've done this for you
+    expander = lorr_expander_w_reservations(domain, reservation_table)
 
-    # 🏷️ A1 EXERCISE: DEFINE THE HEURISTIC
+    # 🏷️ A2 EXERCISE: PLAY WITH HEURISTICS
+    # Try changing the heuristic function below and see how it affects the search.
     # Import a heuristic function
-    heuristic = None
-    # region ANSWER A1:
+    heuristic = manhattan_heuristic
+    # region ANSWER A2:
     heuristic = manhattan_heuristic
     # endregion
 

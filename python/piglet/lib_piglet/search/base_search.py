@@ -16,15 +16,21 @@ from lib_piglet.utils.identifier import get_random_id
 
 class base_search:
 
-    name = 'untitled-search'
+    name = "untitled-search"
 
     def log(self, event: str, current: search_node, **kwargs):
         if self.listener_:
             self.listener_.log(self.name, event, current, **kwargs)
         return current
 
-    def __init__(self, open_list, expander: base_expander, heuristic_function=None,
-                time_limit: int = sys.maxsize, listener: event_listener = None):
+    def __init__(
+        self,
+        open_list,
+        expander: base_expander,
+        heuristic_function=None,
+        time_limit: int = sys.maxsize,
+        listener: event_listener = None,
+    ):
         self.listener_ = listener
 
         self.open_list_: list[search_node] = open_list
@@ -49,7 +55,7 @@ class base_search:
     # @param start_state The start of the path
     # @param goal_state Then goal of the path
     # @return a list of locations between start and goal
-    def get_path(self, start_state, goal_state):
+    def get_path(self, start_state, goal_state) -> solution:
         raise NotImplementedError()
 
     # Generate search_node objects for a given state
@@ -78,7 +84,9 @@ class base_search:
             result.h_ = 0
             result.f_ = result.g_
         else:
-            result.h_ = self.heuristic_function_(self.expander_.domain_, result.state_, self.goal_)
+            result.h_ = self.heuristic_function_(
+                self.expander_.domain_, result.state_, self.goal_
+            )
             result.f_ = result.g_ + result.h_ * self.heuristic_weight_
         return result
 

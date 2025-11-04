@@ -34,7 +34,7 @@ from piglet.lib_piglet.domains.robotrunners import (
 )
 
 
-class robotrunners_expander(base_expander):
+class lorr_expander(base_expander):
 
     def __init__(
         self,
@@ -71,8 +71,18 @@ class robotrunners_expander(base_expander):
     # @param state: A (x,y,direction) tuple; robot location + facing direction
     # @return a list of Move_Actions
     def get_actions(self, state: tuple):
-        x, y, direction, t = state
+        x, y, direction, *_ = state
         actions = []
+
+        # Check if we are on the map
+        if not (
+            0 <= x < int(self.domain_.height_) and 0 <= y < int(self.domain_.width_)
+        ):
+            return actions
+
+        # Check if we are on an obstacle
+        if not self.domain_.get_tile((x, y)):
+            return actions
 
         # 🏷️ A1 EXERCISE: IMPLEMENT THE LOGIC TO DETERMINE VALID ACTIONS
         #
@@ -84,42 +94,29 @@ class robotrunners_expander(base_expander):
         # Populate the 'actions' list with valid robotrunners_action objects.
         #
         # region ANSWER A1:
-        if (
-            x < 0
-            or x >= int(self.domain_.height_)
-            or y < 0
-            or y >= int(self.domain_.width_)
+
+        # Check if we can move forward
+        if any(
+            [
+                direction == Directions.NORTH and self.domain_.get_tile((x - 1, y)),
+                direction == Directions.EAST and self.domain_.get_tile((x, y + 1)),
+                direction == Directions.SOUTH and self.domain_.get_tile((x + 1, y)),
+                direction == Directions.WEST and self.domain_.get_tile((x, y - 1)),
+            ]
         ):
-            return actions
-
-        if not self.domain_.get_tile((x, y)):
-            return actions
-
-        if direction == Directions.NORTH and self.domain_.get_tile((x - 1, y)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.MOVE_FORWARD
-            actions[-1].cost_ = 1
-        elif direction == Directions.EAST and self.domain_.get_tile((x, y + 1)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.MOVE_FORWARD
-            actions[-1].cost_ = 1
-        elif direction == Directions.SOUTH and self.domain_.get_tile((x + 1, y)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.MOVE_FORWARD
-            actions[-1].cost_ = 1
-        elif direction == Directions.WEST and self.domain_.get_tile((x, y - 1)):
             actions.append(robotrunners_action())
             actions[-1].move_ = Move_Actions.MOVE_FORWARD
             actions[-1].cost_ = 1
 
-        if self.domain_.get_tile((x, y)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.ROTATE_CW
-            actions[-1].cost_ = 1
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.ROTATE_CCW
-            actions[-1].cost_ = 1
+        # Can always rotate
+        actions.append(robotrunners_action())
+        actions[-1].move_ = Move_Actions.ROTATE_CW
+        actions[-1].cost_ = 1
+        actions.append(robotrunners_action())
+        actions[-1].move_ = Move_Actions.ROTATE_CCW
+        actions[-1].cost_ = 1
         # endregion
+
         return actions
 
     
@@ -131,7 +128,7 @@ class robotrunners_expander(base_expander):
     # @return A tuple describing the new state of the robot,
     # after the move action is applied
     def move(self, curr_state: tuple, move):
-        x, y, direction, t = curr_state
+        x, y, direction, *_ = curr_state
 
         # 🏷️ A1 EXERCISE: IMPLEMENT THE LOGIC TO UPDATE THE STATE GIVEN THE ACTION
         #
@@ -158,7 +155,7 @@ class robotrunners_expander(base_expander):
 
         # endregion
 
-        return x, y, direction, t + 1
+        return x, y, direction
 
     def __str__(self):
         return str(self.domain_)

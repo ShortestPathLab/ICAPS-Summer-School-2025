@@ -15,8 +15,8 @@ from piglet.lib_piglet.search.graph_search import graph_search
 from piglet.lib_piglet.utils.data_structure import bin_heap
 from piglet.lib_piglet.search import search_node
 from piglet.lib_piglet.domains.robotrunners import robotrunners
-from .ex1_robotrunners_expander import robotrunners_expander
-from .ex2_robotrunners_heuristic import straight_heuristic
+from .ex1_lorr_expander import lorr_expander
+from .ex2_lorr_heuristics import straight_heuristic
 
 
 def create_search(domain: robotrunners):
@@ -26,7 +26,7 @@ def create_search(domain: robotrunners):
     # Import and initialize the expander
     expander = None
     # region ANSWER A1:
-    expander = robotrunners_expander(domain)
+    expander = lorr_expander(domain)
     # endregion
 
     # 🏷️ A1 EXERCISE: DEFINE THE HEURISTIC

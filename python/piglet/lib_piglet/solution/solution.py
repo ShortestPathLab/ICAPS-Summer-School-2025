@@ -5,6 +5,7 @@
 # @created: 2020-07-16
 #
 
+
 # Store solution of a search. paths_ attribute include a list of search_node.
 class solution:
 
@@ -24,10 +25,13 @@ class solution:
     def __repr__(self):
         return self.__str__()
 
+    def get_solution(self):
+        return [node.state_ for node in self.paths_]
+
+
 # Convert solution to a list of state
 def solution_to_state_list(sol: solution):
     path = solution.paths_[:]
-    for i in range(0,len(path)):
+    for i in range(0, len(path)):
         path = path[i].state_
     return path
-

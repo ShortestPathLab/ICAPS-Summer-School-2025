@@ -1,4 +1,4 @@
-from ..a1.ex1_robotrunners_expander import robotrunners_expander
+from ..a2.ex1_lorr_expander_w_reservations import lorr_expander_w_reservations
 from piglet.lib_piglet.domains.robotrunners import (
     Move_Actions,
     robotrunners,
@@ -9,7 +9,7 @@ from piglet.lib_piglet.constraints.robotrunners_constraints import (
 )
 
 
-class robotrunners_expander_with_wait(robotrunners_expander):
+class lorr_expander_w_reservations_and_wait(lorr_expander_w_reservations):
     def __init__(
         self,
         map: robotrunners,
