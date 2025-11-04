@@ -23,6 +23,7 @@ def naive_planner(domain: robotrunners, use_with_startkit: BindStartKit):
 
     # ℹ️ INFO We instantiate the search here.
     engine = create_search(domain)
+
     # ℹ️ INFO We connect the search to the start kit here.
     # It returns a function that allows you to run the search
     # in the context of the start kit.
