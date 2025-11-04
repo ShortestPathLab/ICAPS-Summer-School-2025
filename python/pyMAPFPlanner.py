@@ -298,19 +298,14 @@ class pyMAPFPlanner:
                 self.env.curr_states[i].orientation,
             )
             cx, cy, cr, *_ = current_state
-
             if current_path is None or len(current_path) == 0:
-                print("a", flush=True)
                 # Leave as wait and continue
                 actions[i] = MAPF.Action.W
             planned_next_state = current_path[0]
             nx, ny, nr, *_ = planned_next_state
             if (cx, cy) != (nx, ny):
-                print("b", current_state, planned_next_state, flush=True)
-                # raise BaseException()
                 actions[i] = MAPF.Action.FW
             elif nr == cr:
-                print("c", flush=True)
                 actions[i] = MAPF.Action.W
             else:
                 # Must be turn
@@ -320,7 +315,6 @@ class pyMAPFPlanner:
                 elif incr == -1 or incr == 3:
                     actions[i] = MAPF.Action.CCR
             if pop:
-                print("r", flush=True)
                 self._queue[i].pop(0)  # remove the executed action
         return actions
 
