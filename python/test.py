@@ -24,8 +24,8 @@ from piglet.lib_piglet.output.trace_output import trace_output
 from piglet.lib_piglet.utils.data_structure import bin_heap
 from piglet.lib_piglet.cli.cli_tool import parse_problem
 
-MAP_PATH_ABSOLUTE = "/home/spaaaacccee/projects/opss25-startkit/example_problems/random/maps/random-32-32-20.map"
-SCEN_PATH_ABSOLUTE = "/home/spaaaacccee/projects/opss25-startkit/example_problems/random/random-32-32-10.scen"
+MAP_PATH_ABSOLUTE = "example_problems/random/maps/random-32-32-20.map"
+SCEN_PATH_ABSOLUTE = "example_problems/random/random-32-32-10.scen"
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
