@@ -47,24 +47,29 @@ class robotrunners_expander(base_expander):
         # memory for storing successor (state, action) pairs
         self.succ_: list = []
 
-    # identify successors of the current node
+    # Expand the current search node and generate all successors 
     #
     # @param current: The current node
-    # @return : Possible next
+    # @return : A list with all successor nodes
     def expand(self, current: search_node):
         self.succ_.clear()
+
+        # get the set of actions applicable in the current state 
+        # for each action generate a corresponding search node (=successor)
+        # NB: we only initialise the state and action attributes of each
+        # sucessor. The search will initialise the rest, assuming it decides to
+        # add the corresponding successor to OPEN
         for a in self.get_actions(current.state_):
-            # NB: we only initialise the state and action attributes.
-            # The search will initialise the rest, assuming it decides
-            # to add the corresponding successor to OPEN
+            # applying an action yields a new state 
             new_state = self.move(current.state_, a.move_)
             self.succ_.append((new_state, a))
         return self.succ_[:]
 
-    # return a list with all the applicable/valid actions
-    # at tile (x, y)
-    # @param loc A (x,y) coordinate tuple
-    # @return a list of gridaction object.
+    # return a list with all the moves/actions that the robot can apply in the
+    # current state
+    #
+    # @param state: A (x,y,direction) tuple; robot location + facing direction
+    # @return a list of Move_Actions
     def get_actions(self, state: tuple):
         x, y, direction, t = state
         actions = []
@@ -117,6 +122,14 @@ class robotrunners_expander(base_expander):
         # endregion
         return actions
 
+    
+    # Compute the effect of applying a given move action 
+    # in the current state
+    #
+    # @param curr_state: the current state of the robot
+    # @param move: the proposed move (forward, rotate, wait)
+    # @return A tuple describing the new state of the robot,
+    # after the move action is applied
     def move(self, curr_state: tuple, move):
         x, y, direction, t = curr_state
 
