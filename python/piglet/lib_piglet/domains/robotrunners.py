@@ -48,6 +48,12 @@ class robotrunners_action:
 robotrunners_state = tuple[int, int, Directions, int]
 
 
+def robotrunners_state_is_equal(a: robotrunners_state, b: robotrunners_state):
+    x1, y1, r1, *_ = a
+    x2, y2, r2, *_ = b
+    return (x1, y1, r1) == (x2, y2, r2)
+
+
 class robotrunners(gridmap):
     def get_name(self):
         return "robotrunners"

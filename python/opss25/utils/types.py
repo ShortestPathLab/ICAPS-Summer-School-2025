@@ -5,4 +5,4 @@ import MAPF
 
 GetPath = Callable[[MAPF.SharedEnvironment, int], list | None]
 
-Planner = Callable[[MAPF.SharedEnvironment, list[list]], list[list]]
+Planner = Callable[[MAPF.SharedEnvironment, list[list], bool], list[list]]
