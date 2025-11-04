@@ -68,7 +68,7 @@ jobs:
                   }
 
                   # Generate branches a1-a4
-                  for i in 0 1 2 3; do
+                  for i in 0 1 2 3 4; do
                       j=$((i + 1))
                       git checkout main -f
                       branch="a${j}"

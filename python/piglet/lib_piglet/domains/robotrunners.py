@@ -46,7 +46,7 @@ class robotrunners_action:
             print("WAIT " + str(self.cost_))
 
 
-robotrunners_state = tuple
+robotrunners_state = tuple[int, int, Directions, int]
 
 
 class robotrunners(gridmap):

@@ -2,26 +2,31 @@
 # This module defines constraints, constraints table and reservation table for grid map.
 
 
+from typing import TypeAlias
+from piglet.lib_piglet.domains.robotrunners import robotrunners_state
+
+
+Timestep: TypeAlias = int
+AgentId: TypeAlias = int
+
+
 class robotrunners_reservation_table:
 
     width_: int
     height_: int
-    vertextable_: list
-    edgetable_: list
+    vertextable_: list[list[AgentId]]
+    edgetable_: dict[robotrunners_state, dict[Timestep, AgentId]]
 
     def __init__(self, width, height):
         self.width_ = width
         self.height_ = height
-        self.vertextable_ = [
-            [None] * int(self.width_) for _ in range(int(self.height_))
-        ]
-        self.edgetable_ = {}
+        self.clear()
 
     # Check is an location reserved by any other agent
     # @param state A tuple of (x,y,t) coordinates.
     # @param agent_id An int of agent_id.
     # @return bool True if reserved.
-    def is_reserved(self, state: tuple, current_agent_id: int = -1):
+    def is_reserved(self, state: robotrunners_state, current_agent_id: AgentId = -1):
         x, y, direction, t = state
         if self.vertextable_[x][y] is None:
             return False
@@ -40,7 +45,7 @@ class robotrunners_reservation_table:
     # @param state A tuple of (x,y,t) coordinates.
     # @param agent_id An int of agent_id.
     # @return success True if add successful, false if the location reserved by other agent.
-    def add_vertex(self, state: tuple, agent_id: int):
+    def add_vertex(self, state: robotrunners_state, agent_id: AgentId):
         x, y, direction, t = state
         if self.vertextable_[x][y] is None:
             self.vertextable_[x][y] = {}
@@ -59,7 +64,7 @@ class robotrunners_reservation_table:
     # @param state A tuple of (x,y,t) coordinates.
     # @param agent_id An int of agent_id.
     # @return success True if delete successful, False if reserve doesn't exist
-    def del_vertex(self, state: tuple, agent_id: int):
+    def del_vertex(self, state: robotrunners_state, agent_id: AgentId):
         x, y, direction, t = state
         if self.vertextable_[x][y] is None:
             return False
@@ -77,7 +82,7 @@ class robotrunners_reservation_table:
     # @param state A tuple of (x,y,t) coordinates.
     # @param agent_id An int of agent_id.
     # @return bool True if reserved.
-    # def is_edge_collision(self, state: tuple, new_state: tuple, current_agent_id: int = -1):
+    # def is_edge_collision(self, state: tuple, new_state: tuple, current_agent_id: AgentId = -1):
     #     x, y, direction, t = state
     #     nx, ny, n_direction, arrival_t = new_state
     #     if not (x,y,nx,ny) in self.edgetable_:
@@ -93,7 +98,10 @@ class robotrunners_reservation_table:
 
     #     return True
     def is_edge_collision(
-        self, state: tuple, new_state: tuple, current_agent_id: int = -1
+        self,
+        state: robotrunners_state,
+        new_state: robotrunners_state,
+        current_agent_id: AgentId = -1,
     ):
         x, y, direction, t = state
         nx, ny, n_direction, arrival_t = new_state
@@ -110,7 +118,12 @@ class robotrunners_reservation_table:
 
         return False
 
-    def add_edge(self, state: tuple, new_state: tuple, agent_id: int):
+    def add_edge(
+        self,
+        state: robotrunners_state,
+        new_state: robotrunners_state,
+        agent_id: AgentId,
+    ):
         x, y, direction, t = state
         nx, ny, n_direction, arrival_t = new_state
         key = (x, y, nx, ny)
@@ -123,7 +136,12 @@ class robotrunners_reservation_table:
         bucket[arrival_t] = agent_id
         return True
 
-    def del_edge(self, state: tuple, new_state: tuple, agent_id: int):
+    def del_edge(
+        self,
+        state: robotrunners_state,
+        new_state: robotrunners_state,
+        agent_id: AgentId,
+    ):
         x, y, direction, t = state
         nx, ny, n_direction, arrival_t = new_state
         key = (x, y, nx, ny)
@@ -145,7 +163,7 @@ class robotrunners_reservation_table:
     # # @param state A tuple of (x,y,t) coordinates.
     # # @param agent_id An int of agent_id.
     # # @return success True if add successful, false if the location reserved by other agent.
-    # def add_edge(self, state: tuple, new_state: tuple, agent_id: int):
+    # def add_edge(self, state: tuple, new_state: tuple, agent_id: AgentId):
     #     x, y, direction, t = state
     #     nx, ny, n_direction, arrival_t = new_state
     #     if self.edgetable_[(x,y,nx,ny)] is None:
@@ -165,7 +183,7 @@ class robotrunners_reservation_table:
     # # @param state A tuple of (x,y,t) coordinates.
     # # @param agent_id An int of agent_id.
     # # @return success True if delete successful, False if reserve doesn't exist
-    # def del_edge(self, state: tuple, new_state: tuple, agent_id: int):
+    # def del_edge(self, state: tuple, new_state: tuple, agent_id: AgentId):
     #     x, y, direction, t = state
     #     nx, ny, n_direction, arrival_t = new_state
     #     if self.edgetable_[(x,y,nx,ny)] is None:
@@ -183,6 +201,6 @@ class robotrunners_reservation_table:
     # clear the reservation table
     def clear(self):
         self.vertextable_ = [
-            [None] * int(self.width_) for x in range(int(self.height_))
+            [None] * int(self.width_) for _ in range(int(self.height_))
         ]
         self.edgetable_ = {}

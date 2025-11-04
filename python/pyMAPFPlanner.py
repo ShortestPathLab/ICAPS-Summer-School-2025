@@ -28,6 +28,7 @@ from piglet.lib_piglet.utils.data_structure import bin_heap
 import opss25.a2.ex3_create_search
 from piglet.lib_piglet.logging.search_logger import bind, search_logger
 from piglet.lib_piglet.output.trace_output import trace_output
+from environment import EX
 
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
 
@@ -118,7 +119,23 @@ class pyMAPFPlanner:
 
         # ---  Plan with Prioritized Planning (PP) ---------------------------------
         # Here we allow 10 seconds (10,000 ms) of planning time for all agents.
-        self.run_PP_planner(10000)
+        match EX:
+            case 1:
+                # TODO
+                self.run_PP_planner(10000)
+            case 2:
+                # TODO
+                self.run_PP_planner(10000)
+            case 3:
+                # TODO
+                self.run_PP_planner(10000)
+            case 4:
+                # TODO
+                self.run_PP_planner(10000)
+            case 5:
+                # TODO
+                # This case is the main branch
+                self.run_PP_planner(10000)
 
         return self.execute_action_from_path_pool()
 
@@ -185,7 +202,14 @@ class pyMAPFPlanner:
         )
 
     def put_agents_wait_in_place(self, agent_i: int, start_time: int):
-        print("Warning: PP could not find path for agent", agent_i, ", set to wait in place.","loc",self.env.curr_states[agent_i].location,flush=True)
+        print(
+            "Warning: PP could not find path for agent",
+            agent_i,
+            ", set to wait in place.",
+            "loc",
+            self.env.curr_states[agent_i].location,
+            flush=True,
+        )
         current_piglet_state = self._to_piglet_state(
             self.env.curr_states[agent_i].location,
             direction=self.env.curr_states[agent_i].orientation,
@@ -213,7 +237,7 @@ class pyMAPFPlanner:
             dict {agent_id: mapf_state_list} on success, or None if any agent fails.
         NOTE: This function does NOT commit reservations; caller commits on success.
         """
-        print("PP planning for agents:", replan_agent_ids,flush=True)
+        print("PP planning for agents:", replan_agent_ids, flush=True)
         for i in replan_agent_ids:
             piglet_path = self.get_txastar_path(
                 self.env.curr_states[i].location,
@@ -228,7 +252,7 @@ class pyMAPFPlanner:
                 continue
             else:
                 self._path_pool[i] = self.solution_to_mapf_state_list(piglet_path)[1:]
-                
+
                 self.reserve_path(
                     self.solution_to_piglet_state_list(piglet_path),
                     agent_id=i,
@@ -257,7 +281,7 @@ class pyMAPFPlanner:
                 has_collisions = True  # replan all if we have mismatches between lcurrent state and path pool
                 break
         if has_collisions:
-            print("Detected path mismatch, replanning all agents.",flush=True)
+            print("Detected path mismatch, replanning all agents.", flush=True)
             return agent_ids  # replan all agents if any mismatch detected
 
         # when no collisions, only replan agents with missing or empty paths
@@ -270,8 +294,8 @@ class pyMAPFPlanner:
                 replan_agents.append(i)
                 continue
             # Reserve existing paths for agents not needing replanning
-            print("Has existing path for agent", i, "reserving it.",flush=True)
-            self._path_pool[i] = self._path_pool[i][1:] # remove start
+            print("Has existing path for agent", i, "reserving it.", flush=True)
+            self._path_pool[i] = self._path_pool[i][1:]  # remove start
             piglet_path = self.mapf_state_list_to_piglet_state_list(
                 self._path_pool[i],
                 agent_id=i,
@@ -282,7 +306,7 @@ class pyMAPFPlanner:
                 agent_id=i,
                 start_time=0,
             )
-        print("Agents needing replanning:", replan_agents,flush=True)
+        print("Agents needing replanning:", replan_agents, flush=True)
         return replan_agents
 
     def run_PP_planner(self, time_limit: int):
@@ -297,7 +321,7 @@ class pyMAPFPlanner:
         # print(self.env.num_of_agents)
         agent_ids = list(range(self.env.num_of_agents))
         replan_agents = self.find_replan_agents(agent_ids)
-        print("Replanning agents:", replan_agents,flush=True)   
+        print("Replanning agents:", replan_agents, flush=True)
         random.shuffle(replan_agents)  # rando
         success = False
         # while not success:
@@ -325,24 +349,24 @@ class pyMAPFPlanner:
 
     def solution_to_piglet_state_list(self, solution):
         return [node.state_ for node in solution.paths_]
-    
-    def mapf_state_list_to_piglet_state_list(self, mapf_path,agent_id,start_time):
+
+    def mapf_state_list_to_piglet_state_list(self, mapf_path, agent_id, start_time):
         piglet_path = []
         current_piglet_state = self._to_piglet_state(
-                    self.env.curr_states[agent_id].location,
-                    direction=self.env.curr_states[agent_id].orientation,
-                    time=start_time,
-                )
-        start_time+=1
+            self.env.curr_states[agent_id].location,
+            direction=self.env.curr_states[agent_id].orientation,
+            time=start_time,
+        )
+        start_time += 1
         piglet_path.append(current_piglet_state)
         for state in mapf_path:
             current_piglet_state = self._to_piglet_state(
                 state[0],
                 direction=state[1],
-                time = start_time,
+                time=start_time,
             )
             piglet_path.append(current_piglet_state)
-            start_time+=1
+            start_time += 1
         return piglet_path
 
     # -------- Reserve path forward (start → goal) --------
