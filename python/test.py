@@ -1,15 +1,18 @@
 import os
 import sys
 
+import opss25.a1.ex2_robotrunners_heuristic
+import opss25.a2.ex1_robotrunners_expander_with_wait
 import piglet.lib_piglet.search.search_node as sn
+from piglet.lib_piglet.cli.cli_tool import parse_problem
 from piglet.lib_piglet.constraints.robotrunners_constraints import (
     robotrunners_reservation_table,
 )
 from piglet.lib_piglet.domains import robotrunners
 from piglet.lib_piglet.domains.robotrunners import Directions
-import opss25.a2.ex1_robotrunners_expander_with_wait
-import opss25.a1.ex2_robotrunners_heuristic
 from piglet.lib_piglet.heuristics import gridmap_h
+from piglet.lib_piglet.logging.search_logger import bind, search_logger
+from piglet.lib_piglet.output.trace_output import trace_output
 from piglet.lib_piglet.search import (
     base_search,
     graph_search,
@@ -18,14 +21,10 @@ from piglet.lib_piglet.search import (
     search_node,
     tree_search,
 )
-from piglet.lib_piglet.logging.search_logger import search_logger, bind
-from piglet.lib_piglet.output.trace_output import trace_output
-
 from piglet.lib_piglet.utils.data_structure import bin_heap
-from piglet.lib_piglet.cli.cli_tool import parse_problem
 
-MAP_PATH_ABSOLUTE = "/home/spaaaacccee/projects/opss25-startkit/example_problems/random/random-32-32-10.map"
-SCEN_PATH_ABSOLUTE = "/home/spaaaacccee/projects/opss25-startkit/example_problems/random/random-32-32-10.scen"
+MAP_PATH_ABSOLUTE = "example_problems/random/maps/random-32-32-20.map"
+SCEN_PATH_ABSOLUTE = "example_problems/random/random-32-32-10.scen"
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 

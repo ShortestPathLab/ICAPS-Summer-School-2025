@@ -1,10 +1,8 @@
 # constraints/robotrunners_constraints.py
 # This module defines constraints, constraints table and reservation table for grid map.
 
-
 from typing import TypeAlias
 from piglet.lib_piglet.domains.robotrunners import robotrunners_state
-
 
 Timestep: TypeAlias = int
 AgentId: TypeAlias = int
@@ -22,7 +20,7 @@ class robotrunners_reservation_table:
         self.height_ = height
         self.clear()
 
-    # Check is an location reserved by any other agent
+    # Check if a temporal reservation exists at a given vertex
     # @param state A tuple of (x,y,t) coordinates.
     # @param agent_id An int of agent_id.
     # @return bool True if reserved.
@@ -41,45 +39,50 @@ class robotrunners_reservation_table:
 
         return True
 
-    # Add an single reservation to reservation table
+    # Add a single vertex reservation to reservation table
     # @param state A tuple of (x,y,t) coordinates.
     # @param agent_id An int of agent_id.
     # @return success True if add successful, false if the location reserved by other agent.
     def add_vertex(self, state: robotrunners_state, agent_id: AgentId):
         x, y, direction, t = state
+
+        # allocate memory for the reservation table (x, y)
         if self.vertextable_[x][y] is None:
             self.vertextable_[x][y] = {}
 
+        # reserve (x, y, t) for agent @agent_id
         if t not in self.vertextable_[x][y]:
             self.vertextable_[x][y][t] = agent_id
             return True
 
-        if self.vertextable_[x][y][t] != agent_id and self.vertextable_[x][y][t] != -1:
-            return False
-        else:
-            self.vertextable_[x][y][t] = agent_id
-            return True
+        return False
 
-    # Delete a reserve from reservation table
+    # Delete a vertex reservation from reservation table
     # @param state A tuple of (x,y,t) coordinates.
     # @param agent_id An int of agent_id.
     # @return success True if delete successful, False if reserve doesn't exist
     def del_vertex(self, state: robotrunners_state, agent_id: AgentId):
         x, y, direction, t = state
+
+        # is the reservation table for cell (x, y) initialised?
+        # if not, there's nothing to delete
         if self.vertextable_[x][y] is None:
             return False
 
+        # delete temporal reservation (x, y, t) but only
+        # if it belongs to agent @agent_id
         if t in self.vertextable_[x][y]:
             if self.vertextable_[x][y][t] == agent_id:
-                self.vertextable_[x][y][t] = -1
+                del self.vertextable_[x][y][t]
                 return True
-            else:
-                return False
-        else:
-            return False
 
-    # Check is an location reserved by any other agent
-    # @param state A tuple of (x,y,t) coordinates.
+        # reservation doesn't exist or belongs to another
+        # agent. cannot delete
+        return False
+
+    # Check for edge collision
+    # @param state The first vertex (x, y, t)
+    # @param new_state The second vertex (nx, ny, t)
     # @param agent_id An int of agent_id.
     # @return bool True if reserved.
     # def is_edge_collision(self, state: tuple, new_state: tuple, current_agent_id: AgentId = -1):
@@ -110,9 +113,9 @@ class robotrunners_reservation_table:
             if not bucket:
                 continue
             val = bucket.get(arrival_t)
-            if val in (None, -1):
+            if val in (None, current_agent_id):
                 continue
-            if current_agent_id != -1 and val == current_agent_id:
+            if current_agent_id is None:
                 continue
             return True
 
@@ -128,11 +131,14 @@ class robotrunners_reservation_table:
         nx, ny, n_direction, arrival_t = new_state
         key = (x, y, nx, ny)
 
-        bucket = self.edgetable_.setdefault(key, {})  # <-- no KeyError
-        # Conflict if someone else already holds this time slot (and it’s not the tombstone -1)
-        if arrival_t in bucket and bucket[arrival_t] not in (-1, agent_id):
+        # <-- no KeyError
+        bucket = self.edgetable_.setdefault(key, {})
+
+        # conflict; someone else already reserved the edge
+        if arrival_t in bucket and bucket[arrival_t] != agent_id:
             return False
 
+        # reservation successful
         bucket[arrival_t] = agent_id
         return True
 
@@ -147,16 +153,18 @@ class robotrunners_reservation_table:
         key = (x, y, nx, ny)
 
         bucket = self.edgetable_.get(key)  # <-- safe
+
+        # nothing to delete
         if not bucket:
             return False
 
+        # delete reservation if it exists and
+        # it is held by agent @param agent_id
         if arrival_t in bucket and bucket[arrival_t] == agent_id:
-            bucket[arrival_t] = -1  # tombstone
-            # Optional cleanup: remove empty buckets if they only contain -1
-            # if all(v == -1 for v in bucket.values()):
-            #     del self.edgetable_[key]
+            del bucket[arrival_t]
             return True
 
+        # delete failed (reservation held by another agent)
         return False
 
     # # Add an single reservation to reservation table
