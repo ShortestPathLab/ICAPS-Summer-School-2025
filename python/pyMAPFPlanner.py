@@ -17,9 +17,9 @@ from opss25.utils import interop
 # Piglet imports
 from piglet.lib_piglet.domains.robotrunners import (
     Directions,
+    robotrunners_state_is_equal,
     robotrunners,
     robotrunners_state,
-    robotrunners_state_is_equal,
 )
 from piglet.lib_piglet.expanders import (
     base_expander,
@@ -33,6 +33,7 @@ from piglet.lib_piglet.search.base_search import (
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
 
 LOG_ENABLED = False
+REPLAN_ENABLED = True
 
 
 class pyMAPFPlanner:
