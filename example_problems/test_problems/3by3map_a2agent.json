@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
     "mapFile": "maps/3by3.map",
     "agentFile": "agents/3by3_2agents.agents",
     "teamSize": 2,
@@ -6,3 +7,12 @@
     "numTasksReveal": 1.0,
     "version": "2024 LoRR"
 }
+=======
+  "mapFile": "maps/3by3.map",
+  "agentFile": "agents/3by3_2agents.agents",
+  "teamSize": 2,
+  "taskFile": "tasks/3by3_tasks.tasks",
+  "numTasksReveal": 1.0,
+  "version": "2024 LoRR"
+}
+>>>>>>> 9e1668926cd839691588b80250978d1c2f0fc921
