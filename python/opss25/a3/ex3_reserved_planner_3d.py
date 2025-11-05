@@ -26,7 +26,10 @@ def reserved_planner_3d(domain: robotrunners, use_with_startkit: BindStartKit):
         paths: list[list],
         last_did_error: bool = False,
     ):
+        #first clear the reservation table
+        table.clear()
         if any(not p for p in paths):
+            #plan for each agent
             for i in range(len(paths)):
                 # plan path for agent i
                 paths[i] = run_search(env, i)

@@ -65,8 +65,14 @@ def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
     ):
 
         # 🏷️ A4 EXERCISE: WRITE THE PRIORITISED PLANNER
+        # Plan only for agents that need replanning, in a random order.
+        # First, determine which agents need replanning. 
+        # Clear the reservation table if we're replanning for all agents.
+        # Then, randomise the order in which you'll plan for them.
         # region ANSWER A4:
         agents_to_plan = check_plan_needed(paths, last_did_error)
+        if len(agents_to_plan) == len(paths): #that means we replan from scratch, so clear the table
+            table.clear()
         # Randomly order agents to plan
         for i in order_agents_by_priority(agents_to_plan):
             # plan path for agent i
