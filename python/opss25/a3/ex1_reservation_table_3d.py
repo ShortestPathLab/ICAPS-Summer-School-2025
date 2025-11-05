@@ -32,15 +32,13 @@ class reservation_table_3d:
         # endregion
 
     def unreserve(self, id: int, *states: robotrunners_state):
-        # 🏷️ A3 EXERCISE: IMPLEMENT UNRESERVE
         # This method should unreserve the given states for
         # agent @param id.
-        # region ANSWER A3:
+        # Not used in this assignment, but good to have for further improvements.
         for state in states:
-            self.remove_vertex(state, id)
+            self.del_vertex(state, id)
         for prev, next in pairwise(states):
-            self.remove_edge(prev, next, id)
-        # endregion
+            self.del_edge(prev, next, id)
 
     # Check if a temporal reservation exists at a given vertex
     # @param state A tuple of (x,y,t) coordinates.
