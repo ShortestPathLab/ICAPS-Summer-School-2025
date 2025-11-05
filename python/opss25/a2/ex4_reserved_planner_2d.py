@@ -16,6 +16,7 @@
 
 
 import MAPF
+from python.opss25.utils import interop
 from .ex1_reservation_table_2d import reservation_table_2d
 from opss25.utils.types import BindStartKit
 from piglet.lib_piglet.domains.robotrunners import robotrunners
@@ -60,7 +61,7 @@ def reserved_planner_2d(domain: robotrunners, use_with_startkit: BindStartKit):
             # Check if we've got a solution
             if paths[i]:
                 # Reserve only the first point on the path
-                table.reserve(paths[i][0])
+                table.reserve(interop.get_agent_state(env, i), paths[i][0])
         return paths
 
         # endregion
