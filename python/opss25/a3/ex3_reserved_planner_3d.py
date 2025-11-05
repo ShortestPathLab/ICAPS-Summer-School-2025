@@ -31,7 +31,9 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
             for i in range(len(paths)):
                 # plan path for agent i
                 paths[i] = run_search(env, i)
-                table.reserve(i, *paths[i])
+                # TODO need to reserve current -> next
+                # Since run_search doesnt have the current state
+                table.reserve(i, env.curr_states[i], *paths[i])
                 pass
             return paths
         else:
