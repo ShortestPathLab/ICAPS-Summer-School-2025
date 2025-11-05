@@ -31,7 +31,7 @@ class lorr_expander_w_reservations_and_wait(lorr_expander_w_reservations):
             # to add the corresponding successor to OPEN
             new_state = self.move(current.state_, a.move_)
 
-            # 🏷️ A2 EXERCISE: CHECK THE RESERVATION TABLE
+            # 🏷️ A3 EXERCISE: CHECK THE RESERVATION TABLE
             #
             # Now that we have a reservation table, we need to check that
             # we're not bumping into other agents by checking the reservation table.
@@ -52,7 +52,7 @@ class lorr_expander_w_reservations_and_wait(lorr_expander_w_reservations):
         x, y, direction, *_ = state
         actions = super().get_actions(state)
 
-        # 🏷️ A2 EXERCISE: IMPLEMENT THE WAIT ACTION
+        # 🏷️ A3 EXERCISE: IMPLEMENT THE WAIT ACTION
         #
         # Now we're dealing with the time dimension, robots can now wait.
         # Here, we need to determine if the robot can wait on a tile.

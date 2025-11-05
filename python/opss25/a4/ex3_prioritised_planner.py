@@ -15,20 +15,20 @@ def order_agents_by_priority(agents_sequence: list[int]) -> list[int]:
     """
     Orders agents by priority. We simply use random shuffle for now.
     """
-    # 🏷️ A3 EXERCISE: WRITE THE RANDOM SHUFFLING OF AGENTS ORDER
+    # 🏷️ A4 EXERCISE: WRITE THE RANDOM SHUFFLING OF AGENTS ORDER
     # region ANSWER4:
     random.shuffle(agents_sequence)
     return agents_sequence
     # endregion
 
 
-def check_plan_needed(paths: list[list], last_did_error: bool) -> list[int]:
+def check_plan_needed(paths: list[list], last_did_error: bool, table:reservation_table_3d) -> list[int]:
     """
     Checks for each agent whether a plan is needed.
     An agent needs a plan if its path is empty. Or if last_did_error is True.
     Returns a list of agent indices that need planning.
     """
-    # 🏷️ A3 EXERCISE: WRITE THE LOGIC TO DETERMINE WHICH AGENTS NEED PLANNING
+    # 🏷️ A4 EXERCISE: WRITE THE LOGIC TO DETERMINE WHICH AGENTS NEED PLANNING
     #
     # This function should return all the agents that require planning. For
     # our purposes, we'll say that an agent requires planning if its path is
@@ -64,7 +64,7 @@ def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         last_did_error: bool = False,
     ):
 
-        # 🏷️ A3 EXERCISE: WRITE THE PRIORITISED PLANNER
+        # 🏷️ A4 EXERCISE: WRITE THE PRIORITISED PLANNER
         # region ANSWER A4:
         agents_to_plan = check_plan_needed(paths, last_did_error)
         # Randomly order agents to plan
@@ -72,7 +72,6 @@ def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
             # plan path for agent i
             paths[i] = run_search(env, i)
             table.reserve(i, interop.get_agent_state(env, i), *paths[i])
-            pass
         return paths
         # endregion
 

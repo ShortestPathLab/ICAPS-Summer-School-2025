@@ -26,21 +26,13 @@ def reserved_planner_3d(domain: robotrunners, use_with_startkit: BindStartKit):
         paths: list[list],
         last_did_error: bool = False,
     ):
-
-        # 🏷️ A3 EXERCISE: WRITE THE PRIORITISED PLANNER
-        # plan for all agents if any agent is unplanned
-        # region ANSWER A3:
         if any(not p for p in paths):
             for i in range(len(paths)):
                 # plan path for agent i
                 paths[i] = run_search(env, i)
-                # TODO It won't be obvious how to get the current
-                # state of the agent.
                 table.reserve(i, interop.get_agent_state(env, i), *paths[i])
-                pass
             return paths
         else:
             return paths
-        # endregion
 
     return plan

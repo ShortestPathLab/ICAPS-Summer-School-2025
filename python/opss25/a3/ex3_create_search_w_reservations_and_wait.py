@@ -29,13 +29,7 @@ def create_search_w_reservations_and_wait(
 
     # ℹ️ INFO We've done this for you
     expander = lorr_expander_w_reservations_and_wait(domain, reservation_table)
-
-    # 🏷️ A2 EXERCISE: (OPTIONAL) PLAY WITH HEURISTICS
-    # Try changing the heuristic function below and see how it affects the search.
     # Import a heuristic function
     heuristic = manhattan_heuristic
-    # region ANSWER A3:
-    heuristic = manhattan_heuristic
-    # endregion
 
     return graph_search(open_list, expander, heuristic_function=heuristic)
