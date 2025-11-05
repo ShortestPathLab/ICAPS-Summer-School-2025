@@ -98,6 +98,7 @@ class reservation_table_3d:
         x, y, direction, t = state
         nx, ny, n_direction, arrival_t = new_state
 
+        # 🏷️ A3 EXERCISE: IMPLEMENT IS_EDGE_RESERVE
         # This method should return True if there is an edge reservation not for
         # current_agent_id between state and new_state at timestep arrival_t.
         # It should return False otherwise.
@@ -128,6 +129,7 @@ class reservation_table_3d:
         nx, ny, n_direction, arrival_t = new_state
         key = (x, y, nx, ny)
 
+        # 🏷️ A3 EXERCISE: IMPLEMENT ADD_EDGE
         # This method should add an edge reservation to the edge
         # reservation table. It should return True if the reservation was
         # successful, and return False if edge is already reserved.
@@ -156,6 +158,7 @@ class reservation_table_3d:
         nx, ny, n_direction, arrival_t = new_state
         key = (x, y, nx, ny)
 
+        # 🏷️ A3 EXERCISE: IMPLEMENT DEL_EDGE
         # This method should delete an edge reservation from the edge
         # reservation table. It should return True if a reservation was
         # deleted, and return False if reservation doesn't exist.
