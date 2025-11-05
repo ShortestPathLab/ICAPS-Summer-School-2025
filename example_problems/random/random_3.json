@@ -1,7 +1,7 @@
 {
     "mapFile": "maps/random-32-32-20.map",
-    "agentFile": "agents/random_150.agents",
-    "teamSize": 150,
+    "agentFile": "agents/random_3.agents",
+    "teamSize": 3,
     "taskFile": "tasks/random.tasks",
     "numTasksReveal": 1.0,
     "version": "2024 LoRR"
