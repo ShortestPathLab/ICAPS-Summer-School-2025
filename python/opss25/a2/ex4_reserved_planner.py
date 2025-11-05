@@ -61,8 +61,8 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
             if paths[i]:
                 # Reserve only the first point on the path
                 table.reserve(paths[i][0])
-        # endregion
-
         return paths
+
+        # endregion
 
     return plan
