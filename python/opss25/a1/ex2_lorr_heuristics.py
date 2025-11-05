@@ -128,9 +128,9 @@ def get_init_turns(state1, state2):
     if not possible_targets:
         return 0  # same cell
 
+    min_turns = float("inf")
     # 🏷️ A1 EXERCISE: CALCULATE THE NUMBER OF INITIAL TURNS REQUIRED
     #                 TO FACE THE NEAREST HEURISTIC-RECOMMENDED DIRECTION.
-    min_turns = float("inf")
     # region ANSWER A1:
     for target_dir in possible_targets:
         diff = abs(curr_dir - target_dir)
