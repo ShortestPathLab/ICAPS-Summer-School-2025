@@ -9,7 +9,7 @@ from piglet.lib_piglet.domains.robotrunners import robotrunners
 from .ex1_reservation_table_3d import reservation_table_3d
 
 
-def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
+def reserved_planner_3d(domain: robotrunners, use_with_startkit: BindStartKit):
     """
     Creates a planner that plans for all agents, any time there's a missing path, even if other agents are already planned.
     We do not replan on unsuccessful commits.
