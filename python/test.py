@@ -2,7 +2,7 @@ import os
 
 import piglet.lib_piglet.search.search_node as sn
 from piglet.lib_piglet.cli.cli_tool import parse_problem
-from piglet.lib_piglet.constraints.robotrunners_constraints import (
+from opss25.a3.ex2_reservation_table_3d import (
     robotrunners_reservation_table,
 )
 from piglet.lib_piglet.domains import robotrunners
