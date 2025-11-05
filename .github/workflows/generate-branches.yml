@@ -1,93 +1,94 @@
 name: Generate Assignment Branches
 
 on:
-    workflow_dispatch:
-    push:
-        branches:
-            - main
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
-    contents: write # 👈 allows commits and pushes using GITHUB_TOKEN
+  contents: write # 👈 allows commits and pushes using GITHUB_TOKEN
 jobs:
-    generate:
-        runs-on: ubuntu-latest
+  generate:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0 # So we can push branches
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # So we can push branches
 
-            - name: Set up Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.x"
-            - name: Set up Git user
-              run: |
-                  git config user.name "github-actions[bot]"
-                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Set up Git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-            - name: Generate branches for each assignment
-              run: |
-                  # Helper: Remove answer regions above a certain assignment number
-                  remove_answers() {
-                    local max=$1
-                    echo "Removing regions with A > $max"
-                    for f in $(find . -type f -name "*.py"); do
-                        echo "Processing $f..."
-                        awk -v max="$max" '
-                            BEGIN { skip=0; indent="" }
-                            # Match start of ANSWER region (allow leading spaces)
-                            /^ *# *region +ANSWER +A[0-9]+:/ {
-                            match($0, /^( *)/, m)
-                            indent = m[1]  # capture indentation
-                            match($0, /A([0-9]+)/, m)
-                            if (m[1] > max) {
-                                skip = 1
-                                print indent "pass"    # insert placeholder
-                                next                    # skip printing region line
-                            }
-                            }
+      - name: Generate branches for each assignment
+        run: |
+          # Helper: Remove answer regions above a certain assignment number
+          remove_answers() {
+            local max=$1
+            echo "Removing regions with A > $max"
+            for f in $(find . -type f -name "*.py"); do
+                echo "Processing $f..."
+                awk -v max="$max" '
+                    BEGIN { skip=0; indent="" }
+                    # Match start of ANSWER region (allow leading spaces)
+                    /^ *# *region +ANSWER +A[0-9]+:/ {
+                    match($0, /^( *)/, m)
+                    indent = m[1]  # capture indentation
+                    match($0, /A([0-9]+)/, m)
+                    if (m[1] > max) {
+                        skip = 1
+                        print indent "pass"    # insert placeholder
+                        next                    # skip printing region line
+                    }
+                    }
 
-                            # Match end of region
-                            /^ *# *endregion/ {
-                            if (skip) { skip = 0; next }  # skip the end line entirely
-                            }
+                    # Match end of region
+                    /^ *# *endregion/ {
+                    if (skip) { skip = 0; next }  # skip the end line entirely
+                    }
 
-                            # Print everything else if not skipping
-                            skip == 0 { print }
-                        ' "$f" > "$f.tmp"
+                    # Print everything else if not skipping
+                    skip == 0 { print }
+                ' "$f" > "$f.tmp"
 
-                        if [ -s "$f.tmp" ]; then
-                            mv "$f.tmp" "$f"
-                        else
-                            echo "⚠️  Skipping $f (produced empty output)"
-                            rm "$f.tmp"
-                        fi
-                    done
-                  }
+                if [ -s "$f.tmp" ]; then
+                    mv "$f.tmp" "$f"
+                else
+                    echo "⚠️  Skipping $f (produced empty output)"
+                    rm "$f.tmp"
+                fi
+            done
+          }
 
-                  # Generate branches a1-a4
-                  for i in 0 1 2 3 4; do
-                        echo "=== Generating branch $branch ==="
+          # Generate branches a1-a4
+          for i in 0 1 2 3 4; do
+                echo "=== Generating branch $branch ==="
 
-                        # Reset to main
-                        git checkout main -f
+                # Reset to main
+                git checkout main -f
 
-                        # Clean working directory except for python/
-                        echo "Keeping only python/ directory..."
-                        find . -mindepth 1 -maxdepth 1 ! -name 'python' ! -name '.git' -exec rm -rf {} +
+                # Clean working directory except for python/
+                echo "Keeping only python/ directory..."
+                find . -mindepth 1 -maxdepth 1 ! -name 'python' ! -name '.git' -exec rm -rf {} +
 
-                        # Now process only python files
-                        if [ -d python ]; then
-                            remove_answers "$i"
-                        else
-                            echo "⚠️  python/ folder not found!"
-                            continue
-                        fi
+                # Now process only python files
+                if [ -d python ]; then
+                    remove_answers "$i"
+                else
+                    echo "⚠️  python/ folder not found!"
+                    continue
+                fi
 
-                        # Create/update branch
-                        git checkout -B "$branch"
-                        git add -A
-                        git commit -m "Generated $branch with only python/ and answers up to A${j}" || echo "No changes to commit"
-                        git push origin "$branch" --force
+                # Create/update branch
+                git checkout -B "$branch"
+                git add -A
+                git commit -m "Generated $branch with only python/ and answers up to A${j}" || echo "No changes to commit"
+                git push origin "$branch" --force
+          done
