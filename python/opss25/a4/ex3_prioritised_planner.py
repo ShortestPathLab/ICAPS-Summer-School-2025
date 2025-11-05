@@ -1,11 +1,14 @@
+import random
+
 import MAPF
-from ..a3.ex1_reservation_table_3d import reservation_table_3d
-from opss25.utils.types import BindStartKit
-from piglet.lib_piglet.domains.robotrunners import robotrunners
-from python.opss25.a2.ex3_create_search_w_reservations import (
+from opss25.a2.ex3_create_search_w_reservations import (
     create_search_w_reservations,
 )
-import random
+from opss25.utils import interop
+from opss25.utils.types import BindStartKit
+from piglet.lib_piglet.domains.robotrunners import robotrunners
+
+from ..a3.ex1_reservation_table_3d import reservation_table_3d
 
 
 def order_agents_by_priority(agents_sequence: list[int]) -> list[int]:
@@ -67,8 +70,7 @@ def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         for i in order_agents_by_priority(agents_to_plan):
             # plan path for agent i
             paths[i] = run_search(env, i)
-            # Then insert reservations for already planned agents
-            # TODO Reservation table API not finalised
+            table.reserve(i, interop.get_agent_state(env, i), *paths[i])
             pass
         return paths
         # endregion

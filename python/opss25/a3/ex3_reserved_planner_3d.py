@@ -1,11 +1,10 @@
 import MAPF
+from opss25.a2.ex3_create_search_w_reservations import (
+    create_search_w_reservations,
+)
 from opss25.utils import interop
 from opss25.utils.types import BindStartKit
 from piglet.lib_piglet.domains.robotrunners import robotrunners
-
-from python.opss25.a2.ex3_create_search_w_reservations import (
-    create_search_w_reservations,
-)
 
 from .ex1_reservation_table_3d import reservation_table_3d
 
