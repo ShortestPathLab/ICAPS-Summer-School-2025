@@ -7,8 +7,8 @@ import MAPF
 # OPSS25 imports
 import opss25.a1.ex4_basic_planner
 import opss25.a2.ex4_reserved_planner
-import python.opss25.a4.ex3_prioritised_planner
-import opss25.a4.ex1_lns_planner
+import opss25.a3.ex3_reserved_planner
+import opss25.a4.ex3_prioritised_planner
 
 # Utils imports
 from environment import EX
@@ -124,8 +124,8 @@ class pyMAPFPlanner:
             {
                 1: opss25.a1.ex4_basic_planner.chosen_planner,
                 2: opss25.a2.ex4_reserved_planner.reserved_planner,
-                3: python.opss25.a4.ex3_prioritised_planner.prioritised_planner,
-                4: opss25.a4.ex1_lns_planner.lns_planner,
+                3: opss25.a3.ex3_reserved_planner.basic_planner,
+                4: opss25.a4.ex3_prioritised_planner.prioritised_planner,
                 # This one runs when you're in the main branch
                 5: opss25.a1.ex4_basic_planner.chosen_planner,
             }[EX]
