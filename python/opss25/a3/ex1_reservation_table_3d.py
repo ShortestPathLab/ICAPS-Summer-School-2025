@@ -97,6 +97,12 @@ class reservation_table_3d:
     ):
         x, y, direction, t = state
         nx, ny, n_direction, arrival_t = new_state
+
+        # This method should return True if there is an edge reservation not for
+        # current_agent_id between state and new_state at timestep arrival_t.
+        # It should return False otherwise.
+        # region ANSWER A3:
+
         for key in ((x, y, nx, ny), (nx, ny, x, y)):
             bucket = self.edge_table.get(key)
             if not bucket:
@@ -109,6 +115,8 @@ class reservation_table_3d:
             return True
 
         return False
+
+        # endregion
 
     def add_edge(
         self,
