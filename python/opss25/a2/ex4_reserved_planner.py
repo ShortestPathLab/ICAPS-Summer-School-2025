@@ -53,10 +53,11 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         # Refer to the basic planners in ex1 if you're stuck.
         #
         # region ANSWER A2:
+
         table.clear()
         for i in range(len(paths)):
             paths[i] = run_search(env, i)
-            # Reserve only the first path
+            # Reserve only the first point on the path
             table.reserve(paths[1][0])
 
         # endregion
