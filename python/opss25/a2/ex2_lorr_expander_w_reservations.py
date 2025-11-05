@@ -1,19 +1,18 @@
-from ..a1.ex1_lorr_expander import lorr_expander
 from piglet.lib_piglet.domains.robotrunners import (
     Move_Actions,
     robotrunners,
     robotrunners_action,
 )
-from piglet.lib_piglet.constraints.robotrunners_constraints import (
-    robotrunners_reservation_table,
-)
+
+from ..a1.ex1_lorr_expander import lorr_expander
+from .ex1_reservation_table_2d import reservation_table_2d
 
 
 class lorr_expander_w_reservations(lorr_expander):
     def __init__(
         self,
         map: robotrunners,
-        reservation_table: robotrunners_reservation_table,
+        reservation_table: reservation_table_2d,
     ):
         super().__init__(map)
         self.reservation_table_ = reservation_table
@@ -29,14 +28,13 @@ class lorr_expander_w_reservations(lorr_expander):
             # 🏷️ A2 EXERCISE: CHECK THE RESERVATION TABLE
             #
             # Now that we have a reservation table, we need to check that
-            # we're not bumping into other agents by checking the reservation table.
+            # we're not bumping into other agents by checking the
+            # reservation table.
             #
             # We must check for both edge and vertex collisions.
             #
             # region ANSWER A2:
             if self.reservation_table_.is_reserved(new_state):
-                continue
-            if self.reservation_table_.is_edge_collision(current.state_, new_state):
                 continue
             # endregion
 
@@ -44,7 +42,7 @@ class lorr_expander_w_reservations(lorr_expander):
         return self.succ_[:]
 
     def get_actions(self, state: tuple):
-        x, y, direction, t = state
+        x, y, *_ = state
         actions = super().get_actions(state)
 
         # 🏷️ A2 EXERCISE: IMPLEMENT THE WAIT ACTION
@@ -59,4 +57,5 @@ class lorr_expander_w_reservations(lorr_expander):
             actions[-1].move_ = Move_Actions.WAIT
             actions[-1].cost_ = 1
         # endregion
+
         return actions

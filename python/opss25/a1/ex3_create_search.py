@@ -2,12 +2,14 @@
 #
 # TASK 3: BUILD THE SEARCH ENGINE
 #
-# This is where it all comes together. In this task, you will implement the search
-# engine for the robot runners domain, using the expander you implemented in the
-# previous task. Try out a few of the heuristics and see how performance differs.
+# This is where it all comes together. In this task, you will implement the
+# search engine for the robot runners domain, using the expander you implemented
+# in the previous task. Try out a few of the heuristics and see how performance
+# differs.
 #
 # Look out for the 🏷️ EXERCISE label in the code below.
-# The code sections marked with this label are where you need to implement your solution.
+# The code sections marked with this label are where you need to implement your
+# solution.
 #
 # ──────────────────────────────────────────────────────────────────────────────
 

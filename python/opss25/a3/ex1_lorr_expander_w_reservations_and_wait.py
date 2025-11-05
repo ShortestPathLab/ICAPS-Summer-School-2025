@@ -1,4 +1,4 @@
-from ..a2.ex1_lorr_expander_w_reservations import lorr_expander_w_reservations
+from ..a2.ex2_lorr_expander_w_reservations import lorr_expander_w_reservations
 from piglet.lib_piglet.domains.robotrunners import (
     Move_Actions,
     robotrunners,

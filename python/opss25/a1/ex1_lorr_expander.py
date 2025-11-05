@@ -13,7 +13,8 @@
 # - Wait: The robot does nothing. However for task 1, we'll ignore this action.
 #
 # Look out for the 🏷️ EXERCISE label in the code below.
-# The code sections marked with this label are where you need to implement your solution.
+# The code sections marked with this label are where you need to implement your
+# solution.
 #
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -47,20 +48,20 @@ class lorr_expander(base_expander):
         # memory for storing successor (state, action) pairs
         self.succ_: list = []
 
-    # Expand the current search node and generate all successors 
+    # Expand the current search node and generate all successors
     #
     # @param current: The current node
     # @return : A list with all successor nodes
     def expand(self, current: search_node):
         self.succ_.clear()
 
-        # get the set of actions applicable in the current state 
+        # get the set of actions applicable in the current state
         # for each action generate a corresponding search node (=successor)
         # NB: we only initialise the state and action attributes of each
         # sucessor. The search will initialise the rest, assuming it decides to
         # add the corresponding successor to OPEN
         for a in self.get_actions(current.state_):
-            # applying an action yields a new state 
+            # applying an action yields a new state
             new_state = self.move(current.state_, a.move_)
             self.succ_.append((new_state, a))
         return self.succ_[:]
@@ -119,8 +120,7 @@ class lorr_expander(base_expander):
 
         return actions
 
-    
-    # Compute the effect of applying a given move action 
+    # Compute the effect of applying a given move action
     # in the current state
     #
     # @param curr_state: the current state of the robot

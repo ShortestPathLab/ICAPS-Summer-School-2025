@@ -10,7 +10,8 @@
 # goal state.
 #
 # Look out for the 🏷️ EXERCISE label in the code below.
-# The code sections marked with this label are where you need to implement your solution.
+# The code sections marked with this label are where you need to implement your
+# solution.
 #
 # ──────────────────────────────────────────────────────────────────────────────
 
