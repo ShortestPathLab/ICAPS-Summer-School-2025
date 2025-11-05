@@ -49,6 +49,8 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         # 🧪 Try out a few strategies that use this reservation table.
         # - Reserve the entire path as you plan for each agent
         # - Reserve only the next point on the path
+        # - Reserve the current position if the search fails
+        # - Don't reserve the current position if the search fails
         #
         # Refer to the basic planners in ex1 if you're stuck.
         #
@@ -57,8 +59,10 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         table.clear()
         for i in range(len(paths)):
             paths[i] = run_search(env, i)
-            # Reserve only the first point on the path
-            table.reserve(paths[1][0])
+            # Check if we've got a solution
+            if paths[i]:
+                # Reserve only the first point on the path
+                table.reserve(paths[i])
 
         # endregion
 
