@@ -69,26 +69,29 @@ jobs:
 
           # Generate branches a1-a4
           for i in 0 1 2 3 4; do
-                echo "=== Generating branch $branch ==="
+              j=$((i + 1))
+              branch="a${j}"
 
-                # Reset to main
-                git checkout main -f
+              echo "=== Generating branch $branch ==="
 
-                # Clean working directory except for python/
-                echo "Keeping only python/ directory..."
-                find . -mindepth 1 -maxdepth 1 ! -name 'python' ! -name '.git' -exec rm -rf {} +
+              # Reset to main
+              git checkout main -f
 
-                # Now process only python files
-                if [ -d python ]; then
-                    remove_answers "$i"
-                else
-                    echo "⚠️  python/ folder not found!"
-                    continue
-                fi
+              # Clean working directory except for python/
+              echo "Keeping only python/ directory..."
+              find . -mindepth 1 -maxdepth 1 ! -name 'python' ! -name '.git' -exec rm -rf {} +
 
-                # Create/update branch
-                git checkout -B "$branch"
-                git add -A
-                git commit -m "Generated $branch with only python/ and answers up to A${j}" || echo "No changes to commit"
-                git push origin "$branch" --force
+              # Now process only python files
+              if [ -d python ]; then
+                  remove_answers "$i"
+              else
+                  echo "⚠️  python/ folder not found!"
+                  continue
+              fi
+
+              # Create/update branch
+              git checkout -B "$branch"
+              git add -A
+              git commit -m "Generated $branch with only python/ and answers up to A${j}" || echo "No changes to commit"
+              git push origin "$branch" --force
           done
