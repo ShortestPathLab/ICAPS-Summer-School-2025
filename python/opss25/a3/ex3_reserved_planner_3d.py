@@ -29,6 +29,7 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
 
         # 🏷️ A3 EXERCISE: WRITE THE PRIORITISED PLANNER
         # plan for all agents if any agent is unplanned
+        # region ANSWER A3:
         if any(not p for p in paths):
             for i in range(len(paths)):
                 # plan path for agent i
