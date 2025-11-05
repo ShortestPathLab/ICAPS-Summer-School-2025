@@ -159,7 +159,7 @@ class reservation_table_3d:
     # clear the reservation table
     def clear(self):
         self.vertex_table = [
-            [None for _ in range(int(self.width_))] for _ in range(int(self.height_))
+            [dict() for _ in range(int(self.width_))] for _ in range(int(self.height_))
         ]
         self.edge_table = {}
 

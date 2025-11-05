@@ -127,7 +127,7 @@ class pyMAPFPlanner:
                 3: opss25.a3.ex3_reserved_planner_3d.reserved_planner_3d,
                 4: opss25.a4.ex3_prioritised_planner.prioritised_planner,
                 # This one runs when you're in the main branch
-                5: opss25.a1.ex4_basic_planner.chosen_planner,
+                5: opss25.a3.ex3_reserved_planner_3d.reserved_planner_3d,
             }[EX]
         )
 

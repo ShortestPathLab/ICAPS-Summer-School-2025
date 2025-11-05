@@ -3,6 +3,7 @@ from piglet.lib_piglet.domains.robotrunners import (
     Move_Actions,
     robotrunners,
     robotrunners_action,
+    robotrunners_state,
 )
 from .ex1_reservation_table_3d import (
     reservation_table_3d,
@@ -15,8 +16,12 @@ class lorr_expander_w_reservations_and_wait(lorr_expander_w_reservations):
         map: robotrunners,
         reservation_table: reservation_table_3d,
     ):
-        super().__init__(map)
+        super().__init__(map, reservation_table)
         self.reservation_table_ = reservation_table
+
+    def move(self, curr_state: robotrunners_state, move):
+        x, y, d, t = curr_state
+        return (*super().move(curr_state, move), t + 1)
 
     def expand(self, current):
         self.succ_.clear()
@@ -44,7 +49,7 @@ class lorr_expander_w_reservations_and_wait(lorr_expander_w_reservations):
         return self.succ_[:]
 
     def get_actions(self, state: tuple):
-        x, y, direction, t = state
+        x, y, direction, *_ = state
         actions = super().get_actions(state)
 
         # 🏷️ A2 EXERCISE: IMPLEMENT THE WAIT ACTION

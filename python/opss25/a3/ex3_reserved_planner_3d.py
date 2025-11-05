@@ -1,6 +1,6 @@
 import MAPF
-from opss25.a2.ex3_create_search_w_reservations import (
-    create_search_w_reservations,
+from opss25.a3.ex3_create_search_w_reservations_and_wait import (
+    create_search_w_reservations_and_wait,
 )
 from opss25.utils import interop
 from opss25.utils.types import BindStartKit
@@ -17,7 +17,7 @@ def reserved_planner_3d(domain: robotrunners, use_with_startkit: BindStartKit):
 
     # Create reservation table
     table = reservation_table_3d(domain.width_, domain.height_)
-    engine = create_search_w_reservations(domain, table)
+    engine = create_search_w_reservations_and_wait(domain, table)
     # Create search
     run_search = use_with_startkit(engine)
 

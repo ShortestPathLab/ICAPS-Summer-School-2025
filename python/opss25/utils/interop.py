@@ -42,7 +42,7 @@ def to_piglet_state(
         d = dir_to_piglet(direction)  # must return a Directions member
 
     # ALWAYS return something
-    return (r, c, d) if time is None else (r, c, d, time)
+    return (r, c, d, time if time is not None else 0)
 
 
 # --- mapf -----------------------------------------------------------
