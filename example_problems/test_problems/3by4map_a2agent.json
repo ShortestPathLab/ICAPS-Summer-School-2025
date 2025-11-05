@@ -1,0 +1,8 @@
+{
+    "mapFile": "maps/3by4.map",
+    "agentFile": "agents/3by4_2agents.agents",
+    "teamSize": 2,
+    "taskFile": "tasks/3by4_a2tasks.tasks",
+    "numTasksReveal": 1.0,
+    "version": "2024 LoRR"
+}
