@@ -22,7 +22,7 @@ def order_agents_by_priority(agents_sequence: list[int]) -> list[int]:
     # endregion
 
 
-def check_plan_needed(paths: list[list], last_did_error: bool, table:reservation_table_3d) -> list[int]:
+def check_plan_needed(paths: list[list], last_did_error: bool) -> list[int]:
     """
     Checks for each agent whether a plan is needed.
     An agent needs a plan if its path is empty. Or if last_did_error is True.

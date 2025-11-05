@@ -34,7 +34,7 @@ class reservation_table_3d:
     def unreserve(self, id: int, *states: robotrunners_state):
         # This method should unreserve the given states for
         # agent @param id.
-        # Not used in this assignment, but good to have for further improvements.
+        # Not mandatory for this assignment, but useful for future improvements.
         for state in states:
             self.del_vertex(state, id)
         for prev, next in pairwise(states):
@@ -156,11 +156,10 @@ class reservation_table_3d:
         nx, ny, n_direction, arrival_t = new_state
         key = (x, y, nx, ny)
 
-        # 🏷️ A3 EXERCISE: IMPLEMENT DEL_EDGE
         # This method should delete an edge reservation from the edge
         # reservation table. It should return True if a reservation was
         # deleted, and return False if reservation doesn't exist.
-        # region ANSWER A3:
+        # Not mandatory for this assignment, but useful for future improvements.
 
         bucket = self.edge_table.get(key)  # <-- safe
 
@@ -176,8 +175,6 @@ class reservation_table_3d:
 
         # delete failed (reservation held by another agent)
         return False
-
-        # endregion
 
     # clear the reservation table
     def clear(self):
