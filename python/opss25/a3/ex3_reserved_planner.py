@@ -1,5 +1,5 @@
 import MAPF
-from .ex2_reservation_table_3d import reservation_table_3d
+from .ex1_reservation_table_3d import reservation_table_3d
 from opss25.utils.types import BindStartKit
 from piglet.lib_piglet.domains.robotrunners import robotrunners
 from python.opss25.a2.ex3_create_search_w_reservations import (
@@ -26,12 +26,12 @@ def basic_planner(domain: robotrunners, use_with_startkit: BindStartKit):
     ):
 
         # 🏷️ A3 EXERCISE: WRITE THE PRIORITISED PLANNER
-        #plan for all agents if any agent is unplanned
+        # plan for all agents if any agent is unplanned
         if any(not p for p in paths):
             for i in range(len(paths)):
-                #plan path for agent i
+                # plan path for agent i
                 paths[i] = run_search(env, i)
-                #then insert reservations for already planned agents
+                # then insert reservations for already planned agents
                 pass
             return paths
         else:

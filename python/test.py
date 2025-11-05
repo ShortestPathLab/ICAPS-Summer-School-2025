@@ -2,7 +2,7 @@ import os
 
 import piglet.lib_piglet.search.search_node as sn
 from piglet.lib_piglet.cli.cli_tool import parse_problem
-from opss25.a3.ex2_reservation_table_3d import (
+from python.opss25.a3.ex1_reservation_table_3d import (
     robotrunners_reservation_table,
 )
 from piglet.lib_piglet.domains import robotrunners
@@ -45,10 +45,9 @@ expander = (
         dm, reservation_table=default_res_table
     )
 )
-heuristic_function = opss25.a1.ex2_heuristic.straight_heuristic
 open_list = bin_heap(sn.compare_node_f)
 engine = graph_search.graph_search
-search_engine = engine(open_list, expander, heuristic_function=heuristic_function)
+search_engine = engine(open_list, expander)
 
 bind(search_engine, logger).head()
 

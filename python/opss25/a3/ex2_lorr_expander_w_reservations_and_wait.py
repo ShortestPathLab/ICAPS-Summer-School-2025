@@ -4,7 +4,7 @@ from piglet.lib_piglet.domains.robotrunners import (
     robotrunners,
     robotrunners_action,
 )
-from .ex2_reservation_table_3d import (
+from .ex1_reservation_table_3d import (
     robotrunners_reservation_table,
 )
 

@@ -6,6 +6,7 @@ from piglet.lib_piglet.domains.robotrunners import robotrunners_state
 Timestep: TypeAlias = int
 AgentId: TypeAlias = int
 
+
 class robotrunners_reservation_table:
 
     width_: int
@@ -210,6 +211,7 @@ class robotrunners_reservation_table:
             [None] * int(self.width_) for _ in range(int(self.height_))
         ]
         self.edgetable_ = {}
+
 
 # Theoretically only the code in this folder should ever
 # Interact with the reservation table
