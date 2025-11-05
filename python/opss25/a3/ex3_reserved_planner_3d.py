@@ -7,7 +7,7 @@ from python.opss25.a2.ex3_create_search_w_reservations import (
 )
 
 
-def basic_planner(domain: robotrunners, use_with_startkit: BindStartKit):
+def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
     """
     Creates a planner that plans for all agents, any time there's a missing path, even if other agents are already planned.
     We do not replan on unsuccessful commits.
@@ -31,7 +31,7 @@ def basic_planner(domain: robotrunners, use_with_startkit: BindStartKit):
             for i in range(len(paths)):
                 # plan path for agent i
                 paths[i] = run_search(env, i)
-                # then insert reservations for already planned agents
+                table.reserve(i, *paths[i])
                 pass
             return paths
         else:
