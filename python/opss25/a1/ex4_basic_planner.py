@@ -36,11 +36,8 @@ def naive_planner(domain: robotrunners, use_with_startkit: BindStartKit):
     def plan(
         env: MAPF.SharedEnvironment, paths: list[list], last_did_error: bool = False
     ):
-        #plan for all agents if any agent is unplanned
-        if any(not p for p in paths):
-            return [run_search(env, i) for i, _ in enumerate(paths)]
-        else:
-            return paths
+        #plan for all agents
+        return [run_search(env, i) for i, _ in enumerate(paths)]
 
     return plan
 
