@@ -34,7 +34,6 @@ def check_plan_needed(paths: list[list], last_did_error: bool) -> list[int]:
     # our purposes, we'll say that an agent requires planning if its path is
     # empty. Additionally if last_did_error is True, we need to plan for all
     # agents, even if they've already been planned.
-    # Hint: you might want to reserve existing paths for other agents.
     #
     # region ANSWER A4:
     if last_did_error:
