@@ -16,6 +16,7 @@ class file_output(base_output):
 
     def verbatim(self, s: str):
         self.file.write(s)
+        self.file.flush()
 
     def event(self, **kwargs):
         self.verbatim(", ".join(f"{k}: {v}" for k, v in kwargs.items()) + "\n")
