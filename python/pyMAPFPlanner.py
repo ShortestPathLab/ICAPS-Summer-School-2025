@@ -1,6 +1,8 @@
 from functools import lru_cache
 from itertools import zip_longest
 
+import uuid
+
 # League of Robot Runners imports
 import MAPF
 
@@ -127,7 +129,7 @@ class pyMAPFPlanner:
                 3: opss25.a3.ex3_reserved_planner_3d.reserved_planner_3d,
                 4: opss25.a4.ex3_prioritised_planner.prioritised_planner,
                 # This one runs when you're in the main branch
-                5: opss25.a3.ex3_reserved_planner_3d.reserved_planner_3d,
+                5: opss25.a2.ex4_reserved_planner_2d.reserved_planner_2d,
             }[EX]
         )
 
@@ -140,11 +142,12 @@ class pyMAPFPlanner:
         )
 
         def use_with_startkit(piglet_engine: base_search):
-            if LOG_ENABLED:
-                logger = search_logger(logger=trace_output(file="output.trace.yaml"))
-                bind(piglet_engine, logger).head()
 
             def run(start: int, direction: Directions, goal: int):
+                if LOG_ENABLED:
+                    filename = f"output-{uuid.uuid4()}.trace.yaml"
+                    logger = search_logger(logger=trace_output(file=filename))
+                    bind(piglet_engine, logger).head()
                 piglet_engine.open_list_.clear()
                 solution = piglet_engine.get_path(
                     interop.to_piglet_state(self.env, start, direction),
