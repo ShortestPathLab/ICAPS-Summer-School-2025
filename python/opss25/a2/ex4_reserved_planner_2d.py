@@ -22,7 +22,7 @@ from piglet.lib_piglet.domains.robotrunners import robotrunners
 from .ex3_create_search_w_reservations import create_search_w_reservations
 
 
-def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
+def reserved_planner_2d(domain: robotrunners, use_with_startkit: BindStartKit):
     """
     Creates a planner that'll maintain a basic reservation table so that
     agents don't bump into each other.
@@ -61,8 +61,8 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
             if paths[i]:
                 # Reserve only the first point on the path
                 table.reserve(paths[i][0])
-        # endregion
-
         return paths
+
+        # endregion
 
     return plan

@@ -5,7 +5,7 @@ from piglet.lib_piglet.domains.robotrunners import (
     robotrunners_action,
 )
 from .ex1_reservation_table_3d import (
-    robotrunners_reservation_table,
+    reservation_table_3d,
 )
 
 
@@ -13,7 +13,7 @@ class lorr_expander_w_reservations_and_wait(lorr_expander_w_reservations):
     def __init__(
         self,
         map: robotrunners,
-        reservation_table: robotrunners_reservation_table,
+        reservation_table: reservation_table_3d,
     ):
         super().__init__(map)
         self.reservation_table_ = reservation_table
@@ -34,9 +34,9 @@ class lorr_expander_w_reservations_and_wait(lorr_expander_w_reservations):
             # We must check for both edge and vertex collisions.
             #
             # region ANSWER A2:
-            if self.reservation_table_.is_reserved(new_state):
+            if self.reservation_table_.is_vertex_reserved(new_state):
                 continue
-            if self.reservation_table_.is_edge_collision(current.state_, new_state):
+            if self.reservation_table_.is_edge_reserved(current.state_, new_state):
                 continue
             # endregion
 

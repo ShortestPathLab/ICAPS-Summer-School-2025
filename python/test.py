@@ -3,7 +3,7 @@ import os
 import piglet.lib_piglet.search.search_node as sn
 from piglet.lib_piglet.cli.cli_tool import parse_problem
 from python.opss25.a3.ex1_reservation_table_3d import (
-    robotrunners_reservation_table,
+    reservation_table_3d,
 )
 from piglet.lib_piglet.domains import robotrunners
 from piglet.lib_piglet.domains.robotrunners import Directions
@@ -36,7 +36,7 @@ logger = search_logger(logger=trace_output(file="test.trace.yaml"))
 task = parse_problem(scens[0], 0)  # 0 for gridmap
 
 # int orientation;  // 0:east, 1:south, 2:west, 3:north
-default_res_table = robotrunners_reservation_table(32, 32)
+default_res_table = reservation_table_3d(32, 32)
 
 dm = robotrunners.robotrunners(MAP_PATH_ABSOLUTE)
 

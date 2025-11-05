@@ -6,8 +6,8 @@ import MAPF
 
 # OPSS25 imports
 import opss25.a1.ex4_basic_planner
-import opss25.a2.ex4_reserved_planner
-import opss25.a3.ex3_reserved_planner
+import opss25.a2.ex4_reserved_planner_2d
+import opss25.a3.ex3_reserved_planner_3d
 import opss25.a4.ex3_prioritised_planner
 
 # Utils imports
@@ -123,8 +123,8 @@ class pyMAPFPlanner:
         return self.bind_planner(
             {
                 1: opss25.a1.ex4_basic_planner.chosen_planner,
-                2: opss25.a2.ex4_reserved_planner.reserved_planner,
-                3: opss25.a3.ex3_reserved_planner.basic_planner,
+                2: opss25.a2.ex4_reserved_planner_2d.reserved_planner_2d,
+                3: opss25.a3.ex3_reserved_planner_3d.reserved_planner_3d,
                 4: opss25.a4.ex3_prioritised_planner.prioritised_planner,
                 # This one runs when you're in the main branch
                 5: opss25.a1.ex4_basic_planner.chosen_planner,

@@ -1,13 +1,15 @@
 import MAPF
-from .ex1_reservation_table_3d import reservation_table_3d
-from opss25.utils.types import BindStartKit
-from piglet.lib_piglet.domains.robotrunners import robotrunners
-from python.opss25.a2.ex3_create_search_w_reservations import (
+from opss25.a2.ex3_create_search_w_reservations import (
     create_search_w_reservations,
 )
+from opss25.utils import interop
+from opss25.utils.types import BindStartKit
+from piglet.lib_piglet.domains.robotrunners import robotrunners
+
+from .ex1_reservation_table_3d import reservation_table_3d
 
 
-def basic_planner(domain: robotrunners, use_with_startkit: BindStartKit):
+def reserved_planner_3d(domain: robotrunners, use_with_startkit: BindStartKit):
     """
     Creates a planner that plans for all agents, any time there's a missing path, even if other agents are already planned.
     We do not replan on unsuccessful commits.
@@ -27,11 +29,14 @@ def basic_planner(domain: robotrunners, use_with_startkit: BindStartKit):
 
         # 🏷️ A3 EXERCISE: WRITE THE PRIORITISED PLANNER
         # plan for all agents if any agent is unplanned
+        # region ANSWER A3:
         if any(not p for p in paths):
             for i in range(len(paths)):
                 # plan path for agent i
                 paths[i] = run_search(env, i)
-                # then insert reservations for already planned agents
+                # TODO It won't be obvious how to get the current
+                # state of the agent.
+                table.reserve(i, interop.get_agent_state(env, i), *paths[i])
                 pass
             return paths
         else:
