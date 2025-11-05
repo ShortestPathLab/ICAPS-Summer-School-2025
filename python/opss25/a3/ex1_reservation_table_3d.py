@@ -13,7 +13,7 @@ class reservation_table_3d:
     width_: int
     height_: int
     vertex_table: list[list[dict[Timestep, AgentId]]]
-    edge_table: dict[robotrunners_state, dict[Timestep, AgentId]]
+    edge_table: dict[tuple[int, int, int, int], dict[Timestep, AgentId]]
 
     def __init__(self, width, height):
         self.width_ = width
