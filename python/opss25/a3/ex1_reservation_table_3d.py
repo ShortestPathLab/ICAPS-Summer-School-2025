@@ -141,6 +141,11 @@ class reservation_table_3d:
         nx, ny, n_direction, arrival_t = new_state
         key = (x, y, nx, ny)
 
+        # This method should delete an edge reservation from the edge
+        # reservation table. It should return True if a reservation was
+        # deleted, and return False if reservation doesn't exist.
+        # region ANSWER A3:
+
         bucket = self.edge_table.get(key)  # <-- safe
 
         # nothing to delete
@@ -155,6 +160,8 @@ class reservation_table_3d:
 
         # delete failed (reservation held by another agent)
         return False
+
+	# endregion
 
     # clear the reservation table
     def clear(self):
