@@ -120,6 +120,11 @@ class reservation_table_3d:
         nx, ny, n_direction, arrival_t = new_state
         key = (x, y, nx, ny)
 
+        # This method should add an edge reservation to the edge
+        # reservation table. It should return True if the reservation was
+        # successful, and return False if edge is already reserved.
+        # region ANSWER A3:
+
         # <-- no KeyError
         bucket = self.edge_table.setdefault(key, {})
 
@@ -130,6 +135,8 @@ class reservation_table_3d:
         # reservation successful
         bucket[arrival_t] = agent_id
         return True
+
+        # endregion
 
     def del_edge(
         self,
@@ -161,7 +168,7 @@ class reservation_table_3d:
         # delete failed (reservation held by another agent)
         return False
 
-	# endregion
+        # endregion
 
     # clear the reservation table
     def clear(self):
