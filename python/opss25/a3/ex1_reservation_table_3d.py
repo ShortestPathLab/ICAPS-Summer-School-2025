@@ -1,5 +1,6 @@
 # This module defines constraints, constraints table and reservation table for grid map.
 
+from itertools import pairwise
 from typing import TypeAlias
 from piglet.lib_piglet.domains.robotrunners import robotrunners_state
 
@@ -19,6 +20,28 @@ class reservation_table_3d:
         self.height_ = height
         self.clear()
 
+    def reserve(self, id: int, *states: robotrunners_state):
+        # 🏷️ A3 EXERCISE: IMPLEMENT RESERVE
+        # This method should reserve the given states for
+        # agent @param id.
+        # region ANSWER A3:
+        for state in states:
+            self.add_vertex(state, id)
+        for prev, next in pairwise(states):
+            self.add_edge(prev, next, id)
+        # endregion
+
+    def unreserve(self, id: int, *states: robotrunners_state):
+        # 🏷️ A3 EXERCISE: IMPLEMENT UNRESERVE
+        # This method should unreserve the given states for
+        # agent @param id.
+        # region ANSWER A3:
+        for state in states:
+            self.remove_vertex(state, id)
+        for prev, next in pairwise(states):
+            self.remove_edge(prev, next, id)
+        # endregion
+
     # Check if a temporal reservation exists at a given vertex
     # @param state A tuple of (x,y,t) coordinates.
     # @param agent_id An int of agent_id.
@@ -28,17 +51,8 @@ class reservation_table_3d:
     ):
         x, y, direction, t = state
 
-        # 🏷️ A3 EXERCISE: IMPLEMENT IS_RESERVED
-        #
-        # This function should return True if the vertex
-        # at state is reserved.
-        #
-        # region ANSWER A3:
-
         v = self.vertex_table[x][y].get(t, -1) if t in self.vertex_table[x][y] else -1
         return v != -1 and v != current_agent_id
-
-        # endregion
 
     # Add a single vertex reservation to reservation table
     # @param state A tuple of (x,y,t) coordinates.
