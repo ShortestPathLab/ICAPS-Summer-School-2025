@@ -1,14 +1,12 @@
 # ──────────────────────────────────────────────────────────────────────────────
 #
-# TASK 1: BUILD A PLANNER WITH RESERVATIONS
+# TASK 4: BUILD THE PLANNER WITH RESERVATIONS
 #
-# Welp, you've seen that running A* blindly without any coordination wouldn't
-# work out for more than one agent. Who would've guessed? Let's try some
-# techniques to get around this problem.
+# Write the planner that uses the search engine that we've created. It's also
+# going to need some logic on how it's going to update the reservation table.
 #
-# In this task, you will implement a planner that uses a reservation table to
-# ensure that agents don't bump into each other. Try experimenting with
-# different ways to use the reservation table and see how it affects the search.
+# When you're done with this part, you'll get a working planner that can plan
+# around other agents!
 #
 # Look out for the 🏷️ EXERCISE label in the code below.
 # The code sections marked with this label are where you need to implement your
@@ -49,15 +47,20 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         # 🧪 Try out a few strategies that use this reservation table.
         # - Reserve the entire path as you plan for each agent
         # - Reserve only the next point on the path
+        # - Reserve the current position if the search fails
+        # - Don't reserve the current position if the search fails
         #
         # Refer to the basic planners in ex1 if you're stuck.
         #
         # region ANSWER A2:
+
         table.clear()
         for i in range(len(paths)):
             paths[i] = run_search(env, i)
-            # Reserve only the first path
-            table.reserve(paths[1][0])
+            # Check if we've got a solution
+            if paths[i]:
+                # Reserve only the first point on the path
+                table.reserve(paths[i][0])
 
         # endregion
 

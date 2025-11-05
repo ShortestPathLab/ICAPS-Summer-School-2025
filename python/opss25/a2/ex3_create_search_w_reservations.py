@@ -2,9 +2,8 @@
 #
 # TASK 3: BUILD THE SEARCH ENGINE
 #
-# This is where it all comes together. In this task, you will implement the search
-# engine for the robot runners domain, using the expander you implemented in the
-# previous task. Try out a few of the heuristics and see how performance differs.
+# Write a search engine that pulls together the expander that we've just created
+# along with the other components of the search engine.
 #
 # Look out for the 🏷️ EXERCISE label in the code below.
 # The code sections marked with this label are where you need to implement your
@@ -29,10 +28,10 @@ def create_search_w_reservations(
     # ℹ️ INFO We've done this for you
     expander = lorr_expander_w_reservations(domain, reservation_table)
 
-    # 🏷️ A2 EXERCISE: PLAY WITH HEURISTICS
+    # 🏷️ A2 EXERCISE: (OPTIONAL) PLAY WITH HEURISTICS
     # Try changing the heuristic function below and see how it affects the search.
     # Import a heuristic function
-    heuristic = None
+    heuristic = manhattan_heuristic
     # region ANSWER A2:
     heuristic = manhattan_heuristic
     # endregion
