@@ -18,6 +18,14 @@ def to_piglet_state_list(
     ]
 
 
+def get_agent_state(env: MAPF.SharedEnvironment, id: int):
+    return to_piglet_state(
+        env,
+        env.curr_states[id].location,
+        env.curr_states[id].orientation,
+    )
+
+
 def to_piglet_state(
     env: MAPF.SharedEnvironment,
     loc: int,

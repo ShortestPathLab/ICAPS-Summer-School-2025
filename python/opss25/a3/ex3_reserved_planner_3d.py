@@ -1,10 +1,13 @@
 import MAPF
-from .ex1_reservation_table_3d import reservation_table_3d
+from opss25.utils import interop
 from opss25.utils.types import BindStartKit
 from piglet.lib_piglet.domains.robotrunners import robotrunners
+
 from python.opss25.a2.ex3_create_search_w_reservations import (
     create_search_w_reservations,
 )
+
+from .ex1_reservation_table_3d import reservation_table_3d
 
 
 def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
@@ -31,9 +34,9 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
             for i in range(len(paths)):
                 # plan path for agent i
                 paths[i] = run_search(env, i)
-                # TODO need to reserve current -> next
-                # Since run_search doesnt have the current state
-                table.reserve(i, env.curr_states[i], *paths[i])
+                # TODO It won't be obvious how to get the current
+                # state of the agent.
+                table.reserve(i, interop.get_agent_state(env, i), *paths[i])
                 pass
             return paths
         else:
