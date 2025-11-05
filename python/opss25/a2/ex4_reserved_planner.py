@@ -26,8 +26,6 @@ def reserved_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         paths: list[list],
         last_did_error: bool = False,
     ):
-        if last_did_error:
-            raise RuntimeError("Error: Last action did not successfully commit.")
         # 🏷️ A2 EXERCISE: WRITE THE RESERVATION TABLE PLANNER
         pass
         # region ANSWER A2:

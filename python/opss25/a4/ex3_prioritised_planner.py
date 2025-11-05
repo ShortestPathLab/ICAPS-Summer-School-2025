@@ -5,6 +5,29 @@ from piglet.lib_piglet.domains.robotrunners import robotrunners
 from python.opss25.a2.ex3_create_search_w_reservations import (
     create_search_w_reservations,
 )
+import random
+
+def order_agents_by_priority(agents_sequence:list[int]) -> list[int]:
+    """
+    Orders agents by priority. We simply use random shuffle for now.
+    """
+    # 🏷️ A3 EXERCISE: WRITE THE RANDOM SHUFFLING OF AGENTS ORDER
+    return random.shuffle(agents_sequence)
+
+def check_plan_needed(paths: list[list], last_did_error: bool) -> list[int]:
+    """
+    Checks for each agent whether a plan is needed.
+    An agent needs a plan if its path is empty. Or if last_did_error is True.
+    Returns a list of agent indices that need planning.
+    """
+    # 🏷️ A3 EXERCISE: WRITE THE LOGIC TO DETERMINE WITHH AGENTS NEED PLANNING
+    if last_did_error:
+        return [i for i in range(len(paths))]
+    agents_to_plan = [] 
+    for i in range(len(paths)):
+        if not paths[i]:
+            agents_to_plan.append(i)
+    return agents_to_plan
 
 
 def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
@@ -25,15 +48,15 @@ def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         last_did_error: bool = False,
     ):
 
-        # TODO This one maybe make it replan on error
-        if last_did_error:
-            raise RuntimeError("Error: Last action did not successfully commit.")
-
         # 🏷️ A3 EXERCISE: WRITE THE PRIORITISED PLANNER
-        pass
-        # region ANSWER A3:
-        # TODO Do the prioritised planner!!!!
-        pass
+        agents_to_plan = check_plan_needed(paths, last_did_error)
+        #randomly order agents to plan
+        for i in order_agents_by_priority(agents_to_plan):
+            #plan path for agent i
+            paths[i] = run_search(env, i)
+            #then insert reservations for already planned agents
+            pass
+        return paths
         # endregion
 
     return plan

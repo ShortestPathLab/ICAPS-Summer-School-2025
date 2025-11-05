@@ -25,15 +25,17 @@ def basic_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         last_did_error: bool = False,
     ):
 
-        # TODO This one maybe make it replan on error
-        if last_did_error:
-            raise RuntimeError("Error: Last action did not successfully commit.")
-
         # 🏷️ A3 EXERCISE: WRITE THE PRIORITISED PLANNER
-        pass
-        # region ANSWER A3:
-        # TODO Do the prioritised planner!!!!
-        pass
+        #plan for all agents if any agent is unplanned
+        if any(not p for p in paths):
+            for i in range(len(paths)):
+                #plan path for agent i
+                paths[i] = run_search(env, i)
+                #then insert reservations for already planned agents
+                pass
+            return paths
+        else:
+            return paths
         # endregion
 
     return plan
