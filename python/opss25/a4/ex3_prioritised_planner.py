@@ -16,7 +16,7 @@ def order_agents_by_priority(agents_sequence: list[int]) -> list[int]:
     Orders agents by priority. We simply use random shuffle for now.
     """
     # 🏷️ A3 EXERCISE: WRITE THE RANDOM SHUFFLING OF AGENTS ORDER
-    # region ANSWER A3:
+    # region ANSWER4:
     return random.shuffle(agents_sequence)
     # endregion
 
@@ -34,7 +34,7 @@ def check_plan_needed(paths: list[list], last_did_error: bool) -> list[int]:
     # empty. Additionally if last_did_error is True, we need to plan for all
     # agents, even if they've already been planned.
     #
-    # region ANSWER A3:
+    # region ANSWER A4:
     if last_did_error:
         return list(range(len(paths)))
     agents_to_plan = []
@@ -64,7 +64,7 @@ def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
     ):
 
         # 🏷️ A3 EXERCISE: WRITE THE PRIORITISED PLANNER
-        # region ANSWER A3:
+        # region ANSWER A4:
         agents_to_plan = check_plan_needed(paths, last_did_error)
         # Randomly order agents to plan
         for i in order_agents_by_priority(agents_to_plan):

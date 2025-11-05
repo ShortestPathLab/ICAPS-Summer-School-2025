@@ -34,7 +34,7 @@ def create_search_w_reservations_and_wait(
     # Try changing the heuristic function below and see how it affects the search.
     # Import a heuristic function
     heuristic = manhattan_heuristic
-    # region ANSWER A2:
+    # region ANSWER A3:
     heuristic = manhattan_heuristic
     # endregion
 
