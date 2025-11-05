@@ -18,7 +18,7 @@ from piglet.lib_piglet.utils.data_structure import bin_heap
 from piglet.lib_piglet.search import search_node
 from piglet.lib_piglet.domains.robotrunners import robotrunners
 from .ex1_lorr_expander import lorr_expander
-from .ex2_lorr_heuristics import straight_heuristic
+from .ex2_lorr_heuristics import straight_heuristic, manhattan_heuristic, octile_heuristic, direction_aware_heuristic
 
 
 def create_search(domain: robotrunners):
@@ -35,7 +35,7 @@ def create_search(domain: robotrunners):
     # Import a heuristic function
     heuristic = None
     # region ANSWER A1:
-    heuristic = straight_heuristic
+    heuristic = manhattan_heuristic
     # endregion
 
     return graph_search(open_list, expander, heuristic_function=heuristic)
