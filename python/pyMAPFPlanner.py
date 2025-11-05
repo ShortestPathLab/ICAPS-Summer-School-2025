@@ -32,7 +32,7 @@ from piglet.lib_piglet.search.base_search import (
 
 # 0=Action.FW, 1=Action.CR, 2=Action.CCR, 3=Action.W
 
-LOG_ENABLED = True
+LOG_ENABLED = False
 
 
 class pyMAPFPlanner:
