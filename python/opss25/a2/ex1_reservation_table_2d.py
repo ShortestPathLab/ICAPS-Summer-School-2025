@@ -2,7 +2,7 @@ from piglet.lib_piglet.domains.robotrunners import robotrunners_state
 
 # ──────────────────────────────────────────────────────────────────────────────
 #
-# TASK 1: BUILD A PLANNER WITH RESERVATIONS
+# TASK 1: BUILD A RESERVATION TABLE
 #
 # Welp, you've seen that running A* blindly without any coordination wouldn't
 # work out for more than one agent. Who would've guessed? Let's try some
@@ -11,6 +11,8 @@ from piglet.lib_piglet.domains.robotrunners import robotrunners_state
 # In this task, you will implement a planner that uses a reservation table to
 # ensure that agents don't bump into each other. Try experimenting with
 # different ways to use the reservation table and see how it affects the search.
+#
+# To get started, let's create a super simple reservation table.
 #
 # Look out for the 🏷️ EXERCISE label in the code below.
 # The code sections marked with this label are where you need to implement your

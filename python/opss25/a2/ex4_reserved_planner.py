@@ -1,14 +1,12 @@
 # ──────────────────────────────────────────────────────────────────────────────
 #
-# TASK 1: BUILD A PLANNER WITH RESERVATIONS
+# TASK 4: BUILD THE PLANNER WITH RESERVATIONS
 #
-# Welp, you've seen that running A* blindly without any coordination wouldn't
-# work out for more than one agent. Who would've guessed? Let's try some
-# techniques to get around this problem.
+# Write the planner that uses the search engine that we've created. It's also
+# going to need some logic on how it's going to update the reservation table.
 #
-# In this task, you will implement a planner that uses a reservation table to
-# ensure that agents don't bump into each other. Try experimenting with
-# different ways to use the reservation table and see how it affects the search.
+# When you're done with this part, you'll get a working planner that can plan
+# around other agents!
 #
 # Look out for the 🏷️ EXERCISE label in the code below.
 # The code sections marked with this label are where you need to implement your
