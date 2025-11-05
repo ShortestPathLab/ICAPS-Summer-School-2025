@@ -129,7 +129,7 @@ class pyMAPFPlanner:
                 3: opss25.a3.ex3_reserved_planner_3d.reserved_planner_3d,
                 4: opss25.a4.ex3_prioritised_planner.prioritised_planner,
                 # This one runs when you're in the main branch
-                5: opss25.a2.ex4_reserved_planner_2d.reserved_planner_2d,
+                5: opss25.a4.ex3_prioritised_planner.prioritised_planner,
             }[EX]
         )
 
@@ -150,7 +150,9 @@ class pyMAPFPlanner:
                     bind(piglet_engine, logger).head()
                 piglet_engine.open_list_.clear()
                 solution = piglet_engine.get_path(
-                    interop.to_piglet_state(self.env, start, direction),
+                    interop.to_piglet_state(
+                        self.env, start, direction, self.env.curr_timestep
+                    ),
                     interop.to_piglet_state(self.env, goal),
                 )
                 return solution.get_solution()[1:] if solution else []

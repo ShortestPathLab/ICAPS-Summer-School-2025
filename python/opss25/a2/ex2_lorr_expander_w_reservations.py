@@ -13,9 +13,7 @@
 # ──────────────────────────────────────────────────────────────────────────────
 
 from piglet.lib_piglet.domains.robotrunners import (
-    Move_Actions,
     robotrunners,
-    robotrunners_action,
 )
 
 from ..a1.ex1_lorr_expander import lorr_expander
@@ -54,22 +52,3 @@ class lorr_expander_w_reservations(lorr_expander):
 
             self.succ_.append((new_state, a))
         return self.succ_[:]
-
-    def get_actions(self, state: tuple):
-        x, y, *_ = state
-        actions = super().get_actions(state)
-
-        # 🏷️ A2 EXERCISE: IMPLEMENT THE WAIT ACTION
-        #
-        # Now we're dealing with the time dimension, robots can now wait.
-        # Here, we need to determine if the robot can wait on a tile.
-        # If so, we need to add a wait action to the list.
-        #
-        # region ANSWER A2:
-        if self.domain_.get_tile((x, y)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.WAIT
-            actions[-1].cost_ = 1
-        # endregion
-
-        return actions

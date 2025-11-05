@@ -1,14 +1,14 @@
 import random
 
 import MAPF
-from opss25.a2.ex3_create_search_w_reservations import (
-    create_search_w_reservations,
-)
 from opss25.utils import interop
 from opss25.utils.types import BindStartKit
 from piglet.lib_piglet.domains.robotrunners import robotrunners
 
 from ..a3.ex1_reservation_table_3d import reservation_table_3d
+from ..a3.ex3_create_search_w_reservations_and_wait import (
+    create_search_w_reservations_and_wait,
+)
 
 
 def order_agents_by_priority(agents_sequence: list[int]) -> list[int]:
@@ -17,7 +17,8 @@ def order_agents_by_priority(agents_sequence: list[int]) -> list[int]:
     """
     # 🏷️ A3 EXERCISE: WRITE THE RANDOM SHUFFLING OF AGENTS ORDER
     # region ANSWER4:
-    return random.shuffle(agents_sequence)
+    random.shuffle(agents_sequence)
+    return agents_sequence
     # endregion
 
 
@@ -53,7 +54,7 @@ def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
 
     # Create reservation table
     table = reservation_table_3d(domain.width_, domain.height_)
-    engine = create_search_w_reservations(domain, table)
+    engine = create_search_w_reservations_and_wait(domain, table)
     # Create search
     run_search = use_with_startkit(engine)
 
