@@ -9,6 +9,7 @@
 import math, random
 from lib_piglet.search.search_node import compare_node_g, compare_node_f, search_node
 from lib_piglet.utils.data_structure import bin_heap
+from lib_piglet.domains.robotrunners import Directions
 
 def piglet_heuristic(domain,current_state, goal_state):
     return manhattan_heuristic(current_state, goal_state)
@@ -24,8 +25,35 @@ def manhattan_heuristic(current_state, goal_state):
 
 def direction_aware_heuristic(current_state, goal_state):
     dx, dy = abs(current_state[0] - goal_state[0]), abs(current_state[1] - goal_state[1])
-    turns_required = (dx > 0 and dy > 0)
+    is_bend: bool = dx > 0 and dy > 0
+    init_turns: int = get_init_turns(current_state, goal_state)
+    turns_required = is_bend + init_turns # do we need to turn from x->y, or vice versa?
     return dx + dy + turns_required
+
+def get_init_turns(state1, state2):
+    dx, dy = state2[0] - state1[0], state2[1] - state1[1]
+    curr_dir = state1[2]
+
+    # Determine candidate target directions
+    possible_targets = []
+    if dx > 0:
+        possible_targets.append(Directions.EAST)
+    elif dx < 0:
+        possible_targets.append(Directions.WEST)
+    if dy > 0:
+        possible_targets.append(Directions.SOUTH)
+    elif dy < 0:
+        possible_targets.append(Directions.NORTH)
+
+    if not possible_targets:
+        return 0  # same cell
+
+    min_turns = float("inf")
+    for target_dir in possible_targets:
+        diff = abs(curr_dir - target_dir)
+        turns = min(diff, 4 - diff)  # wrap-around (NORTH↔WEST)
+        min_turns = min(min_turns, turns)
+    return min_turns
 
 def straight_heuristic(current_state, goal_state):
     return round(math.sqrt((current_state[0] - goal_state[0])**2 + (current_state[1] - goal_state[1])**2), 5)
