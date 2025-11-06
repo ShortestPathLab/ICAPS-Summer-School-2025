@@ -116,13 +116,13 @@ def get_init_turns(state1, state2):
 
     # Determine candidate target directions
     possible_targets = []
-    if dx > 0:
-        possible_targets.append(Directions.EAST)
-    elif dx < 0:
-        possible_targets.append(Directions.WEST)
     if dy > 0:
-        possible_targets.append(Directions.SOUTH)
+        possible_targets.append(Directions.EAST)
     elif dy < 0:
+        possible_targets.append(Directions.WEST)
+    if dx > 0:
+        possible_targets.append(Directions.SOUTH)
+    elif dx < 0:
         possible_targets.append(Directions.NORTH)
 
     if not possible_targets:
