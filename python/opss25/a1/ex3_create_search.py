@@ -27,15 +27,11 @@ def create_search(domain: robotrunners):
     # 🏷️ A1 EXERCISE: DEFINE THE EXPANDER
     # Import and initialize the expander
     expander = None
-    # region ANSWER A1:
-    expander = lorr_expander(domain)
-    # endregion
+    pass
 
     # 🏷️ A1 EXERCISE: DEFINE THE HEURISTIC
     # Import a heuristic function
     heuristic = None
-    # region ANSWER A1:
-    heuristic = manhattan_heuristic
-    # endregion
+    pass
 
     return graph_search(open_list, expander, heuristic_function=heuristic)

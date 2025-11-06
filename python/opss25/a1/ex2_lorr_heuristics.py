@@ -37,11 +37,7 @@ def manhattan_heuristic(
     #
     # Write and return an expression that computes the manhattan distance.
 
-    # region ANSWER A1:
-
-    return abs(current_state[0] - goal_state[0]) + abs(current_state[1] - goal_state[1])
-
-    # endregion
+    pass
 
 
 def octile_heuristic(
@@ -57,16 +53,7 @@ def octile_heuristic(
     #
     # Write and return an expression that computes the octile distance.
 
-    # region ANSWER A1:
-    delta_x = abs(current_state[0] - goal_state[0])
-    delta_y = abs(current_state[1] - goal_state[1])
-    return round(
-        min(delta_x, delta_y) * math.sqrt(2)
-        + max(delta_x, delta_y)
-        - min(delta_x, delta_y),
-        5,
-    )
-    # endregion
+    pass
 
 
 def straight_heuristic(
@@ -82,16 +69,7 @@ def straight_heuristic(
     #
     # Write and return an expression that computes the straight distance.
 
-    # region ANSWER A1:
-    return round(
-        (
-            (current_state[0] - goal_state[0]) ** 2
-            + (current_state[1] - goal_state[1]) ** 2
-        )
-        ** 0.5,
-        5,
-    )
-    # endregion
+    pass
 
 
 def direction_aware_heuristic(
@@ -131,10 +109,4 @@ def get_init_turns(state1, state2):
     min_turns = float("inf")
     # 🏷️ A1 EXERCISE: CALCULATE THE NUMBER OF INITIAL TURNS REQUIRED
     #                 TO FACE THE NEAREST HEURISTIC-RECOMMENDED DIRECTION.
-    # region ANSWER A1:
-    for target_dir in possible_targets:
-        diff = abs(curr_dir - target_dir)
-        turns = min(diff, 4 - diff)  # wrap-around (NORTH↔WEST)
-        min_turns = min(min_turns, turns)
-    return min_turns
-    # endregion
+    pass

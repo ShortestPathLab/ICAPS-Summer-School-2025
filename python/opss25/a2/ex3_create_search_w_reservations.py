@@ -32,8 +32,6 @@ def create_search_w_reservations(
     # Try changing the heuristic function below and see how it affects the search.
     # Import a heuristic function
     heuristic = manhattan_heuristic
-    # region ANSWER A2:
-    heuristic = manhattan_heuristic
-    # endregion
+    pass
 
     return graph_search(open_list, expander, heuristic_function=heuristic)

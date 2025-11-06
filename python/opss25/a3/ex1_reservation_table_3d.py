@@ -24,12 +24,7 @@ class reservation_table_3d:
         # 🏷️ A3 EXERCISE: IMPLEMENT RESERVE
         # This method should reserve the given states for
         # agent @param id.
-        # region ANSWER A3:
-        for state in states:
-            self.add_vertex(state, id)
-        for prev, next in pairwise(states):
-            self.add_edge(prev, next, id)
-        # endregion
+        pass
 
     def unreserve(self, id: int, *states: robotrunners_state):
         # This method should unreserve the given states for
@@ -100,22 +95,7 @@ class reservation_table_3d:
         # This method should return True if there is an edge reservation not for
         # current_agent_id between state and new_state at timestep arrival_t.
         # It should return False otherwise.
-        # region ANSWER A3:
-
-        for key in ((x, y, nx, ny), (nx, ny, x, y)):
-            bucket = self.edge_table.get(key)
-            if not bucket:
-                continue
-            val = bucket.get(arrival_t)
-            if val in (None, current_agent_id):
-                continue
-            if current_agent_id is None:
-                continue
-            return True
-
-        return False
-
-        # endregion
+        pass
 
     def add_edge(
         self,
@@ -131,20 +111,7 @@ class reservation_table_3d:
         # This method should add an edge reservation to the edge
         # reservation table. It should return True if the reservation was
         # successful, and return False if edge is already reserved.
-        # region ANSWER A3:
-
-        # <-- no KeyError
-        bucket = self.edge_table.setdefault(key, {})
-
-        # conflict; someone else already reserved the edge
-        if arrival_t in bucket and bucket[arrival_t] != agent_id:
-            return False
-
-        # reservation successful
-        bucket[arrival_t] = agent_id
-        return True
-
-        # endregion
+        pass
 
     def del_edge(
         self,

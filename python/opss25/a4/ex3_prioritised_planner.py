@@ -35,15 +35,7 @@ def check_plan_needed(paths: list[list], last_did_error: bool) -> list[int]:
     # empty. Additionally if last_did_error is True, we need to plan for all
     # agents, even if they've already been planned.
     #
-    # region ANSWER A4:
-    if last_did_error:
-        return list(range(len(paths)))
-    agents_to_plan = []
-    for i, path in enumerate(paths):
-        if not path:
-            agents_to_plan.append(i)
-    return agents_to_plan
-    # endregion
+    pass
 
 
 def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
@@ -69,20 +61,6 @@ def prioritised_planner(domain: robotrunners, use_with_startkit: BindStartKit):
         # First,Determine  which agents need replanning. 
         # Second, clear the table and reserve the paths of all agents that do not need replanning.
         # Then, randomise the order in which you'll plan for them.
-        # region ANSWER A4:
-        agents_to_plan = check_plan_needed(paths, last_did_error)
-        table.clear()
-        for i in range(len(paths)):
-            if i not in agents_to_plan:
-                table.reserve(
-                    i, interop.get_agent_state(env, i), *paths[i]
-                )
-        # Randomly order agents to plan
-        for i in order_agents_by_priority(agents_to_plan):
-            # plan path for agent i
-            paths[i] = run_search(env, i)
-            table.reserve(i, interop.get_agent_state(env, i), *paths[i])
-        return paths
-        # endregion
+        pass
 
     return plan

@@ -107,26 +107,7 @@ class lorr_expander(base_expander):
 
         # Task: define the rest of the actions
 
-        # region ANSWER A1:
-
-        # Can always rotate CCW
-        actions.append(robotrunners_action())
-        actions[-1].move_ = Move_Actions.ROTATE_CCW
-        actions[-1].cost_ = 1
-
-        # Check if we can move forward
-        if any(
-            [
-                direction == Directions.NORTH and self.domain_.get_tile((x - 1, y)),
-                direction == Directions.EAST and self.domain_.get_tile((x, y + 1)),
-                direction == Directions.SOUTH and self.domain_.get_tile((x + 1, y)),
-                direction == Directions.WEST and self.domain_.get_tile((x, y - 1)),
-            ]
-        ):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.MOVE_FORWARD
-            actions[-1].cost_ = 1
-        # endregion
+        pass
 
         return actions
 
@@ -151,23 +132,7 @@ class lorr_expander(base_expander):
         # to moving (altering the state) in the environment.
         # Your task is to modify (x,y,dir) based on each action
         #
-        # region ANSWER A1:
-
-        if move == Move_Actions.ROTATE_CW:
-            direction = Directions((direction.value + 1) % 4)
-        elif move == Move_Actions.ROTATE_CCW:
-            direction = Directions((direction.value - 1) % 4)
-        elif move == Move_Actions.MOVE_FORWARD:
-            if direction == Directions.NORTH:
-                x -= 1
-            elif direction == Directions.EAST:
-                y += 1
-            elif direction == Directions.SOUTH:
-                x += 1
-            elif direction == Directions.WEST:
-                y -= 1
-
-        # endregion
+        pass
 
         return x, y, direction
 
