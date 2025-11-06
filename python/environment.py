@@ -12,6 +12,4 @@ EX = 3
 EX = 4
 # endregion
 
-# region ANSWER A4:
-EX = 5
-# endregion
+pass
