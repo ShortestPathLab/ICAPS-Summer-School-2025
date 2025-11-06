@@ -43,8 +43,6 @@ class lorr_expander_w_reservations(lorr_expander):
             # we're not bumping into other agents by checking the
             # reservation table.
             #
-            # We must check for both edge and vertex collisions.
-            #
             # region ANSWER A2:
             if self.reservation_table_.is_reserved(new_state):
                 continue
