@@ -43,7 +43,8 @@ def reserved_planner_2d(domain: robotrunners, use_with_startkit: BindStartKit):
     ):
         # 🏷️ A2 EXERCISE: WRITE THE RESERVATION TABLE PLANNER
         # Write a planning loop that drives the low planning logic,
-        # and don't forget to use the reservation table!
+        # where agents reserve their path so that future agents
+        # must avoid them: use your reservation table!
         #
         # 🧪 Try out a few strategies that use this reservation table.
         # - Reserve the entire path as you plan for each agent
@@ -53,17 +54,18 @@ def reserved_planner_2d(domain: robotrunners, use_with_startkit: BindStartKit):
         #
         # Refer to the basic planners in ex1 if you're stuck.
         #
-        # region ANSWER A2:
-
         table.clear()
         for i in range(len(paths)):
             paths[i] = run_search(env, i)
+
+        # region ANSWER A2:
+
             # Check if we've got a solution
             if paths[i]:
                 # Reserve only the first point on the path
                 table.reserve(interop.get_agent_state(env, i), paths[i][0])
-        return paths
 
         # endregion
+        return paths
 
     return plan
