@@ -49,17 +49,10 @@ class reservation_table_2d:
         # 🏷️ A2 EXERCISE: IMPLEMENT RESERVE
         # This function should mark the tiles
         # in states as reserved.
-        # region ANSWER A2:
-        for state in states:
-            x, y, *_ = state
-            self.vertex_table[x][y] = True
-        # endregion
+        pass
 
     def is_reserved(self, state: robotrunners_state):
         # 🏷️ A2 EXERCISE: IMPLEMENT IS_RESERVED
         # This function should return True if the tile
         # at state is reserved.
-        # region ANSWER A2:
-        x, y, *_ = state
-        return self.vertex_table[x][y]
-        # endregion
+        pass

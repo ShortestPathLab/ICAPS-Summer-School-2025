@@ -58,14 +58,7 @@ def reserved_planner_2d(domain: robotrunners, use_with_startkit: BindStartKit):
         for i in range(len(paths)):
             paths[i] = run_search(env, i)
 
-        # region ANSWER A2:
-
-            # Check if we've got a solution
-            if paths[i]:
-                # Reserve only the first point on the path
-                table.reserve(interop.get_agent_state(env, i), paths[i][0])
-
-        # endregion
+        pass
         return paths
 
     return plan

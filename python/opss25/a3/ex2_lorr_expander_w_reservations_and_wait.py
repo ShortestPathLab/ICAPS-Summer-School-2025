@@ -38,12 +38,7 @@ class lorr_expander_w_reservations_and_wait(lorr_expander_w_reservations):
             #
             # We must check for both edge and vertex collisions.
             #
-            # region ANSWER A3:
-            if self.reservation_table_.is_vertex_reserved(new_state):
-                continue
-            if self.reservation_table_.is_edge_reserved(current.state_, new_state):
-                continue
-            # endregion
+            pass
 
             self.succ_.append((new_state, a))
         return self.succ_[:]
@@ -58,10 +53,5 @@ class lorr_expander_w_reservations_and_wait(lorr_expander_w_reservations):
         # Here, we need to determine if the robot can wait on a tile.
         # If so, we need to add a wait action to the list.
         #
-        # region ANSWER A3:
-        if self.domain_.get_tile((x, y)):
-            actions.append(robotrunners_action())
-            actions[-1].move_ = Move_Actions.WAIT
-            actions[-1].cost_ = 1
-        # endregion
+        pass
         return actions

@@ -43,10 +43,7 @@ class lorr_expander_w_reservations(lorr_expander):
             # we're not bumping into other agents by checking the
             # reservation table.
             #
-            # region ANSWER A2:
-            if self.reservation_table_.is_reserved(new_state):
-                continue
-            # endregion
+            pass
 
             self.succ_.append((new_state, a))
         return self.succ_[:]
