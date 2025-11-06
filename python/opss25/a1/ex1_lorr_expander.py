@@ -94,7 +94,25 @@ class lorr_expander(base_expander):
         #
         # Populate the 'actions' list with valid robotrunners_action objects.
         #
+        # HINTS:
+        #   1. you have access to Directions.NORTH, Directions.EAST, etc.
+        #      (these directions are an enum: NORTH=1, EAST=2, SOUTH=3, WEST=4)
+        #   2. You also have access to whether a specific location is free or blocked in the gridmap
+        #      using self.domain_.get_tile(x,y)
+
+        # Can always rotate CW
+        actions.append(robotrunners_action())
+        actions[-1].move_ = Move_Actions.ROTATE_CW
+        actions[-1].cost_ = 1
+
+        # Task: define the rest of the actions
+
         # region ANSWER A1:
+
+        # Can always rotate CCW
+        actions.append(robotrunners_action())
+        actions[-1].move_ = Move_Actions.ROTATE_CCW
+        actions[-1].cost_ = 1
 
         # Check if we can move forward
         if any(
@@ -108,14 +126,6 @@ class lorr_expander(base_expander):
             actions.append(robotrunners_action())
             actions[-1].move_ = Move_Actions.MOVE_FORWARD
             actions[-1].cost_ = 1
-
-        # Can always rotate
-        actions.append(robotrunners_action())
-        actions[-1].move_ = Move_Actions.ROTATE_CW
-        actions[-1].cost_ = 1
-        actions.append(robotrunners_action())
-        actions[-1].move_ = Move_Actions.ROTATE_CCW
-        actions[-1].cost_ = 1
         # endregion
 
         return actions
@@ -136,6 +146,10 @@ class lorr_expander(base_expander):
         # based on the action it is taking.
         #
         # Mutate the values of x, y, direction and t according to the action.
+        #
+        # HINT: you need to also define how each action actually corresponds
+        # to moving (altering the state) in the environment.
+        # Your task is to modify (x,y,dir) based on each action
         #
         # region ANSWER A1:
 
