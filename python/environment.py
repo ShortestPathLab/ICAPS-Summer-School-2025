@@ -8,10 +8,6 @@ EX = 2
 EX = 3
 # endregion
 
-# region ANSWER A3:
-EX = 4
-# endregion
+pass
 
-# region ANSWER A4:
-EX = 5
-# endregion
+pass
